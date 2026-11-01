@@ -16,6 +16,7 @@ import {
 } from './hooks/useLocalStorageDraft'
 
 const BACKUP_STORAGE_KEY = 'student_resume_user_backup'
+const DISMISSED_NOTE_KEY = 'resume_storage_notice_dismissed'
 
 // Helper to check if the current data is the sample data
 const isSampleData = (data) =>
@@ -29,8 +30,26 @@ export default function App() {
     defaultValues: initialData,
   })
 
-  // Automatically save every form change to localStorage
-  useLocalStorageDraft(methods.watch)
+  // Automatically save every form change to localStorage with save status indicator
+  const saveStatus = useLocalStorageDraft(methods.watch)
+
+  // One-time dismissible note about browser storage
+  const [showStorageNotice, setShowStorageNotice] = useState(() => {
+    try {
+      return localStorage.getItem(DISMISSED_NOTE_KEY) !== 'true'
+    } catch {
+      return false
+    }
+  })
+
+  const handleDismissNotice = () => {
+    setShowStorageNotice(false)
+    try {
+      localStorage.setItem(DISMISSED_NOTE_KEY, 'true')
+    } catch {
+      // Ignore quota errors
+    }
+  }
 
   // Track backup of the user's real data before loading sample
   const [userBackup, setUserBackup] = useState(() => {
@@ -117,16 +136,22 @@ export default function App() {
         <header className="border-b border-slate-200 bg-white px-4 sm:px-6 py-3.5 sticky top-0 z-20">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
             <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-base sm:text-lg font-bold text-slate-900">
-                  Student Resume &amp; CV Creator
-                </h1>
-                <span className="hidden sm:inline-block rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
-                  Auto-saved locally
-                </span>
-              </div>
-              <p className="text-xs text-slate-500">
-                Fill in your details once — switch templates anytime without losing data.
+              <h1 className="text-base sm:text-lg font-bold text-slate-900">
+                Student Resume &amp; CV Creator
+              </h1>
+              <p
+                aria-live="polite"
+                className={`text-xs mt-0.5 ${
+                  saveStatus === 'error'
+                    ? 'text-amber-700 font-medium'
+                    : 'text-slate-500'
+                }`}
+              >
+                {saveStatus === 'saving'
+                  ? 'Saving...'
+                  : saveStatus === 'error'
+                    ? "Couldn't save. Download your PDF so you don't lose your work."
+                    : 'Saved on this device'}
               </p>
             </div>
 
@@ -165,6 +190,22 @@ export default function App() {
         </header>
 
         <main className="mx-auto max-w-[1440px] px-4 sm:px-6 py-6 space-y-4">
+          {/* One-time browser storage note */}
+          {showStorageNotice && (
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-700">
+              <span>
+                Your work is saved in this browser only. Clearing your browser data will delete it.
+              </span>
+              <button
+                type="button"
+                onClick={handleDismissNotice}
+                className="rounded-md border border-slate-300 bg-white px-3 py-1 text-xs font-medium text-slate-800 hover:bg-slate-100 shrink-0 focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer"
+              >
+                Got it
+              </button>
+            </div>
+          )}
+
           {/* Active Sample Data Notice Banner */}
           {isSampleActive && (
             <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900 flex flex-wrap items-center justify-between gap-2 shadow-xs">
