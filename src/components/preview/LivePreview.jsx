@@ -90,7 +90,7 @@ export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
 
             return (
               <iframe
-                src={`${url}#toolbar=0&navpanes=0`}
+                src={`${url}#toolbar=0&navpanes=0&view=FitH`}
                 title="Live Resume PDF Preview"
                 className="h-full w-full border-0"
               />

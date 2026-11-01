@@ -5,6 +5,7 @@ import { getContactItems, renderResumeSection } from '../sectionRenderer'
 const createStyles = (theme) =>
   StyleSheet.create({
     page: {
+      backgroundColor: '#ffffff',
       fontFamily: theme.fontFamily,
       fontSize: theme.fontSize.body,
       color: theme.textColor,
@@ -51,7 +52,7 @@ export default function HeaderBanner({ data, theme }) {
 
   return (
     <Document>
-      <Page size="A4" style={styles.page} wrap={documentType === 'cv'}>
+      <Page size="A4" style={styles.page}>
         <View style={styles.banner}>
           <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
           {contactItems.length > 0 && (

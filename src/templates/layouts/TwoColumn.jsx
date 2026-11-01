@@ -8,6 +8,7 @@ const NARROW_COLUMN_IDS = new Set(['education', 'skills', 'awards', 'certificati
 const createStyles = (theme) =>
   StyleSheet.create({
     page: {
+      backgroundColor: '#ffffff',
       padding: theme.spacing.pagePadding,
       fontFamily: theme.fontFamily,
       fontSize: theme.fontSize.body,
@@ -64,7 +65,7 @@ export default function TwoColumn({ data, theme }) {
 
   return (
     <Document>
-      <Page size="A4" style={styles.page} wrap={documentType === 'cv'}>
+      <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
           {contactItems.length > 0 && (

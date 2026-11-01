@@ -23,6 +23,7 @@ const createCompactTheme = (theme) => ({
 const createStyles = (compactTheme) =>
   StyleSheet.create({
     page: {
+      backgroundColor: '#ffffff',
       padding: compactTheme.spacing.pagePadding,
       fontFamily: compactTheme.fontFamily,
       fontSize: compactTheme.fontSize.body,
@@ -71,7 +72,7 @@ export default function Compact({ data, theme }) {
 
   return (
     <Document>
-      <Page size="A4" style={styles.page} wrap={documentType === 'cv'}>
+      <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
           {contactItems.length > 0 && (

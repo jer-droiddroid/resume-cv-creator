@@ -7,6 +7,7 @@ const SIDEBAR_SECTIONS = new Set(['education', 'skills', 'awards', 'certificatio
 const createStyles = (theme) =>
   StyleSheet.create({
     page: {
+      backgroundColor: '#ffffff',
       flexDirection: 'row',
       fontFamily: theme.fontFamily,
       fontSize: theme.fontSize.body,
@@ -65,7 +66,7 @@ export default function SidebarLeft({ data, theme }) {
 
   return (
     <Document>
-      <Page size="A4" style={styles.page} wrap={documentType === 'cv'}>
+      <Page size="A4" style={styles.page}>
         <View style={styles.sidebar}>
           <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
           {contactItems.length > 0 && (

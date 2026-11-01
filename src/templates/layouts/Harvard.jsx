@@ -6,6 +6,7 @@ import { formatDateRange, getContactItems } from '../sectionRenderer'
 const createHarvardStyles = (theme) =>
   StyleSheet.create({
     page: {
+      backgroundColor: '#ffffff',
       padding: theme.spacing.pagePadding,
       fontFamily: theme.fontFamily,
       fontSize: theme.fontSize.body,
@@ -277,7 +278,7 @@ export default function Harvard({ data, theme }) {
 
   return (
     <Document>
-      <Page size="A4" style={styles.page} wrap={documentType === 'cv'}>
+      <Page size="A4" style={styles.page}>
         {/* Centered Harvard Header */}
         <View style={styles.header}>
           <Text style={styles.name}>{personalInfo.fullName || 'YOUR NAME'}</Text>
