@@ -13,6 +13,31 @@ export function loadSavedDraft() {
     const raw = localStorage.getItem(DRAFT_STORAGE_KEY)
     if (!raw) return defaultResumeData
     const parsed = JSON.parse(raw)
+
+    // Sanitize sections so UUIDs never overwrite real section identifiers
+    const validKeys = new Set([
+      'summary',
+      'education',
+      'experience',
+      'organizations',
+      'projects',
+      'skills',
+      'awards',
+      'certifications',
+    ])
+
+    let sections = defaultResumeData.sections
+    if (Array.isArray(parsed.sections) && parsed.sections.length > 0) {
+      sections = parsed.sections.map((sec, idx) => {
+        const fallback = defaultResumeData.sections[idx] || { id: 'summary', visible: true }
+        const effectiveId = validKeys.has(sec.id) ? sec.id : fallback.id
+        return {
+          id: effectiveId,
+          visible: typeof sec.visible === 'boolean' ? sec.visible : true,
+        }
+      })
+    }
+
     return {
       ...defaultResumeData,
       ...parsed,
@@ -20,10 +45,7 @@ export function loadSavedDraft() {
         ...defaultResumeData.personalInfo,
         ...(parsed.personalInfo || {}),
       },
-      sections:
-        Array.isArray(parsed.sections) && parsed.sections.length > 0
-          ? parsed.sections
-          : defaultResumeData.sections,
+      sections,
     }
   } catch {
     return defaultResumeData
