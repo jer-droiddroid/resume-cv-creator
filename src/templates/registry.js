@@ -15,7 +15,7 @@ export const templates = [
   // ATS-friendly templates
   {
     id: 'reddit-ats',
-    name: 'Reddit / Jake ATS',
+    name: 'Standard',
     category: 'ATS-friendly',
     layout: Harvard,
     theme: themes.redditATS,

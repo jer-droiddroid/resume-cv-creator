@@ -3,7 +3,7 @@
 export const themes = {
   redditATS: {
     id: 'redditATS',
-    name: 'Reddit ATS Standard',
+    name: 'Standard',
     accentColor: '#000000', // Pure black rules and headings
     accentLight: '#f3f4f6',
     textColor: '#0f172a',
