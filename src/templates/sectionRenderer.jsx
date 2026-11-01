@@ -1,0 +1,257 @@
+import { Text, View, StyleSheet } from '@react-pdf/renderer'
+import { generateBullets } from '../data/roleTemplates'
+
+// Format start and end dates neatly (e.g., "Aug 2023 – Present")
+export const formatDateRange = (start, end) => {
+  if (start && end) return `${start} – ${end}`
+  return start || end || ''
+}
+
+// Gather non-empty contact strings from personalInfo
+export const getContactItems = (personalInfo = {}) =>
+  [
+    personalInfo.email,
+    personalInfo.phone,
+    personalInfo.location,
+    personalInfo.linkedin,
+    personalInfo.portfolio,
+  ].filter((item) => item && item.trim())
+
+// Base section styles generated from any theme
+export const createSectionStyles = (theme, options = {}) => {
+  const headingColor = options.headingColor || theme.accentColor
+  const textColor = options.textColor || theme.textColor
+  const mutedColor = options.mutedColor || theme.mutedColor
+
+  return StyleSheet.create({
+    section: {
+      marginBottom: theme.spacing.sectionGap,
+    },
+    sectionHeading: {
+      fontFamily: theme.fontFamilyBold,
+      fontSize: theme.fontSize.sectionHeading,
+      color: headingColor,
+      textTransform: 'uppercase',
+      letterSpacing: 0.8,
+      marginBottom: 5,
+      paddingBottom: theme.headingStyle === 'underline' ? 2 : 3,
+      paddingHorizontal: theme.headingStyle === 'accent-tint' ? 5 : 0,
+      paddingTop: theme.headingStyle === 'accent-tint' ? 3 : 0,
+      backgroundColor:
+        theme.headingStyle === 'accent-tint' && !options.invert
+          ? theme.accentLight || '#f1f5f9'
+          : 'transparent',
+      borderBottomWidth: theme.headingStyle === 'underline' ? 1 : 0,
+      borderBottomColor: headingColor,
+    },
+    itemContainer: {
+      marginBottom: theme.spacing.itemGap,
+    },
+    rowBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'baseline',
+      gap: 6,
+    },
+    itemTitle: {
+      fontFamily: theme.fontFamilyBold,
+      fontSize: theme.fontSize.itemTitle,
+      color: textColor,
+    },
+    itemSubtitle: {
+      fontFamily: theme.fontFamilyItalic,
+      fontSize: theme.fontSize.body,
+      color: mutedColor,
+      marginBottom: 2,
+    },
+    dateText: {
+      fontSize: theme.fontSize.small,
+      color: mutedColor,
+    },
+    bodyText: {
+      fontSize: theme.fontSize.body,
+      color: textColor,
+    },
+    bulletRow: {
+      flexDirection: 'row',
+      marginTop: 2,
+      paddingLeft: 3,
+    },
+    bulletDot: {
+      width: 9,
+      fontSize: theme.fontSize.body,
+      color: textColor,
+    },
+    bulletText: {
+      flex: 1,
+      fontSize: theme.fontSize.body,
+      color: textColor,
+    },
+  })
+}
+
+/**
+ * Renders any single resume section by its sectionId.
+ * Shared across all layouts so adding or updating a section works everywhere.
+ */
+export function renderResumeSection(sectionId, data, theme, styleOverrides = {}) {
+  const styles = createSectionStyles(theme, styleOverrides)
+  const currency = data?.currency || 'PHP'
+
+  switch (sectionId) {
+    case 'summary':
+      return (
+        <View key="summary" style={styles.section}>
+          <Text style={styles.sectionHeading}>Summary</Text>
+          <Text style={styles.bodyText}>{data.summary}</Text>
+        </View>
+      )
+
+    case 'education':
+      return (
+        <View key="education" style={styles.section}>
+          <Text style={styles.sectionHeading}>Education</Text>
+          {data.education
+            .filter((edu) => edu.school || edu.degree)
+            .map((edu, index) => (
+              <View key={index} style={styles.itemContainer}>
+                <View style={styles.rowBetween}>
+                  <Text style={styles.itemTitle}>{edu.school}</Text>
+                  <Text style={styles.dateText}>
+                    {formatDateRange(edu.startDate, edu.endDate)}
+                  </Text>
+                </View>
+                {edu.degree ? <Text style={styles.itemSubtitle}>{edu.degree}</Text> : null}
+                {edu.details ? <Text style={styles.bodyText}>{edu.details}</Text> : null}
+              </View>
+            ))}
+        </View>
+      )
+
+    case 'experience':
+      return (
+        <View key="experience" style={styles.section}>
+          <Text style={styles.sectionHeading}>Experience</Text>
+          {data.experience
+            .filter((exp) => exp.company || exp.title)
+            .map((exp, index) => (
+              <View key={index} style={styles.itemContainer}>
+                <View style={styles.rowBetween}>
+                  <Text style={styles.itemTitle}>{exp.title}</Text>
+                  <Text style={styles.dateText}>
+                    {formatDateRange(exp.startDate, exp.endDate)}
+                  </Text>
+                </View>
+                {exp.company ? <Text style={styles.itemSubtitle}>{exp.company}</Text> : null}
+                {(exp.bullets || [])
+                  .filter((b) => b && b.trim())
+                  .map((bullet, bIndex) => (
+                    <View key={bIndex} style={styles.bulletRow}>
+                      <Text style={styles.bulletDot}>•</Text>
+                      <Text style={styles.bulletText}>{bullet}</Text>
+                    </View>
+                  ))}
+              </View>
+            ))}
+        </View>
+      )
+
+    case 'organizations':
+      return (
+        <View key="organizations" style={styles.section}>
+          <Text style={styles.sectionHeading}>Leadership &amp; Organizations</Text>
+          {data.organizations
+            .filter((org) => org.organization || org.title)
+            .map((org, index) => {
+              const bullets = generateBullets(org, currency)
+              return (
+                <View key={index} style={styles.itemContainer}>
+                  <View style={styles.rowBetween}>
+                    <Text style={styles.itemTitle}>{org.title}</Text>
+                    <Text style={styles.dateText}>
+                      {formatDateRange(org.startDate, org.endDate)}
+                    </Text>
+                  </View>
+                  {org.organization ? (
+                    <Text style={styles.itemSubtitle}>{org.organization}</Text>
+                  ) : null}
+                  {bullets.map((bullet, bIndex) => (
+                    <View key={bIndex} style={styles.bulletRow}>
+                      <Text style={styles.bulletDot}>•</Text>
+                      <Text style={styles.bulletText}>{bullet}</Text>
+                    </View>
+                  ))}
+                </View>
+              )
+            })}
+        </View>
+      )
+
+    case 'projects':
+      return (
+        <View key="projects" style={styles.section}>
+          <Text style={styles.sectionHeading}>Projects</Text>
+          {data.projects
+            .filter((proj) => proj.name || proj.description)
+            .map((proj, index) => (
+              <View key={index} style={styles.itemContainer}>
+                <View style={styles.rowBetween}>
+                  <Text style={styles.itemTitle}>{proj.name}</Text>
+                  {proj.link ? <Text style={styles.dateText}>{proj.link}</Text> : null}
+                </View>
+                {proj.techStack ? (
+                  <Text style={styles.itemSubtitle}>Tech: {proj.techStack}</Text>
+                ) : null}
+                {proj.description ? (
+                  <Text style={styles.bodyText}>{proj.description}</Text>
+                ) : null}
+              </View>
+            ))}
+        </View>
+      )
+
+    case 'skills':
+      return (
+        <View key="skills" style={styles.section}>
+          <Text style={styles.sectionHeading}>Skills</Text>
+          <Text style={styles.bodyText}>
+            {data.skills.filter((s) => s && s.trim()).join(' • ')}
+          </Text>
+        </View>
+      )
+
+    case 'awards':
+      return (
+        <View key="awards" style={styles.section}>
+          <Text style={styles.sectionHeading}>Awards &amp; Honors</Text>
+          {data.awards
+            .filter((a) => a && a.trim())
+            .map((award, index) => (
+              <View key={index} style={styles.bulletRow}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{award}</Text>
+              </View>
+            ))}
+        </View>
+      )
+
+    case 'certifications':
+      return (
+        <View key="certifications" style={styles.section}>
+          <Text style={styles.sectionHeading}>Certifications</Text>
+          {data.certifications
+            .filter((c) => c && c.trim())
+            .map((cert, index) => (
+              <View key={index} style={styles.bulletRow}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{cert}</Text>
+              </View>
+            ))}
+        </View>
+      )
+
+    default:
+      return null
+  }
+}
+
