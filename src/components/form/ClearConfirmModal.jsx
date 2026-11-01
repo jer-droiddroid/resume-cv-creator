@@ -41,10 +41,10 @@ export default function ClearConfirmModal({ isOpen, onClose, onConfirm, isCleari
         >
           <div>
             <h2 id="clear-dialog-title" className="text-base font-bold text-slate-900">
-              Clear everything?
+              Clear all your details?
             </h2>
             <p className="text-xs text-slate-600 mt-1">
-              This will remove all your entered details and reset to a fresh blank resume. You will have 3 seconds to undo.
+              You&apos;ll have a few seconds to undo.
             </p>
           </div>
 

@@ -135,6 +135,7 @@ export default function App() {
 
   // Clear everything & animation states
   const [isClearModalOpen, setIsClearModalOpen] = useState(false)
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
   const [isClearing, setIsClearing] = useState(false)
   const [clearingPhase, setClearingPhase] = useState('idle') // 'idle' | 'out' | 'prepare-in' | 'in' | 'reduced-out' | 'reduced-in'
   const [showUndoNotice, setShowUndoNotice] = useState(false)
@@ -142,6 +143,29 @@ export default function App() {
 
   const undoDataRef = useRef(null)
   const undoTimeoutRef = useRef(null)
+  const moreMenuRef = useRef(null)
+
+  // Close "More" dropdown when clicking outside or pressing Escape
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target)) {
+        setIsMoreMenuOpen(false)
+      }
+    }
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsMoreMenuOpen(false)
+      }
+    }
+    if (isMoreMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', handleKeyDown)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isMoreMenuOpen])
 
   useEffect(() => {
     return () => {
@@ -314,14 +338,41 @@ export default function App() {
                 </button>
               )}
 
-              <button
-                type="button"
-                disabled={isClearing}
-                onClick={() => setIsClearModalOpen(true)}
-                className="rounded-md border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-100 disabled:opacity-50 cursor-pointer"
-              >
-                Start Over
-              </button>
+              {/* "More" Menu Dropdown */}
+              <div className="relative" ref={moreMenuRef}>
+                <button
+                  type="button"
+                  disabled={isClearing}
+                  id="more-menu-button"
+                  aria-haspopup="menu"
+                  aria-expanded={isMoreMenuOpen}
+                  onClick={() => setIsMoreMenuOpen((prev) => !prev)}
+                  className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer disabled:opacity-50 flex items-center gap-1"
+                >
+                  <span>More</span>
+                  <span className="text-[10px] text-slate-400">▾</span>
+                </button>
+
+                {isMoreMenuOpen && (
+                  <div
+                    role="menu"
+                    aria-labelledby="more-menu-button"
+                    className="absolute right-0 mt-1.5 w-40 rounded-lg border border-slate-200 bg-white p-1 shadow-lg z-30"
+                  >
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setIsMoreMenuOpen(false)
+                        setIsClearModalOpen(true)
+                      }}
+                      className="w-full text-left rounded-md px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer"
+                    >
+                      Start over
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </header>
