@@ -16,7 +16,7 @@ export const sampleResumeData = {
     {
       school: 'University of the Philippines Diliman',
       degree: 'BS Computer Science',
-      startDate: 'Aug 2023',
+      startDate: 'August 2023',
       endDate: 'Present',
       details: "Dean's Lister (GWA: 1.35), DOST-SEI Merit Scholar",
     },
@@ -25,8 +25,8 @@ export const sampleResumeData = {
     {
       company: 'TechStart Manila',
       title: 'Frontend Developer Intern',
-      startDate: 'Jun 2025',
-      endDate: 'Aug 2025',
+      startDate: 'June 2025',
+      endDate: 'August 2025',
       bullets: [
         'Built responsive dashboard components in React and Tailwind CSS used by 1,200+ daily active users.',
         'Reduced page load time by 28% by optimizing bundle imports and image assets.',
@@ -38,7 +38,7 @@ export const sampleResumeData = {
       roleType: 'president',
       organization: 'Association of Computing Machinery (Student Chapter)',
       title: 'Chapter President',
-      startDate: 'Sep 2025',
+      startDate: 'September 2025',
       endDate: 'Present',
       // Numbers only — Step 3 generateBullets() turns these into action-verb bullet points
       metrics: {
@@ -51,8 +51,8 @@ export const sampleResumeData = {
       roleType: 'treasurer',
       organization: 'College Student Council',
       title: 'Finance Officer / Treasurer',
-      startDate: 'Sep 2024',
-      endDate: 'Jun 2025',
+      startDate: 'September 2024',
+      endDate: 'June 2025',
       metrics: {
         budgetManaged: 150000,
         fundsRaised: 45000,

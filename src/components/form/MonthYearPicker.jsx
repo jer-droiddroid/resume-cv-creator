@@ -1,27 +1,55 @@
 import { useFormContext, useWatch } from 'react-hook-form'
 
 const MONTHS = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
+  'January',
+  'February',
+  'March',
+  'April',
   'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ]
 
-// Years from 6 years in future (for expected graduation) down to 1990
+// Normalizes 3-letter ("Aug") or full ("August") to formal full month
+const MONTH_MAP = {
+  jan: 'January',
+  january: 'January',
+  feb: 'February',
+  february: 'February',
+  mar: 'March',
+  march: 'March',
+  apr: 'April',
+  april: 'April',
+  may: 'May',
+  jun: 'June',
+  june: 'June',
+  jul: 'July',
+  july: 'July',
+  aug: 'August',
+  august: 'August',
+  sep: 'September',
+  sept: 'September',
+  september: 'September',
+  oct: 'October',
+  october: 'October',
+  nov: 'November',
+  november: 'November',
+  dec: 'December',
+  december: 'December',
+}
+
+// Years from 6 years in future (for expected graduations) down to 1990
 const currentYear = new Date().getFullYear()
 const YEARS = Array.from({ length: 42 }, (_, i) => String(currentYear + 6 - i))
 
 /**
- * Dropdown picker for Month and Year.
- * Stores clean, standardized strings like "Aug 2023" or "Present".
+ * Formal Dropdown picker for Month (e.g. "August") and Year ("2023").
+ * Stored as clean, professional formal strings: "August 2023" or "Present".
  */
 export default function MonthYearPicker({ name, allowPresent = false }) {
   const { control, setValue } = useFormContext()
@@ -29,18 +57,22 @@ export default function MonthYearPicker({ name, allowPresent = false }) {
 
   const isPresent = allowPresent && rawValue.trim().toLowerCase() === 'present'
 
-  // Parse existing string value like "Aug 2023" or "2023"
+  // Parse existing string value like "August 2023", "Aug 2023", or "2023"
   let parsedMonth = ''
   let parsedYear = ''
 
   if (!isPresent && rawValue) {
     const parts = rawValue.trim().split(/\s+/)
-    if (parts.length === 2 && MONTHS.includes(parts[0])) {
-      parsedMonth = parts[0]
-      parsedYear = parts[1]
+    if (parts.length === 2) {
+      const normalized = MONTH_MAP[parts[0].toLowerCase()]
+      if (normalized) {
+        parsedMonth = normalized
+        parsedYear = parts[1]
+      }
     } else if (parts.length === 1) {
-      if (MONTHS.includes(parts[0])) {
-        parsedMonth = parts[0]
+      const normalized = MONTH_MAP[parts[0].toLowerCase()]
+      if (normalized) {
+        parsedMonth = normalized
       } else if (YEARS.includes(parts[0])) {
         parsedYear = parts[0]
       }
@@ -53,7 +85,6 @@ export default function MonthYearPicker({ name, allowPresent = false }) {
       setValue(name, '')
       return
     }
-    // If year is not chosen yet, default to current year
     const effectiveYear = parsedYear || String(currentYear)
     setValue(name, newMonth ? `${newMonth} ${effectiveYear}` : effectiveYear)
   }
