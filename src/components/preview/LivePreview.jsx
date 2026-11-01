@@ -85,7 +85,7 @@ export default function LivePreview({
 
   return (
     <>
-      <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-slate-100/80 p-3 sm:p-4 shadow-xs lg:h-[calc(100vh-6rem)]">
+      <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-slate-100/80 p-3 sm:p-4 shadow-xs h-[calc(100vh-6rem)] min-h-[500px]">
         {/* Preview toolbar */}
         <div className="flex flex-wrap items-center justify-between gap-2 pb-3 px-1 shrink-0">
           <div className="flex items-center gap-2">
@@ -148,7 +148,7 @@ export default function LivePreview({
         </div>
 
         {/* Stage: Soft neutral gray background with clearly visible scrollbar for the paper resume sheet */}
-        <div className="flex-1 overflow-y-auto preview-scrollbar rounded-xl bg-slate-200/50 p-3 sm:p-6 flex flex-col items-center">
+        <div className="flex-1 min-h-0 overflow-y-scroll preview-scrollbar rounded-xl bg-slate-200/50 p-3 sm:p-6 flex flex-col items-center">
           {hasFadedContent && (
             <p className="text-xs text-slate-500 mb-3 text-center select-none shrink-0">
               Faded text is an example. It disappears as you fill in your own.
