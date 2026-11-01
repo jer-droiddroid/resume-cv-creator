@@ -45,3 +45,29 @@
   --font-brand: var(--font-brand);
   --font-sans: var(--font-sans);
 }
+
+/* Clearly visible, modern scrollbar for the preview stage */
+.preview-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #e2e8f0;
+}
+
+.preview-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.preview-scrollbar::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-radius: 9999px;
+  margin: 6px 0;
+}
+
+.preview-scrollbar::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 9999px;
+  border: 2px solid #e2e8f0;
+}
+
+.preview-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
