@@ -5,11 +5,11 @@ const hasNumber = (value) =>
 // Format plain numbers with commas (e.g. 5000 -> "5,000")
 const formatNumber = (value) => new Intl.NumberFormat('en-US').format(value)
 
-// Format money using Intl.NumberFormat (e.g. 150000, "PHP" -> "₱150,000")
-export const formatMoney = (amount, currency = 'PHP') =>
-  new Intl.NumberFormat('en-PH', {
+// Format money using Intl.NumberFormat (e.g. 15000, "USD" -> "$15,000")
+export const formatMoney = (amount, currency = 'USD') =>
+  new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: currency || 'PHP',
+    currency: currency || 'USD',
     maximumFractionDigits: 0,
   }).format(amount)
 
@@ -67,8 +67,8 @@ export const ROLE_TEMPLATES = {
   treasurer: {
     label: 'Treasurer / Finance',
     fields: [
-      { key: 'budgetManaged', label: 'Total Budget Managed', placeholder: 'e.g. 150000', isCurrency: true },
-      { key: 'fundsRaised', label: 'Funds / Sponsorships Raised', placeholder: 'e.g. 45000', isCurrency: true },
+      { key: 'budgetManaged', label: 'Total Budget Managed', placeholder: 'e.g. 15000', isCurrency: true },
+      { key: 'fundsRaised', label: 'Funds / Sponsorships Raised', placeholder: 'e.g. 4500', isCurrency: true },
       { key: 'costSavedPercent', label: 'Costs Reduced (%)', placeholder: 'e.g. 15' },
     ],
     bullets: [
@@ -96,7 +96,7 @@ export const ROLE_TEMPLATES = {
  * @param {string} currency - Currency code like "PHP" or "USD"
  * @returns {string[]} Array of generated bullet strings
  */
-export function generateBullets(role, currency = 'PHP') {
+export function generateBullets(role, currency = 'USD') {
   if (!role || !role.roleType) return []
 
   const template = ROLE_TEMPLATES[role.roleType]

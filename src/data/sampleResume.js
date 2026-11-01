@@ -1,34 +1,34 @@
-// Fake student resume data used for template picker thumbnails
-// and for testing layouts without touching the student's real input.
+// Universal sample student resume data used for template picker thumbnails
+// and faded placeholder examples without touching the student's real input.
 export const sampleResumeData = {
   documentType: 'resume',
   personalInfo: {
-    fullName: 'Maria Clara Santos',
-    email: 'maria.santos@university.edu.ph',
-    phone: '+63 917 123 4567',
-    location: 'Quezon City, Metro Manila',
-    linkedin: 'linkedin.com/in/mariasantos',
-    portfolio: 'mariasantos.dev',
+    fullName: 'Alex Carter',
+    email: 'alex.carter@university.edu',
+    phone: '(555) 234-5678',
+    location: 'San Francisco, CA',
+    linkedin: 'linkedin.com/in/alexcarter',
+    portfolio: 'alexcarter.dev',
   },
   summary:
-    'Detail-oriented Computer Science senior with hands-on experience in full-stack web development and student leadership. Passionate about building accessible tools for students and local communities.',
+    'Detail-oriented Computer Science senior with hands-on experience in full-stack software development and student leadership. Passionate about building accessible, user-centered web applications.',
   education: [
     {
-      school: 'University of the Philippines Diliman',
-      degree: 'BS Computer Science',
-      startDate: 'August 2023',
-      endDate: 'Present',
-      details: "Dean's Lister (GWA: 1.35), DOST-SEI Merit Scholar",
+      school: 'State University',
+      degree: 'B.S. in Computer Science',
+      startDate: 'September 2022',
+      endDate: 'May 2026',
+      details: "Dean's List (GPA: 3.85/4.0), Academic Excellence Scholarship",
     },
   ],
   experience: [
     {
-      company: 'TechStart Manila',
-      title: 'Frontend Developer Intern',
+      company: 'Acme Technologies',
+      title: 'Software Engineering Intern',
       startDate: 'June 2025',
       endDate: 'August 2025',
       bullets: [
-        'Built responsive dashboard components in React and Tailwind CSS used by 1,200+ daily active users.',
+        'Built responsive dashboard components in React and TypeScript used by 1,200+ daily active users.',
         'Reduced page load time by 28% by optimizing bundle imports and image assets.',
       ],
     },
@@ -36,9 +36,9 @@ export const sampleResumeData = {
   organizations: [
     {
       roleType: 'president',
-      organization: 'Association of Computing Machinery (Student Chapter)',
+      organization: 'Computer Science Student Society',
       title: 'Chapter President',
-      startDate: 'September 2025',
+      startDate: 'September 2024',
       endDate: 'Present',
       // Numbers only — Step 3 generateBullets() turns these into action-verb bullet points
       metrics: {
@@ -49,30 +49,30 @@ export const sampleResumeData = {
     },
     {
       roleType: 'treasurer',
-      organization: 'College Student Council',
+      organization: 'Undergraduate Student Government',
       title: 'Finance Officer / Treasurer',
-      startDate: 'September 2024',
-      endDate: 'June 2025',
+      startDate: 'September 2023',
+      endDate: 'May 2024',
       metrics: {
-        budgetManaged: 150000,
-        fundsRaised: 45000,
+        budgetManaged: 15000,
+        fundsRaised: 4500,
         costSavedPercent: 15,
       },
     },
   ],
   projects: [
     {
-      name: 'Campus Study Buddy',
+      name: 'StudySync',
       description:
-        'A peer-to-peer study group finder with real-time room availability and course matching.',
+        'A collaborative study group platform with real-time room scheduling and course matching.',
       techStack: 'React, Node.js, PostgreSQL, Tailwind CSS',
-      link: 'github.com/mariasantos/study-buddy',
+      link: 'github.com/alexcarter/studysync',
     },
   ],
-  skills: ['JavaScript', 'React', 'Tailwind CSS', 'Node.js', 'Git', 'SQL', 'Figma'],
-  awards: ['1st Place, Inter-University Hackathon 2025', 'Best Capstone Prototype Nominee'],
+  skills: ['JavaScript', 'TypeScript', 'React', 'Tailwind CSS', 'Node.js', 'Git', 'SQL', 'Figma'],
+  awards: ['1st Place, Annual University Hackathon 2025', "Dean's Honor Roll (2023–2025)"],
   certifications: ['AWS Certified Cloud Practitioner (2025)', 'Responsive Web Design — freeCodeCamp'],
-  currency: 'PHP',
+  currency: 'USD',
   sections: [
     { id: 'summary', visible: true },
     { id: 'education', visible: true },
@@ -84,4 +84,3 @@ export const sampleResumeData = {
     { id: 'certifications', visible: true },
   ],
 }
-

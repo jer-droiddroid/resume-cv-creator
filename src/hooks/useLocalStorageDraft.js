@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { defaultResumeData, DEFAULT_SECTIONS } from '../data/defaultResume'
+import { sampleResumeData } from '../data/sampleResume'
 
 const DRAFT_STORAGE_KEY = 'student_resume_cv_draft_v1'
 const TEMPLATE_STORAGE_KEY = 'student_resume_cv_template_v1'
@@ -13,6 +14,20 @@ export function loadSavedDraft() {
     const raw = localStorage.getItem(DRAFT_STORAGE_KEY)
     if (!raw) return defaultResumeData
     const parsed = JSON.parse(raw)
+
+    // Migrate legacy sample data ("Maria Clara Santos") to the new universal sample
+    if (
+      parsed?.personalInfo?.fullName === 'Maria Clara Santos' ||
+      parsed?.personalInfo?.email === 'maria.santos@university.edu.ph'
+    ) {
+      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(sampleResumeData))
+      return sampleResumeData
+    }
+
+    // If blank form still had legacy PHP currency default, update to USD
+    if (!parsed?.personalInfo?.fullName && parsed?.currency === 'PHP') {
+      parsed.currency = 'USD'
+    }
 
     // Sanitize sections so UUIDs never overwrite real section identifiers
     const validKeys = new Set(DEFAULT_SECTIONS.map((s) => s.id))

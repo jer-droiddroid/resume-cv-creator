@@ -76,7 +76,7 @@ export default function ProjectsStep() {
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Campus Study Buddy"
+                  placeholder="e.g. StudySync"
                   {...register(`projects.${index}.name`)}
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
                 />
@@ -88,7 +88,7 @@ export default function ProjectsStep() {
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. github.com/mariasantos/study-buddy"
+                  placeholder="e.g. github.com/alexcarter/studysync"
                   {...register(`projects.${index}.link`)}
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
                 />

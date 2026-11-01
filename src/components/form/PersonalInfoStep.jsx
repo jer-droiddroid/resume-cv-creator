@@ -61,10 +61,10 @@ export default function PersonalInfoStep() {
             {...register('currency')}
             className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-800 focus:border-slate-800 focus:outline-none"
           >
-            <option value="PHP">PHP (₱)</option>
             <option value="USD">USD ($)</option>
             <option value="EUR">EUR (€)</option>
             <option value="GBP">GBP (£)</option>
+            <option value="PHP">PHP (₱)</option>
             <option value="SGD">SGD (S$)</option>
           </select>
         </div>
@@ -76,7 +76,7 @@ export default function PersonalInfoStep() {
           <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
           <input
             type="text"
-            placeholder="e.g. Maria Clara Santos"
+            placeholder="e.g. Alex Carter"
             {...register('personalInfo.fullName')}
             className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-slate-800 focus:outline-none"
           />
@@ -86,7 +86,7 @@ export default function PersonalInfoStep() {
           <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
           <input
             type="email"
-            placeholder="maria.santos@university.edu.ph"
+            placeholder="alex.carter@university.edu"
             {...register('personalInfo.email')}
             className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-slate-800 focus:outline-none"
           />
@@ -96,7 +96,7 @@ export default function PersonalInfoStep() {
           <label className="block text-sm font-medium text-slate-700 mb-1">Phone</label>
           <input
             type="text"
-            placeholder="+63 917 123 4567"
+            placeholder="(555) 234-5678"
             {...register('personalInfo.phone')}
             className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-slate-800 focus:outline-none"
           />
@@ -106,7 +106,7 @@ export default function PersonalInfoStep() {
           <label className="block text-sm font-medium text-slate-700 mb-1">Location</label>
           <input
             type="text"
-            placeholder="Quezon City, Metro Manila"
+            placeholder="San Francisco, CA"
             {...register('personalInfo.location')}
             className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-slate-800 focus:outline-none"
           />
@@ -116,7 +116,7 @@ export default function PersonalInfoStep() {
           <label className="block text-sm font-medium text-slate-700 mb-1">LinkedIn</label>
           <input
             type="text"
-            placeholder="linkedin.com/in/mariasantos"
+            placeholder="linkedin.com/in/alexcarter"
             {...register('personalInfo.linkedin')}
             className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-slate-800 focus:outline-none"
           />
@@ -128,7 +128,7 @@ export default function PersonalInfoStep() {
           </label>
           <input
             type="text"
-            placeholder="mariasantos.dev or github.com/mariasantos"
+            placeholder="alexcarter.dev or github.com/alexcarter"
             {...register('personalInfo.portfolio')}
             className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-slate-800 focus:outline-none"
           />

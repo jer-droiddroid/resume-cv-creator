@@ -96,7 +96,7 @@ export const createSectionStyles = (theme, options = {}) => {
  */
 export function renderResumeSection(sectionId, data, theme, styleOverrides = {}) {
   const styles = createSectionStyles(theme, styleOverrides)
-  const currency = data?.currency || 'PHP'
+  const currency = data?.currency || 'USD'
 
   switch (sectionId) {
     case 'summary':

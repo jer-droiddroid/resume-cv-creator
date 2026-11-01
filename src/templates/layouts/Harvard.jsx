@@ -115,7 +115,7 @@ const createHarvardStyles = (theme) =>
 export default function Harvard({ data, theme }) {
   const styles = createHarvardStyles(theme)
   const activeSections = getActiveSections(data)
-  const { personalInfo = {}, currency = 'PHP', documentType = 'resume' } = data || {}
+  const { personalInfo = {}, currency = 'USD', documentType = 'resume' } = data || {}
   const contactItems = getContactItems(personalInfo)
 
   const renderSection = (sectionId) => {

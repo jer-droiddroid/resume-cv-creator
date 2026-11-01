@@ -105,7 +105,7 @@ export default function ExperienceStep() {
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Frontend Developer Intern"
+                    placeholder="e.g. Software Engineering Intern"
                     {...register(`experience.${index}.title`)}
                     className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
                   />
@@ -117,7 +117,7 @@ export default function ExperienceStep() {
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. TechStart Manila"
+                    placeholder="e.g. Acme Technologies"
                     {...register(`experience.${index}.company`)}
                     className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
                   />

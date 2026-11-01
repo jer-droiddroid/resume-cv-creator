@@ -80,7 +80,7 @@ export default function EducationStep() {
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. University of the Philippines Diliman"
+                  placeholder="e.g. State University"
                   {...register(`education.${index}.school`)}
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
                 />
@@ -92,7 +92,7 @@ export default function EducationStep() {
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. BS Computer Science"
+                  placeholder="e.g. B.S. in Computer Science"
                   {...register(`education.${index}.degree`)}
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
                 />
@@ -112,11 +112,11 @@ export default function EducationStep() {
 
               <div className="sm:col-span-2">
                 <label className="block text-xs font-medium text-slate-700 mb-1">
-                  Honors, GWA/GPA, or Highlights
+                  Honors, GPA, or Highlights
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Dean's Lister (GWA: 1.35), DOST Merit Scholar"
+                  placeholder="e.g. Dean's List (GPA: 3.85/4.0), Academic Excellence Scholarship"
                   {...register(`education.${index}.details`)}
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
                 />

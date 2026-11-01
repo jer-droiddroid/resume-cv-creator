@@ -64,7 +64,7 @@ export const defaultResumeData = {
   skills: [],
   awards: [],
   certifications: [],
-  currency: 'PHP',
+  currency: 'USD',
   sections: DEFAULT_SECTIONS.map(({ id, visible }) => ({ id, visible })),
 }
 

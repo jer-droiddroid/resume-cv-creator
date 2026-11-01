@@ -12,7 +12,7 @@ export default function OrganizationsStep() {
 
   // Watch organizations & currency so we can show dynamic metric inputs and live bullet previews
   const orgValues = useWatch({ control, name: 'organizations' }) || []
-  const currency = useWatch({ control, name: 'currency' }) || 'PHP'
+  const currency = useWatch({ control, name: 'currency' }) || 'USD'
 
   return (
     <div className="space-y-4">

@@ -4,7 +4,7 @@ import { pdf } from '@react-pdf/renderer'
 import { getTemplateById } from '../../templates/registry'
 import { getFittedTheme } from '../../utils/resumeFit'
 
-// Build a clean filename like "Maria_Clara_Santos_Resume.pdf" or "Maria_Clara_Santos_CV.pdf"
+// Build a clean filename like "Alex_Carter_Resume.pdf" or "Alex_Carter_CV.pdf"
 function buildFileName(data) {
   const rawName = data?.personalInfo?.fullName?.trim() || 'Student'
   const safeName = rawName.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '')

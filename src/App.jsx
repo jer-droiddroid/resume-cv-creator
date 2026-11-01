@@ -417,7 +417,7 @@ export default function App() {
             <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900 flex flex-wrap items-center justify-between gap-2 shadow-xs">
               <div className="flex items-center gap-2">
                 <span>
-                  You are currently previewing sample student data (<strong>Maria Clara Santos</strong>).
+                  You are currently previewing sample student data (<strong>{sampleResumeData.personalInfo.fullName}</strong>).
                   {userBackup
                     ? ' Your previous entries were safely saved in the background.'
                     : ' You can replace it with your own details or clear to a blank form.'}

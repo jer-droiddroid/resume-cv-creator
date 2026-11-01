@@ -24,7 +24,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
     .filter((sec) => sec.visible !== false)
     .map((sec) => sec.id)
 
-  const { personalInfo = {}, currency = 'PHP' } = data || {}
+  const { personalInfo = {}, currency = 'USD' } = data || {}
   const realName = personalInfo?.fullName?.trim()
   const displayName = realName || 'Your Name'
   const isNameSample = !realName

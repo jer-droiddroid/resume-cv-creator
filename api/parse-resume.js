@@ -54,7 +54,7 @@ Parse the following raw resume text and extract all information into a single cl
   "skills": ["Skill 1", "Skill 2"],
   "awards": ["Award 1", "Award 2"],
   "certifications": ["Certification 1", "Certification 2"],
-  "currency": "PHP",
+  "currency": "USD",
   "sections": [
     { "id": "summary", "visible": true },
     { "id": "education", "visible": true },
