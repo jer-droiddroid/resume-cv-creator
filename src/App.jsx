@@ -453,7 +453,7 @@ export default function App() {
               <FormWizard key={wizardKey} disabled={isClearing} />
             </div>
 
-            <div className="lg:col-span-7 lg:sticky lg:top-20">
+            <div className="lg:col-span-7">
               <LivePreview
                 selectedTemplateId={selectedTemplateId}
                 onOpenPicker={() => setIsPickerOpen(true)}

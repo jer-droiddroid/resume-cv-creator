@@ -85,9 +85,9 @@ export default function LivePreview({
 
   return (
     <>
-      <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-slate-100/80 p-3 sm:p-4 shadow-xs lg:h-[calc(100vh-6rem)]">
-        {/* Preview toolbar */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pb-3 px-1">
+      <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-slate-100/80 p-3 sm:p-4 shadow-xs">
+        {/* Preview toolbar - sticks neatly below main navbar as user scrolls the full-length resume */}
+        <div className="sticky top-16 z-10 flex flex-wrap items-center justify-between gap-2 pb-3 pt-1 px-1 bg-slate-100/95 backdrop-blur-xs rounded-t-xl">
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold text-slate-800">
               {template.name}
@@ -147,8 +147,8 @@ export default function LivePreview({
           </div>
         </div>
 
-        {/* Stage: Soft neutral gray background with floating paper resume sheet */}
-        <div className="flex-1 overflow-y-auto rounded-xl bg-slate-200/50 p-3 sm:p-6 flex flex-col items-center [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent]">
+        {/* Stage: Soft neutral gray background with floating full-length paper resume sheet */}
+        <div className="w-full rounded-xl bg-slate-200/50 p-3 sm:p-6 sm:pb-8 flex flex-col items-center">
           {hasFadedContent && (
             <p className="text-xs text-slate-500 mb-3 text-center select-none shrink-0">
               Faded text is an example. It disappears as you fill in your own.
@@ -156,7 +156,7 @@ export default function LivePreview({
           )}
           <div
             style={getPaperAnimationStyles()}
-            className="w-full max-w-[650px] bg-white rounded-xs shadow-xl shadow-slate-900/10 border border-slate-200/60 overflow-hidden self-start mx-auto mb-12 will-change-[transform,opacity]"
+            className="w-full max-w-[650px] bg-white rounded-xs shadow-xl shadow-slate-900/10 border border-slate-200/60 overflow-hidden mx-auto will-change-[transform,opacity]"
           >
             <HtmlResumePreview
               data={liveFormData}
