@@ -17,7 +17,7 @@ import { getContactItems } from '../../templates/sectionRenderer'
  * - Shows faded sample placeholder content for empty sections with a small helper note
  */
 export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
-  const { control } = useFormContext()
+  const { control, setValue } = useFormContext()
   const liveFormData = useWatch({ control })
 
   const template = getTemplateById(selectedTemplateId)
@@ -45,9 +45,40 @@ export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
             <span className="text-xs font-semibold text-slate-800">
               {template.name}
             </span>
-            <span className="rounded-md bg-white border border-slate-200 px-2 py-0.5 text-[11px] font-medium text-slate-600">
-              {isResumeMode ? '1-Page Resume' : 'Multi-Page CV'}
-            </span>
+
+            {/* Segmented Resume / CV button */}
+            <div
+              role="radiogroup"
+              aria-label="Document format"
+              className="inline-flex rounded-md bg-white border border-slate-300 p-0.5 text-xs shadow-2xs"
+            >
+              <button
+                type="button"
+                role="radio"
+                aria-checked={isResumeMode}
+                onClick={() => setValue('documentType', 'resume', { shouldDirty: true })}
+                className={`rounded px-2.5 py-1 text-xs font-medium transition cursor-pointer ${
+                  isResumeMode
+                    ? 'bg-slate-900 text-white font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                Resume
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={!isResumeMode}
+                onClick={() => setValue('documentType', 'cv', { shouldDirty: true })}
+                className={`rounded px-2.5 py-1 text-xs font-medium transition cursor-pointer ${
+                  !isResumeMode
+                    ? 'bg-slate-900 text-white font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                CV
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
@@ -84,13 +115,42 @@ export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
       </div>
 
       {/* Mobile sticky Download PDF action bar */}
-      <div className="fixed bottom-0 inset-x-0 p-3 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-xl flex items-center justify-between gap-3 z-30 lg:hidden">
+      <div className="fixed bottom-0 inset-x-0 p-3 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-xl flex items-center justify-between gap-2 z-30 lg:hidden">
         <div className="min-w-0">
           <div className="text-xs font-semibold text-slate-900 truncate">
             {template.name}
           </div>
-          <div className="text-[11px] text-slate-500">
-            {isResumeMode ? '1-page resume' : 'Multi-page CV'}
+          <div
+            role="radiogroup"
+            aria-label="Document format"
+            className="inline-flex rounded-md bg-slate-100 border border-slate-200 p-0.5 text-[11px] mt-1"
+          >
+            <button
+              type="button"
+              role="radio"
+              aria-checked={isResumeMode}
+              onClick={() => setValue('documentType', 'resume', { shouldDirty: true })}
+              className={`rounded px-2 py-0.5 font-medium transition cursor-pointer ${
+                isResumeMode
+                  ? 'bg-slate-900 text-white font-semibold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              Resume
+            </button>
+            <button
+              type="button"
+              role="radio"
+              aria-checked={!isResumeMode}
+              onClick={() => setValue('documentType', 'cv', { shouldDirty: true })}
+              className={`rounded px-2 py-0.5 font-medium transition cursor-pointer ${
+                !isResumeMode
+                  ? 'bg-slate-900 text-white font-semibold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              CV
+            </button>
           </div>
         </div>
         <div className="shrink-0 flex items-center gap-2">
