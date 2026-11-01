@@ -2,6 +2,9 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import { getTemplateById } from '../../templates/registry'
 import HtmlResumePreview from './HtmlResumePreview'
 import DownloadButton from './DownloadButton'
+import { DEFAULT_SECTIONS } from '../../data/defaultResume'
+import { isSectionNonEmpty } from '../../utils/sectionHelpers'
+import { getContactItems } from '../../templates/sectionRenderer'
 
 /**
  * LivePreview:
@@ -11,6 +14,7 @@ import DownloadButton from './DownloadButton'
  * - Zero delay/lag when typing
  * - Stays sticky while the form scrolls on the left
  * - Mobile sticky "Download PDF" bar docked at the bottom of the screen
+ * - Shows faded sample placeholder content for empty sections with a small helper note
  */
 export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
   const { control } = useFormContext()
@@ -18,6 +22,19 @@ export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
 
   const template = getTemplateById(selectedTemplateId)
   const isResumeMode = (liveFormData?.documentType || 'resume') === 'resume'
+
+  // Determine if any visible section or contact details are currently empty (showing faded sample placeholders)
+  const configuredSections =
+    Array.isArray(liveFormData?.sections) && liveFormData.sections.length > 0
+      ? liveFormData.sections
+      : DEFAULT_SECTIONS
+
+  const visibleSections = configuredSections.filter((sec) => sec.visible !== false)
+  const hasEmptySection = visibleSections.some(
+    (sec) => !isSectionNonEmpty(sec.id, liveFormData)
+  )
+  const contactItems = getContactItems(liveFormData?.personalInfo)
+  const hasFadedContent = hasEmptySection || contactItems.length === 0
 
   return (
     <>
@@ -50,8 +67,13 @@ export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
         </div>
 
         {/* Stage: Soft neutral gray background with floating paper resume sheet */}
-        <div className="flex-1 overflow-y-auto rounded-xl bg-slate-200/50 p-3 sm:p-6 flex justify-center">
-          <div className="w-full max-w-[650px] bg-white rounded-xs shadow-xl shadow-slate-900/10 border border-slate-200/60 overflow-hidden self-start">
+        <div className="flex-1 overflow-y-auto rounded-xl bg-slate-200/50 p-3 sm:p-6 flex flex-col items-center">
+          {hasFadedContent && (
+            <p className="text-xs text-slate-500 mb-3 text-center select-none shrink-0">
+              Faded text is an example. It disappears as you fill in your own.
+            </p>
+          )}
+          <div className="w-full max-w-[650px] bg-white rounded-xs shadow-xl shadow-slate-900/10 border border-slate-200/60 overflow-hidden self-start mx-auto">
             <HtmlResumePreview
               data={liveFormData}
               theme={template.theme}

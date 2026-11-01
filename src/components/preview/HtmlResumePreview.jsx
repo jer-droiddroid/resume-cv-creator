@@ -1,18 +1,38 @@
 import { generateBullets } from '../../data/roleTemplates'
-import { getActiveSections } from '../../utils/sectionHelpers'
+import { isSectionNonEmpty } from '../../utils/sectionHelpers'
 import { formatDateRange, getContactItems } from '../../templates/sectionRenderer'
+import { sampleResumeData } from '../../data/sampleResume'
+import { DEFAULT_SECTIONS } from '../../data/defaultResume'
 
 /**
- * Pure HTML/Tailwind Paper Resume Preview (Option A).
+ * Pure HTML/Tailwind Paper Resume Preview.
  * - Matches the selected template's layout (Harvard, Standard, SingleColumn, TwoColumn, SidebarLeft, HeaderBanner, Compact)
  * - Uses exact theme colors, fonts, and heading styles
  * - Displays as an authentic white sheet of paper on a soft neutral gray background with light drop shadow
- * - No iframes, no PDF viewer borders, and no browser-native scrollbars
+ * - FIX 2: Shows faded sample placeholder content from sampleResume.js for any section that is empty
+ * - As the student types their own data, faded text disappears and real data takes its place
+ * - Downloaded PDF only uses real data; sample content never appears in downloaded PDF
  */
 export default function HtmlResumePreview({ data, theme, templateId }) {
-  const activeSections = getActiveSections(data)
+  const configuredSections =
+    Array.isArray(data?.sections) && data.sections.length > 0
+      ? data.sections
+      : DEFAULT_SECTIONS
+
+  const visibleSectionIds = configuredSections
+    .filter((sec) => sec.visible !== false)
+    .map((sec) => sec.id)
+
   const { personalInfo = {}, currency = 'PHP' } = data || {}
-  const contactItems = getContactItems(personalInfo)
+  const realName = personalInfo?.fullName?.trim()
+  const displayName = realName || 'Your Name'
+  const isNameSample = !realName
+
+  const realContactItems = getContactItems(personalInfo)
+  const hasRealContact = realContactItems.length > 0
+  const displayContactItems = hasRealContact
+    ? realContactItems
+    : getContactItems(sampleResumeData.personalInfo)
 
   const isHarvard = templateId.startsWith('harvard-') || templateId.startsWith('reddit-')
   const isBanner = templateId.startsWith('banner-')
@@ -57,177 +77,275 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
     )
   }
 
-  // Render individual sections
+  // Render individual sections (real data if provided, or faded sample placeholder if empty)
   const renderSection = (sectionId, overrides = {}) => {
     switch (sectionId) {
-      case 'summary':
+      case 'summary': {
+        const isReal = isSectionNonEmpty('summary', data)
+        const summaryText = isReal ? data.summary : sampleResumeData.summary
+
         return (
           <div key="summary" className="mb-4">
             {renderHeading('Summary', overrides)}
-            <p className="text-[13px] leading-relaxed text-slate-700">{data.summary}</p>
-          </div>
-        )
-
-      case 'education':
-        return (
-          <div key="education" className="mb-4">
-            {renderHeading('Education', overrides)}
-            <div className="space-y-2.5">
-              {data.education
-                .filter((edu) => edu.school || edu.degree)
-                .map((edu, idx) => (
-                  <div key={idx} className="text-[13px]">
-                    <div className="flex justify-between items-baseline gap-2">
-                      <span className="font-bold text-slate-900">{edu.school}</span>
-                      <span className="text-xs text-slate-500 shrink-0">
-                        {formatDateRange(edu.startDate, edu.endDate)}
-                      </span>
-                    </div>
-                    {edu.degree && (
-                      <div className="italic text-slate-700">{edu.degree}</div>
-                    )}
-                    {edu.details && (
-                      <div className="text-xs text-slate-600 mt-0.5">{edu.details}</div>
-                    )}
-                  </div>
-                ))}
-            </div>
-          </div>
-        )
-
-      case 'experience':
-        return (
-          <div key="experience" className="mb-4">
-            {renderHeading('Experience', overrides)}
-            <div className="space-y-3">
-              {data.experience
-                .filter((exp) => exp.company || exp.title)
-                .map((exp, idx) => (
-                  <div key={idx} className="text-[13px]">
-                    <div className="flex justify-between items-baseline gap-2">
-                      <span className="font-bold text-slate-900">{exp.company || exp.title}</span>
-                      <span className="text-xs text-slate-500 shrink-0">
-                        {formatDateRange(exp.startDate, exp.endDate)}
-                      </span>
-                    </div>
-                    {exp.company && exp.title && (
-                      <div className="italic text-slate-700">{exp.title}</div>
-                    )}
-                    {(exp.bullets || []).filter((b) => b && b.trim()).length > 0 && (
-                      <ul className="mt-1 space-y-1 list-disc pl-4 text-xs text-slate-700 leading-normal">
-                        {exp.bullets
-                          .filter((b) => b && b.trim())
-                          .map((b, bIdx) => (
-                            <li key={bIdx}>{b}</li>
-                          ))}
-                      </ul>
-                    )}
-                  </div>
-                ))}
-            </div>
-          </div>
-        )
-
-      case 'organizations':
-        return (
-          <div key="organizations" className="mb-4">
-            {renderHeading('Leadership & Activities', overrides)}
-            <div className="space-y-3">
-              {data.organizations
-                .filter((org) => org.organization || org.title)
-                .map((org, idx) => {
-                  const bullets = generateBullets(org, currency)
-                  return (
-                    <div key={idx} className="text-[13px]">
-                      <div className="flex justify-between items-baseline gap-2">
-                        <span className="font-bold text-slate-900">
-                          {org.organization || org.title}
-                        </span>
-                        <span className="text-xs text-slate-500 shrink-0">
-                          {formatDateRange(org.startDate, org.endDate)}
-                        </span>
-                      </div>
-                      {org.organization && org.title && (
-                        <div className="italic text-slate-700">{org.title}</div>
-                      )}
-                      {bullets.length > 0 && (
-                        <ul className="mt-1 space-y-1 list-disc pl-4 text-xs text-slate-700 leading-normal">
-                          {bullets.map((b, bIdx) => (
-                            <li key={bIdx}>{b}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  )
-                })}
-            </div>
-          </div>
-        )
-
-      case 'projects':
-        return (
-          <div key="projects" className="mb-4">
-            {renderHeading('Projects', overrides)}
-            <div className="space-y-2.5">
-              {data.projects
-                .filter((p) => p.name || p.description)
-                .map((p, idx) => (
-                  <div key={idx} className="text-[13px]">
-                    <div className="flex justify-between items-baseline gap-2">
-                      <span className="font-bold text-slate-900">{p.name}</span>
-                      {p.link && (
-                        <span className="text-xs text-slate-500 shrink-0">{p.link}</span>
-                      )}
-                    </div>
-                    {p.techStack && (
-                      <div className="italic text-xs text-slate-600">Tech: {p.techStack}</div>
-                    )}
-                    {p.description && (
-                      <p className="text-xs text-slate-700 mt-0.5">{p.description}</p>
-                    )}
-                  </div>
-                ))}
-            </div>
-          </div>
-        )
-
-      case 'skills':
-        return (
-          <div key="skills" className="mb-4">
-            {renderHeading('Skills', overrides)}
-            <p className="text-xs text-slate-700 leading-relaxed">
-              {data.skills.filter((s) => s && s.trim()).join('  •  ')}
+            <p
+              className={`text-[13px] leading-relaxed ${
+                isReal
+                  ? 'text-slate-700'
+                  : 'text-slate-500 opacity-40 select-none italic'
+              }`}
+            >
+              {summaryText}
             </p>
           </div>
         )
+      }
 
-      case 'awards':
+      case 'education': {
+        const isReal = isSectionNonEmpty('education', data)
+        const educationList = isReal
+          ? (data.education || []).filter((edu) => edu.school || edu.degree)
+          : sampleResumeData.education
+
+        return (
+          <div key="education" className="mb-4">
+            {renderHeading('Education', overrides)}
+            <div
+              className={`space-y-2.5 ${
+                !isReal ? 'opacity-40 select-none italic' : ''
+              }`}
+            >
+              {educationList.map((edu, idx) => (
+                <div key={idx} className="text-[13px]">
+                  <div className="flex justify-between items-baseline gap-2">
+                    <span
+                      className={`font-bold ${isReal ? 'text-slate-900' : 'text-slate-700'}`}
+                    >
+                      {edu.school}
+                    </span>
+                    <span className="text-xs text-slate-500 shrink-0">
+                      {formatDateRange(edu.startDate, edu.endDate)}
+                    </span>
+                  </div>
+                  {edu.degree && (
+                    <div className={isReal ? 'italic text-slate-700' : 'text-slate-600'}>
+                      {edu.degree}
+                    </div>
+                  )}
+                  {edu.details && (
+                    <div className="text-xs text-slate-600 mt-0.5">{edu.details}</div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      case 'experience': {
+        const isReal = isSectionNonEmpty('experience', data)
+        const experienceList = isReal
+          ? (data.experience || []).filter((exp) => exp.company || exp.title)
+          : sampleResumeData.experience
+
+        return (
+          <div key="experience" className="mb-4">
+            {renderHeading('Experience', overrides)}
+            <div
+              className={`space-y-3 ${
+                !isReal ? 'opacity-40 select-none italic' : ''
+              }`}
+            >
+              {experienceList.map((exp, idx) => (
+                <div key={idx} className="text-[13px]">
+                  <div className="flex justify-between items-baseline gap-2">
+                    <span
+                      className={`font-bold ${isReal ? 'text-slate-900' : 'text-slate-700'}`}
+                    >
+                      {exp.company || exp.title}
+                    </span>
+                    <span className="text-xs text-slate-500 shrink-0">
+                      {formatDateRange(exp.startDate, exp.endDate)}
+                    </span>
+                  </div>
+                  {exp.company && exp.title && (
+                    <div className={isReal ? 'italic text-slate-700' : 'text-slate-600'}>
+                      {exp.title}
+                    </div>
+                  )}
+                  {(exp.bullets || []).filter((b) => b && b.trim()).length > 0 && (
+                    <ul className="mt-1 space-y-1 list-disc pl-4 text-xs text-slate-700 leading-normal">
+                      {exp.bullets
+                        .filter((b) => b && b.trim())
+                        .map((b, bIdx) => (
+                          <li key={bIdx}>{b}</li>
+                        ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      case 'organizations': {
+        const isReal = isSectionNonEmpty('organizations', data)
+        const orgList = isReal
+          ? (data.organizations || []).filter((org) => org.organization || org.title)
+          : sampleResumeData.organizations
+
+        return (
+          <div key="organizations" className="mb-4">
+            {renderHeading('Leadership & Activities', overrides)}
+            <div
+              className={`space-y-3 ${
+                !isReal ? 'opacity-40 select-none italic' : ''
+              }`}
+            >
+              {orgList.map((org, idx) => {
+                const bullets = generateBullets(org, currency)
+                return (
+                  <div key={idx} className="text-[13px]">
+                    <div className="flex justify-between items-baseline gap-2">
+                      <span
+                        className={`font-bold ${isReal ? 'text-slate-900' : 'text-slate-700'}`}
+                      >
+                        {org.organization || org.title}
+                      </span>
+                      <span className="text-xs text-slate-500 shrink-0">
+                        {formatDateRange(org.startDate, org.endDate)}
+                      </span>
+                    </div>
+                    {org.organization && org.title && (
+                      <div className={isReal ? 'italic text-slate-700' : 'text-slate-600'}>
+                        {org.title}
+                      </div>
+                    )}
+                    {bullets.length > 0 && (
+                      <ul className="mt-1 space-y-1 list-disc pl-4 text-xs text-slate-700 leading-normal">
+                        {bullets.map((b, bIdx) => (
+                          <li key={bIdx}>{b}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )
+      }
+
+      case 'projects': {
+        const isReal = isSectionNonEmpty('projects', data)
+        const projectList = isReal
+          ? (data.projects || []).filter((p) => p.name || p.description)
+          : sampleResumeData.projects
+
+        return (
+          <div key="projects" className="mb-4">
+            {renderHeading('Projects', overrides)}
+            <div
+              className={`space-y-2.5 ${
+                !isReal ? 'opacity-40 select-none italic' : ''
+              }`}
+            >
+              {projectList.map((p, idx) => (
+                <div key={idx} className="text-[13px]">
+                  <div className="flex justify-between items-baseline gap-2">
+                    <span
+                      className={`font-bold ${isReal ? 'text-slate-900' : 'text-slate-700'}`}
+                    >
+                      {p.name}
+                    </span>
+                    {p.link && (
+                      <span className="text-xs text-slate-500 shrink-0">{p.link}</span>
+                    )}
+                  </div>
+                  {p.techStack && (
+                    <div className="italic text-xs text-slate-600">
+                      Tech: {p.techStack}
+                    </div>
+                  )}
+                  {p.description && (
+                    <p className="text-xs text-slate-700 mt-0.5">{p.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      case 'skills': {
+        const isReal = isSectionNonEmpty('skills', data)
+        const skillList = isReal
+          ? (data.skills || []).filter((s) => s && s.trim())
+          : sampleResumeData.skills
+
+        return (
+          <div key="skills" className="mb-4">
+            {renderHeading('Skills', overrides)}
+            <p
+              className={`text-xs leading-relaxed ${
+                isReal
+                  ? 'text-slate-700'
+                  : 'text-slate-500 opacity-40 select-none italic'
+              }`}
+            >
+              {skillList.join('  •  ')}
+            </p>
+          </div>
+        )
+      }
+
+      case 'awards': {
+        const isReal = isSectionNonEmpty('awards', data)
+        const awardList = isReal
+          ? (data.awards || []).filter((a) => a && a.trim())
+          : sampleResumeData.awards
+
         return (
           <div key="awards" className="mb-4">
             {renderHeading('Awards & Honors', overrides)}
-            <ul className="space-y-1 list-disc pl-4 text-xs text-slate-700">
-              {data.awards
-                .filter((a) => a && a.trim())
-                .map((award, idx) => (
-                  <li key={idx}>{award}</li>
-                ))}
+            <ul
+              className={`space-y-1 list-disc pl-4 text-xs ${
+                isReal
+                  ? 'text-slate-700'
+                  : 'text-slate-500 opacity-40 select-none italic'
+              }`}
+            >
+              {awardList.map((award, idx) => (
+                <li key={idx}>{award}</li>
+              ))}
             </ul>
           </div>
         )
+      }
 
-      case 'certifications':
+      case 'certifications': {
+        const isReal = isSectionNonEmpty('certifications', data)
+        const certList = isReal
+          ? (data.certifications || []).filter((c) => c && c.trim())
+          : sampleResumeData.certifications
+
         return (
           <div key="certifications" className="mb-4">
             {renderHeading('Certifications', overrides)}
-            <ul className="space-y-1 list-disc pl-4 text-xs text-slate-700">
-              {data.certifications
-                .filter((c) => c && c.trim())
-                .map((cert, idx) => (
-                  <li key={idx}>{cert}</li>
-                ))}
+            <ul
+              className={`space-y-1 list-disc pl-4 text-xs ${
+                isReal
+                  ? 'text-slate-700'
+                  : 'text-slate-500 opacity-40 select-none italic'
+              }`}
+            >
+              {certList.map((cert, idx) => (
+                <li key={idx}>{cert}</li>
+              ))}
             </ul>
           </div>
         )
+      }
 
       default:
         return null
@@ -236,10 +354,10 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
 
   // Sidebar Layout
   if (isSidebar) {
-    const sidebarSections = activeSections.filter((id) =>
+    const sidebarSections = visibleSectionIds.filter((id) =>
       ['education', 'skills', 'awards', 'certifications'].includes(id)
     )
-    const mainSections = activeSections.filter(
+    const mainSections = visibleSectionIds.filter(
       (id) => !['education', 'skills', 'awards', 'certifications'].includes(id)
     )
 
@@ -255,14 +373,22 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
         >
           <div>
             <h1
-              className="text-lg font-bold tracking-tight mb-2"
-              style={{ color: theme.accentColor }}
+              className={`text-lg font-bold tracking-tight mb-2 ${
+                isNameSample ? 'text-slate-400 opacity-60 italic' : ''
+              }`}
+              style={{ color: isNameSample ? undefined : theme.accentColor }}
             >
-              {personalInfo.fullName || 'Your Name'}
+              {displayName}
             </h1>
-            {contactItems.length > 0 && (
-              <div className="space-y-1 text-xs text-slate-600">
-                {contactItems.map((c, idx) => (
+            {displayContactItems.length > 0 && (
+              <div
+                className={`space-y-1 text-xs ${
+                  hasRealContact
+                    ? 'text-slate-600'
+                    : 'text-slate-400 opacity-50 select-none italic'
+                }`}
+              >
+                {displayContactItems.map((c, idx) => (
                   <div key={idx} className="break-words">
                     {c}
                   </div>
@@ -283,10 +409,10 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
 
   // Two Column Layout
   if (isTwoCol) {
-    const mainSections = activeSections.filter(
+    const mainSections = visibleSectionIds.filter(
       (id) => !['education', 'skills', 'awards', 'certifications'].includes(id)
     )
-    const sideSections = activeSections.filter((id) =>
+    const sideSections = visibleSectionIds.filter((id) =>
       ['education', 'skills', 'awards', 'certifications'].includes(id)
     )
 
@@ -298,14 +424,22 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
           style={{ borderColor: theme.accentColor }}
         >
           <h1
-            className="text-xl font-bold tracking-tight mb-2"
-            style={{ color: theme.accentColor }}
+            className={`text-xl font-bold tracking-tight mb-2 ${
+              isNameSample ? 'text-slate-400 opacity-60 italic' : ''
+            }`}
+            style={{ color: isNameSample ? undefined : theme.accentColor }}
           >
-            {personalInfo.fullName || 'Your Name'}
+            {displayName}
           </h1>
-          {contactItems.length > 0 && (
-            <div className="text-xs text-slate-600">
-              {contactItems.join('  •  ')}
+          {displayContactItems.length > 0 && (
+            <div
+              className={`text-xs ${
+                hasRealContact
+                  ? 'text-slate-600'
+                  : 'text-slate-400 opacity-50 select-none italic'
+              }`}
+            >
+              {displayContactItems.join('  •  ')}
             </div>
           )}
         </div>
@@ -332,18 +466,24 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
           style={{ backgroundColor: theme.accentColor }}
         >
           <h1 className="text-2xl font-bold tracking-tight mb-2">
-            {personalInfo.fullName || 'Your Name'}
+            {displayName}
           </h1>
-          {contactItems.length > 0 && (
-            <div className="text-xs text-slate-100/90">
-              {contactItems.join('  |  ')}
+          {displayContactItems.length > 0 && (
+            <div
+              className={`text-xs ${
+                hasRealContact
+                  ? 'text-slate-100/90'
+                  : 'text-white/60 select-none italic'
+              }`}
+            >
+              {displayContactItems.join('  |  ')}
             </div>
           )}
         </div>
 
         {/* Body */}
         <div className="p-7 sm:p-9 space-y-4">
-          {activeSections.map((id) => renderSection(id))}
+          {visibleSectionIds.map((id) => renderSection(id))}
         </div>
       </div>
     )
@@ -356,14 +496,22 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
       {isHarvard ? (
         <div className="text-center mb-6">
           <h1
-            className="text-xl font-bold uppercase tracking-wide mb-2"
-            style={{ color: theme.accentColor }}
+            className={`text-xl font-bold uppercase tracking-wide mb-2 ${
+              isNameSample ? 'text-slate-400 opacity-60 italic' : ''
+            }`}
+            style={{ color: isNameSample ? undefined : theme.accentColor }}
           >
-            {personalInfo.fullName || 'YOUR NAME'}
+            {displayName.toUpperCase()}
           </h1>
-          {contactItems.length > 0 && (
-            <div className="text-xs text-slate-600">
-              {contactItems.join('  •  ')}
+          {displayContactItems.length > 0 && (
+            <div
+              className={`text-xs ${
+                hasRealContact
+                  ? 'text-slate-600'
+                  : 'text-slate-400 opacity-50 select-none italic'
+              }`}
+            >
+              {displayContactItems.join('  •  ')}
             </div>
           )}
         </div>
@@ -373,14 +521,22 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
           style={{ borderColor: theme.accentColor }}
         >
           <h1
-            className="text-lg font-bold"
-            style={{ color: theme.accentColor }}
+            className={`text-lg font-bold ${
+              isNameSample ? 'text-slate-400 opacity-60 italic' : ''
+            }`}
+            style={{ color: isNameSample ? undefined : theme.accentColor }}
           >
-            {personalInfo.fullName || 'Your Name'}
+            {displayName}
           </h1>
-          {contactItems.length > 0 && (
-            <div className="text-xs text-slate-600 text-right max-w-[60%]">
-              {contactItems.join(' • ')}
+          {displayContactItems.length > 0 && (
+            <div
+              className={`text-xs text-right max-w-[60%] ${
+                hasRealContact
+                  ? 'text-slate-600'
+                  : 'text-slate-400 opacity-50 select-none italic'
+              }`}
+            >
+              {displayContactItems.join(' • ')}
             </div>
           )}
         </div>
@@ -390,14 +546,22 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
           style={{ borderColor: theme.accentColor }}
         >
           <h1
-            className="text-xl font-bold mb-2"
-            style={{ color: theme.accentColor }}
+            className={`text-xl font-bold mb-2 ${
+              isNameSample ? 'text-slate-400 opacity-60 italic' : ''
+            }`}
+            style={{ color: isNameSample ? undefined : theme.accentColor }}
           >
-            {personalInfo.fullName || 'Your Name'}
+            {displayName}
           </h1>
-          {contactItems.length > 0 && (
-            <div className="text-xs text-slate-600">
-              {contactItems.join('  •  ')}
+          {displayContactItems.length > 0 && (
+            <div
+              className={`text-xs ${
+                hasRealContact
+                  ? 'text-slate-600'
+                  : 'text-slate-400 opacity-50 select-none italic'
+              }`}
+            >
+              {displayContactItems.join('  •  ')}
             </div>
           )}
         </div>
@@ -405,9 +569,8 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
 
       {/* Sections */}
       <div className={isCompact ? 'space-y-3' : 'space-y-4'}>
-        {activeSections.map((id) => renderSection(id))}
+        {visibleSectionIds.map((id) => renderSection(id))}
       </div>
     </div>
   )
 }
-
