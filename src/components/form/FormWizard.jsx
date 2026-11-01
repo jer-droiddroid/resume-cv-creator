@@ -19,7 +19,7 @@ const WIZARD_STEPS = [
   { id: 'settings', name: 'Section Order', component: SectionSettingsStep },
 ]
 
-export default function FormWizard() {
+export default function FormWizard({ disabled = false }) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [visitedSteps, setVisitedSteps] = useState(() => new Set([0]))
@@ -129,9 +129,10 @@ export default function FormWizard() {
               aria-haspopup="menu"
               aria-expanded={isMenuOpen}
               aria-controls="all-steps-menu"
+              disabled={disabled}
               onClick={() => setIsMenuOpen((prev) => !prev)}
               onKeyDown={handleKeyDown}
-              className="rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer"
+              className="rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
               All steps
             </button>
@@ -220,7 +221,7 @@ export default function FormWizard() {
         <button
           type="button"
           onClick={goPrev}
-          disabled={currentStepIndex === 0}
+          disabled={disabled || currentStepIndex === 0}
           className="rounded-md border border-slate-300 bg-white px-4 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-900"
         >
           Back
@@ -229,7 +230,8 @@ export default function FormWizard() {
         <button
           type="button"
           onClick={goNext}
-          className="rounded-md bg-slate-900 px-4 py-1.5 text-sm font-medium text-white hover:bg-slate-800 cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-900"
+          disabled={disabled}
+          className="rounded-md bg-slate-900 px-4 py-1.5 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-900"
         >
           {isLastStep ? 'Finish' : 'Next'}
         </button>

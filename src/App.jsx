@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import FormWizard from './components/form/FormWizard'
 import LivePreview from './components/preview/LivePreview'
 import TemplatePicker from './components/picker/TemplatePicker'
 import ImportPdfModal from './components/form/ImportPdfModal'
+import ClearConfirmModal from './components/form/ClearConfirmModal'
 import { defaultResumeData } from './data/defaultResume'
 import { sampleResumeData } from './data/sampleResume'
 import { templates } from './templates/registry'
@@ -132,16 +133,106 @@ export default function App() {
     }
   }
 
-  // Reset form back to blank default state and clear localStorage draft & backup
-  const handleStartOver = () => {
-    const confirmed = window.confirm(
-      'Are you sure you want to start blank? This will clear all current entries.'
-    )
-    if (!confirmed) return
-    clearSavedDraft()
-    localStorage.removeItem(BACKUP_STORAGE_KEY)
-    setUserBackup(null)
-    methods.reset(defaultResumeData)
+  // Clear everything & animation states
+  const [isClearModalOpen, setIsClearModalOpen] = useState(false)
+  const [isClearing, setIsClearing] = useState(false)
+  const [clearingPhase, setClearingPhase] = useState('idle') // 'idle' | 'out' | 'prepare-in' | 'in' | 'reduced-out' | 'reduced-in'
+  const [showUndoNotice, setShowUndoNotice] = useState(false)
+  const [wizardKey, setWizardKey] = useState(0)
+
+  const undoDataRef = useRef(null)
+  const undoTimeoutRef = useRef(null)
+
+  useEffect(() => {
+    return () => {
+      if (undoTimeoutRef.current) {
+        clearTimeout(undoTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  const triggerUndoNotice = () => {
+    if (undoTimeoutRef.current) {
+      clearTimeout(undoTimeoutRef.current)
+    }
+    setShowUndoNotice(true)
+    undoTimeoutRef.current = setTimeout(() => {
+      setShowUndoNotice(false)
+      undoDataRef.current = null
+    }, 3000)
+  }
+
+  // Clear animation sequence (about 450ms total):
+  // 1. Close dialog first
+  // 2. Resume page slides up 24px and fades out (200ms, ease-in); form fades to 0.4
+  // 3. At midpoint: actually clear data, reset to step 1
+  // 4. Fresh resume page fades in from slightly below (250ms, ease-out); form fades back to 1
+  // 5. Show 3s feedback message with Undo button
+  const handleConfirmClear = () => {
+    setIsClearModalOpen(false)
+    setIsClearing(true)
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (prefersReducedMotion) {
+      setClearingPhase('reduced-out')
+      setTimeout(() => {
+        undoDataRef.current = methods.getValues()
+        clearSavedDraft()
+        localStorage.removeItem(BACKUP_STORAGE_KEY)
+        setUserBackup(null)
+        methods.reset(defaultResumeData)
+        setWizardKey((prev) => prev + 1)
+
+        setClearingPhase('reduced-in')
+        setTimeout(() => {
+          setClearingPhase('idle')
+          setIsClearing(false)
+          triggerUndoNotice()
+        }, 50)
+      }, 50)
+      return
+    }
+
+    setClearingPhase('out')
+
+    setTimeout(() => {
+      // Midpoint at 200ms: clear data and return to step 1
+      undoDataRef.current = methods.getValues()
+      clearSavedDraft()
+      localStorage.removeItem(BACKUP_STORAGE_KEY)
+      setUserBackup(null)
+      methods.reset(defaultResumeData)
+      setWizardKey((prev) => prev + 1)
+
+      // Position fresh resume page slightly below
+      setClearingPhase('prepare-in')
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setClearingPhase('in')
+
+          setTimeout(() => {
+            setClearingPhase('idle')
+            setIsClearing(false)
+            triggerUndoNotice()
+          }, 250)
+        })
+      })
+    }, 200)
+  }
+
+  const handleUndoClear = () => {
+    if (undoTimeoutRef.current) {
+      clearTimeout(undoTimeoutRef.current)
+    }
+    if (undoDataRef.current) {
+      methods.reset(undoDataRef.current)
+      undoDataRef.current = null
+    }
+    setShowUndoNotice(false)
   }
 
   return (
@@ -194,8 +285,9 @@ export default function App() {
               {/* Import PDF Button */}
               <button
                 type="button"
+                disabled={isClearing}
                 onClick={() => setIsImportModalOpen(true)}
-                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer flex items-center gap-1.5"
+                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
               >
                 <span>Import PDF</span>
               </button>
@@ -204,8 +296,9 @@ export default function App() {
               {isSampleActive || userBackup ? (
                 <button
                   type="button"
+                  disabled={isClearing}
                   onClick={handleRestoreUserData}
-                  className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 shadow-xs cursor-pointer flex items-center gap-1"
+                  className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50 shadow-xs cursor-pointer flex items-center gap-1"
                 >
                   <span>↩</span>
                   <span>{userBackup ? 'Restore My Data' : 'Clear Sample (Start Blank)'}</span>
@@ -213,8 +306,9 @@ export default function App() {
               ) : (
                 <button
                   type="button"
+                  disabled={isClearing}
                   onClick={handleLoadSample}
-                  className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
+                  className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 cursor-pointer"
                 >
                   Load Sample
                 </button>
@@ -222,8 +316,9 @@ export default function App() {
 
               <button
                 type="button"
-                onClick={handleStartOver}
-                className="rounded-md border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-100 cursor-pointer"
+                disabled={isClearing}
+                onClick={() => setIsClearModalOpen(true)}
+                className="rounded-md border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-100 disabled:opacity-50 cursor-pointer"
               >
                 Start Over
               </button>
@@ -232,6 +327,24 @@ export default function App() {
         </header>
 
         <main className="mx-auto max-w-[1440px] px-4 sm:px-6 pt-6 pb-24 lg:pb-6 space-y-4">
+          {/* Post-clear 3-second feedback notice with Undo */}
+          {showUndoNotice && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs text-slate-800 shadow-sm flex items-center justify-between gap-3 animate-fade-in"
+            >
+              <span>Cleared. You&apos;re starting fresh.</span>
+              <button
+                type="button"
+                onClick={handleUndoClear}
+                className="font-semibold text-slate-900 underline hover:text-slate-700 cursor-pointer px-1.5 py-0.5 rounded focus:outline-none focus:ring-2 focus:ring-slate-900"
+              >
+                Undo
+              </button>
+            </div>
+          )}
+
           {/* One-time browser storage note */}
           {showStorageNotice && (
             <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-700">
@@ -262,8 +375,9 @@ export default function App() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
+                  disabled={isClearing}
                   onClick={handleRestoreUserData}
-                  className="rounded bg-amber-900 px-2.5 py-1 text-xs font-medium text-white hover:bg-amber-800 cursor-pointer"
+                  className="rounded bg-amber-900 px-2.5 py-1 text-xs font-medium text-white hover:bg-amber-800 disabled:opacity-50 cursor-pointer"
                 >
                   {userBackup ? 'Restore My Data' : 'Clear to Blank Form'}
                 </button>
@@ -273,18 +387,39 @@ export default function App() {
 
           {/* Two-column layout: Form on left (~40%), Preview on right (~60%), stacked on mobile */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-            <div className="lg:col-span-5">
-              <FormWizard />
+            <div
+              style={{
+                opacity: clearingPhase === 'out' ? 0.4 : 1,
+                transition:
+                  clearingPhase === 'out'
+                    ? 'opacity 200ms ease-in'
+                    : clearingPhase === 'in'
+                      ? 'opacity 250ms ease-out'
+                      : 'none',
+              }}
+              className="lg:col-span-5 will-change-[opacity]"
+            >
+              <FormWizard key={wizardKey} disabled={isClearing} />
             </div>
 
             <div className="lg:col-span-7 lg:sticky lg:top-20">
               <LivePreview
                 selectedTemplateId={selectedTemplateId}
                 onOpenPicker={() => setIsPickerOpen(true)}
+                clearingPhase={clearingPhase}
+                isClearing={isClearing}
               />
             </div>
           </div>
         </main>
+
+        {/* Clear Confirmation Modal */}
+        <ClearConfirmModal
+          isOpen={isClearModalOpen}
+          onClose={() => setIsClearModalOpen(false)}
+          onConfirm={handleConfirmClear}
+          isClearing={isClearing}
+        />
 
         {/* Template Picker Drawer */}
         <TemplatePicker

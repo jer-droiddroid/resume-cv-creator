@@ -16,7 +16,12 @@ import { getContactItems } from '../../templates/sectionRenderer'
  * - Mobile sticky "Download PDF" bar docked at the bottom of the screen
  * - Shows faded sample placeholder content for empty sections with a small helper note
  */
-export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
+export default function LivePreview({
+  selectedTemplateId,
+  onOpenPicker,
+  clearingPhase = 'idle',
+  isClearing = false,
+}) {
   const { control, setValue } = useFormContext()
   const liveFormData = useWatch({ control })
 
@@ -35,6 +40,48 @@ export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
   )
   const contactItems = getContactItems(liveFormData?.personalInfo)
   const hasFadedContent = hasEmptySection || contactItems.length === 0
+
+  // Animation style for the resume paper sheet during "Clear everything"
+  const getPaperAnimationStyles = () => {
+    if (clearingPhase === 'out') {
+      return {
+        transform: 'translateY(-24px)',
+        opacity: 0,
+        transition: 'transform 200ms ease-in, opacity 200ms ease-in',
+      }
+    }
+    if (clearingPhase === 'prepare-in') {
+      return {
+        transform: 'translateY(16px)',
+        opacity: 0,
+        transition: 'none',
+      }
+    }
+    if (clearingPhase === 'in') {
+      return {
+        transform: 'translateY(0)',
+        opacity: 1,
+        transition: 'transform 250ms ease-out, opacity 250ms ease-out',
+      }
+    }
+    if (clearingPhase === 'reduced-out') {
+      return {
+        opacity: 0,
+        transition: 'opacity 50ms ease-out',
+      }
+    }
+    if (clearingPhase === 'reduced-in') {
+      return {
+        opacity: 1,
+        transition: 'opacity 50ms ease-out',
+      }
+    }
+    return {
+      transform: 'none',
+      opacity: 1,
+      transition: 'none',
+    }
+  }
 
   return (
     <>
@@ -55,9 +102,10 @@ export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
               <button
                 type="button"
                 role="radio"
+                disabled={isClearing}
                 aria-checked={isResumeMode}
                 onClick={() => setValue('documentType', 'resume', { shouldDirty: true })}
-                className={`rounded px-2.5 py-1 text-xs font-medium transition cursor-pointer ${
+                className={`rounded px-2.5 py-1 text-xs font-medium transition cursor-pointer disabled:opacity-50 ${
                   isResumeMode
                     ? 'bg-slate-900 text-white font-semibold shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -68,9 +116,10 @@ export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
               <button
                 type="button"
                 role="radio"
+                disabled={isClearing}
                 aria-checked={!isResumeMode}
                 onClick={() => setValue('documentType', 'cv', { shouldDirty: true })}
-                className={`rounded px-2.5 py-1 text-xs font-medium transition cursor-pointer ${
+                className={`rounded px-2.5 py-1 text-xs font-medium transition cursor-pointer disabled:opacity-50 ${
                   !isResumeMode
                     ? 'bg-slate-900 text-white font-semibold shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -84,8 +133,9 @@ export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
           <div className="flex items-center gap-2">
             <button
               type="button"
+              disabled={isClearing}
               onClick={onOpenPicker}
-              className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
+              className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 cursor-pointer"
             >
               Change Template
             </button>
@@ -104,7 +154,10 @@ export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
               Faded text is an example. It disappears as you fill in your own.
             </p>
           )}
-          <div className="w-full max-w-[650px] bg-white rounded-xs shadow-xl shadow-slate-900/10 border border-slate-200/60 overflow-hidden self-start mx-auto mb-12">
+          <div
+            style={getPaperAnimationStyles()}
+            className="w-full max-w-[650px] bg-white rounded-xs shadow-xl shadow-slate-900/10 border border-slate-200/60 overflow-hidden self-start mx-auto mb-12 will-change-[transform,opacity]"
+          >
             <HtmlResumePreview
               data={liveFormData}
               theme={template.theme}
