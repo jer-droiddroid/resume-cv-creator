@@ -131,14 +131,6 @@ export default function App() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setIsPickerOpen((prev) => !prev)}
-                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
-              >
-                {isPickerOpen ? 'Hide Templates' : `Templates (${templates.length})`}
-              </button>
-
               {/* Dynamic Sample / Restore Button */}
               {isSampleActive || userBackup ? (
                 <button
@@ -172,7 +164,7 @@ export default function App() {
           </div>
         </header>
 
-        <main className="mx-auto max-w-7xl p-4 sm:p-6 space-y-4">
+        <main className="mx-auto max-w-[1440px] px-4 sm:px-6 py-6 space-y-4">
           {/* Active Sample Data Notice Banner */}
           {isSampleActive && (
             <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900 flex flex-wrap items-center justify-between gap-2 shadow-xs">
@@ -197,24 +189,16 @@ export default function App() {
             </div>
           )}
 
-          {/* Collapsible Template Picker Drawer */}
-          {isPickerOpen && (
-            <TemplatePicker
-              selectedTemplateId={selectedTemplateId}
-              onSelectTemplate={handleSelectTemplate}
-            />
-          )}
-
-          {/* Responsive Layout: Stacked on mobile (<1024px), side-by-side split screen on desktop (lg+) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            <div className="lg:col-span-6">
+          {/* Two-column layout: Form on left (~40%), Preview on right (~60%), stacked on mobile */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+            <div className="lg:col-span-5">
               <FormWizard />
             </div>
 
-            <div className="lg:col-span-6 lg:sticky lg:top-20">
+            <div className="lg:col-span-7 lg:sticky lg:top-20">
               <LivePreview
                 selectedTemplateId={selectedTemplateId}
-                onOpenPicker={() => setIsPickerOpen((prev) => !prev)}
+                onOpenPicker={() => setIsPickerOpen(true)}
               />
             </div>
           </div>
