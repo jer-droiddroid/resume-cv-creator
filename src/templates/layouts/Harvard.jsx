@@ -16,19 +16,20 @@ const createHarvardStyles = (theme) =>
     // Centered Harvard Header
     header: {
       alignItems: 'center',
-      marginBottom: theme.spacing.sectionGap + 2,
+      marginBottom: theme.spacing.sectionGap + 5,
     },
     name: {
       fontFamily: theme.fontFamilyBold,
-      fontSize: theme.fontSize.name,
+      fontSize: theme.fontSize.name + 2,
       letterSpacing: 0.8,
       textAlign: 'center',
-      marginBottom: 4,
+      marginBottom: 8,
     },
     contactLine: {
       fontSize: theme.fontSize.small,
       color: theme.mutedColor,
       textAlign: 'center',
+      lineHeight: 1.4,
     },
     // Section header with crisp full-width divider line
     section: {

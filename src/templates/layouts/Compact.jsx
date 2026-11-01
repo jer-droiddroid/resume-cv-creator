@@ -34,10 +34,10 @@ const createStyles = (compactTheme) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-end',
-      marginBottom: compactTheme.spacing.sectionGap + 2,
+      marginBottom: compactTheme.spacing.sectionGap + 3,
       borderBottomWidth: 1.5,
       borderBottomColor: compactTheme.accentColor,
-      paddingBottom: 5,
+      paddingBottom: 7,
     },
     name: {
       fontFamily: compactTheme.fontFamilyBold,
@@ -49,6 +49,7 @@ const createStyles = (compactTheme) =>
       color: compactTheme.mutedColor,
       textAlign: 'right',
       maxWidth: '58%',
+      lineHeight: 1.35,
     },
     pageNumber: {
       position: 'absolute',

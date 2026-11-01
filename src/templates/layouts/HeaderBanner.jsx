@@ -22,11 +22,12 @@ const createStyles = (theme) =>
       fontFamily: theme.fontFamilyBold,
       fontSize: theme.fontSize.name + 2,
       color: '#ffffff',
-      marginBottom: 5,
+      marginBottom: 8,
     },
     contactRow: {
       fontSize: theme.fontSize.small,
       color: '#e2e8f0',
+      lineHeight: 1.4,
     },
     body: {
       paddingHorizontal: theme.spacing.pagePadding,

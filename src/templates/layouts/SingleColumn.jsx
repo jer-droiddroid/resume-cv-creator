@@ -13,20 +13,21 @@ const createStyles = (theme) =>
       lineHeight: theme.spacing.lineHeight,
     },
     header: {
-      marginBottom: theme.spacing.sectionGap,
+      marginBottom: theme.spacing.sectionGap + 4,
       borderBottomWidth: 1.5,
       borderBottomColor: theme.accentColor,
-      paddingBottom: 8,
+      paddingBottom: 10,
     },
     name: {
       fontFamily: theme.fontFamilyBold,
       fontSize: theme.fontSize.name,
       color: theme.accentColor,
-      marginBottom: 4,
+      marginBottom: 8,
     },
     contactRow: {
       fontSize: theme.fontSize.small,
       color: theme.mutedColor,
+      lineHeight: 1.4,
     },
     pageNumber: {
       position: 'absolute',

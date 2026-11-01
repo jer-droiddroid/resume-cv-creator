@@ -27,9 +27,9 @@ const createStyles = (theme) =>
     },
     name: {
       fontFamily: theme.fontFamilyBold,
-      fontSize: theme.fontSize.name - 2,
+      fontSize: theme.fontSize.name - 1,
       color: theme.accentColor,
-      marginBottom: 8,
+      marginBottom: 10,
     },
     contactBlock: {
       marginBottom: theme.spacing.sectionGap + 4,
@@ -40,7 +40,8 @@ const createStyles = (theme) =>
     contactItem: {
       fontSize: theme.fontSize.small,
       color: theme.mutedColor,
-      marginBottom: 3,
+      marginBottom: 4,
+      lineHeight: 1.35,
     },
     pageNumber: {
       position: 'absolute',
