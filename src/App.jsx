@@ -151,15 +151,27 @@ export default function App() {
         <header className="border-b border-slate-200 bg-white px-4 sm:px-6 py-3.5 sticky top-0 z-20">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
             <div>
-              <h1 className="text-base sm:text-lg font-bold text-slate-900">
-                Student Resume &amp; CV Creator
+              <h1 className="leading-none">
+                <a
+                  href="#top"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
+                  className="font-brand font-bold text-lg sm:text-2xl text-slate-900 tracking-[-0.02em] hover:text-slate-700 transition inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 rounded-xs"
+                >
+                  Papel
+                </a>
               </h1>
+              <p className="text-xs text-slate-500 mt-1">
+                Fill in your details once, then switch templates anytime.
+              </p>
               <p
                 aria-live="polite"
-                className={`text-xs mt-0.5 ${
+                className={`text-[11px] sm:text-xs mt-0.5 ${
                   saveStatus === 'error'
                     ? 'text-amber-700 font-medium'
-                    : 'text-slate-500'
+                    : 'text-slate-400'
                 }`}
               >
                 {saveStatus === 'saving'
