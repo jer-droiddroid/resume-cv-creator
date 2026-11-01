@@ -158,9 +158,17 @@ export default function App() {
                     e.preventDefault()
                     window.scrollTo({ top: 0, behavior: 'smooth' })
                   }}
-                  className="font-brand font-bold text-lg sm:text-2xl text-slate-900 tracking-[-0.02em] hover:text-slate-700 transition inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 rounded-xs"
+                  className="group inline-flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 rounded-xs"
                 >
-                  Papel
+                  <img
+                    src="/papel-logo.png"
+                    alt=""
+                    aria-hidden="true"
+                    className="h-6 w-auto sm:h-7 shrink-0 object-contain"
+                  />
+                  <span className="font-brand font-bold text-lg sm:text-2xl text-slate-900 tracking-[-0.02em] group-hover:text-slate-700 transition">
+                    Papel
+                  </span>
                 </a>
               </h1>
               <p className="text-xs text-slate-500 mt-1">
