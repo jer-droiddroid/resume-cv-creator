@@ -15,6 +15,7 @@ function TemplateCard({ template, isSelected, onSelect, showPdfThumbnails }) {
   const isBanner = template.id.startsWith('banner-')
   const isTwoCol = template.id.startsWith('twocol-')
   const isCompact = template.id.startsWith('compact-')
+  const isHarvard = template.id.startsWith('harvard-')
 
   const fontClass =
     theme.fontFamily === 'Times-Roman'
@@ -65,6 +66,18 @@ function TemplateCard({ template, isSelected, onSelect, showPdfThumbnails }) {
                 </div>
                 <div className="text-[5px] opacity-85 truncate">
                   {sampleResumeData.personalInfo.email} • {sampleResumeData.personalInfo.location}
+                </div>
+              </div>
+            ) : isHarvard ? (
+              <div className="px-2 pt-2 pb-0.5 text-center">
+                <div
+                  className="font-bold text-[8px] tracking-wide uppercase truncate"
+                  style={{ color: theme.accentColor }}
+                >
+                  {sampleResumeData.personalInfo.fullName}
+                </div>
+                <div className="text-[4.5px] text-slate-500 truncate">
+                  {sampleResumeData.personalInfo.location} • {sampleResumeData.personalInfo.email}
                 </div>
               </div>
             ) : !isSidebar ? (

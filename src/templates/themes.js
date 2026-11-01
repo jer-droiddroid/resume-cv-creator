@@ -1,6 +1,32 @@
 // Themes define the look & feel (colors, built-in PDF fonts, font sizes, spacing, heading style).
 // Combining a layout with a theme creates a unique template in registry.js.
 export const themes = {
+  harvardClassic: {
+    id: 'harvardClassic',
+    name: 'Harvard Classic',
+    accentColor: '#000000', // Pure black text and rules
+    accentLight: '#f3f4f6',
+    textColor: '#111827',
+    mutedColor: '#262626',
+    fontFamily: 'Times-Roman',
+    fontFamilyBold: 'Times-Bold',
+    fontFamilyItalic: 'Times-Italic',
+    fontSize: {
+      name: 18,
+      sectionHeading: 10.5,
+      itemTitle: 10,
+      body: 9.5,
+      small: 8.5,
+    },
+    spacing: {
+      pagePadding: 36, // Standard 0.5 in margins
+      sectionGap: 10,
+      itemGap: 5.5,
+      lineHeight: 1.28,
+    },
+    headingStyle: 'underline',
+  },
+
   classicSlate: {
     id: 'classicSlate',
     name: 'Classic Slate',

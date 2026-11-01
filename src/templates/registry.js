@@ -3,15 +3,23 @@ import TwoColumn from './layouts/TwoColumn'
 import SidebarLeft from './layouts/SidebarLeft'
 import HeaderBanner from './layouts/HeaderBanner'
 import Compact from './layouts/Compact'
+import Harvard from './layouts/Harvard'
 import { themes } from './themes'
 
 // Template categories for the picker filter
 export const TEMPLATE_CATEGORIES = ['All', 'ATS-friendly', 'Modern', 'Creative']
 
-// Template registry: 5 layouts x themes = 12 distinct templates with zero duplicated logic.
+// Template registry: layouts x themes = distinct templates with zero duplicated logic.
 // Every entry has { id, name, category, layout, theme }
 export const templates = [
   // ATS-friendly templates
+  {
+    id: 'harvard-classic',
+    name: 'Harvard Classic',
+    category: 'ATS-friendly',
+    layout: Harvard,
+    theme: themes.harvardClassic,
+  },
   {
     id: 'single-classic-slate',
     name: 'Classic Slate',
