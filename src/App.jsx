@@ -203,6 +203,14 @@ export default function App() {
             </div>
           </div>
         </main>
+
+        {/* Template Picker Drawer */}
+        <TemplatePicker
+          isOpen={isPickerOpen}
+          onClose={() => setIsPickerOpen(false)}
+          selectedTemplateId={selectedTemplateId}
+          onSelectTemplate={handleSelectTemplate}
+        />
       </div>
     </FormProvider>
   )
