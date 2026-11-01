@@ -1,6 +1,32 @@
 // Themes define the look & feel (colors, built-in PDF fonts, font sizes, spacing, heading style).
 // Combining a layout with a theme creates a unique template in registry.js.
 export const themes = {
+  redditATS: {
+    id: 'redditATS',
+    name: 'Reddit ATS Standard',
+    accentColor: '#000000', // Pure black rules and headings
+    accentLight: '#f3f4f6',
+    textColor: '#0f172a',
+    mutedColor: '#334155',
+    fontFamily: 'Helvetica',
+    fontFamilyBold: 'Helvetica-Bold',
+    fontFamilyItalic: 'Helvetica-Oblique',
+    fontSize: {
+      name: 18,
+      sectionHeading: 10.5,
+      itemTitle: 10,
+      body: 9.5,
+      small: 8.5,
+    },
+    spacing: {
+      pagePadding: 36, // Standard 0.5 in margins
+      sectionGap: 10,
+      itemGap: 5.5,
+      lineHeight: 1.28,
+    },
+    headingStyle: 'underline',
+  },
+
   harvardClassic: {
     id: 'harvardClassic',
     name: 'Harvard Classic',

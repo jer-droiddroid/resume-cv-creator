@@ -12,6 +12,14 @@ export default function SummaryStep() {
         </p>
       </div>
 
+      {/* r/resumes Community Guidance */}
+      <div className="rounded-lg border border-blue-200 bg-blue-50/70 p-3 text-xs text-blue-900 flex items-start gap-2">
+        <span className="text-base leading-none">💡</span>
+        <div>
+          <strong className="font-semibold">r/resumes Wiki Tip:</strong> Summaries are completely optional for students and recent grads! The wiki recommends leaving this blank so you have more room for your education, internships, and technical projects to keep your resume on 1 clean page.
+        </div>
+      </div>
+
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-1">Summary</label>
         <textarea

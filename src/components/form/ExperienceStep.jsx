@@ -42,6 +42,18 @@ export default function ExperienceStep() {
         </button>
       </div>
 
+      {/* Google & Reddit XYZ Bullet Formula Tip */}
+      <div className="rounded-lg border border-emerald-200 bg-emerald-50/70 p-3 text-xs text-emerald-950 flex items-start gap-2">
+        <span className="text-base leading-none">🎯</span>
+        <div>
+          <strong className="font-semibold">The XYZ Formula (Google &amp; r/resumes standard):</strong> Frame each accomplishment as:
+          <span className="font-medium text-emerald-800 italic block mt-0.5">
+            "Accomplished [X] as measured by [Y], by doing [Z]"
+          </span>
+          Start with a strong action verb (<em>Developed, Spearheaded, Reduced, Automated</em>) instead of passive phrasing like <em>"Responsible for"</em> or <em>"Helped with"</em>.
+        </div>
+      </div>
+
       {fields.length === 0 && (
         <p className="text-sm text-slate-500 italic py-4 text-center border border-dashed border-slate-300 rounded-lg">
           No experience entries yet. Click "+ Add Experience" to add an internship or job.

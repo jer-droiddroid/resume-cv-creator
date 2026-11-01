@@ -95,6 +95,14 @@ export default function SkillsExtrasStep() {
         </p>
       </div>
 
+      {/* r/resumes Hard Skills Rule */}
+      <div className="rounded-lg border border-purple-200 bg-purple-50/70 p-3 text-xs text-purple-950 flex items-start gap-2">
+        <span className="text-base leading-none">⚡</span>
+        <div>
+          <strong className="font-semibold">r/resumes Skills Rule:</strong> Stick to concrete hard skills (languages, software, developer tools, hardware). Avoid subjective soft skills like <em>"punctual"</em>, <em>"hard worker"</em>, or <em>"team player"</em>—demonstrate those traits through your experience accomplishments instead.
+        </div>
+      </div>
+
       <StringArraySection
         name="skills"
         title="Skills"

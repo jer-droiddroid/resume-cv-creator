@@ -14,6 +14,13 @@ export const TEMPLATE_CATEGORIES = ['All', 'ATS-friendly', 'Modern', 'Creative']
 export const templates = [
   // ATS-friendly templates
   {
+    id: 'reddit-ats',
+    name: 'Reddit / Jake ATS',
+    category: 'ATS-friendly',
+    layout: Harvard,
+    theme: themes.redditATS,
+  },
+  {
     id: 'harvard-classic',
     name: 'Harvard Classic',
     category: 'ATS-friendly',

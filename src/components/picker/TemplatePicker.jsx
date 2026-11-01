@@ -15,7 +15,7 @@ function TemplateCard({ template, isSelected, onSelect, showPdfThumbnails }) {
   const isBanner = template.id.startsWith('banner-')
   const isTwoCol = template.id.startsWith('twocol-')
   const isCompact = template.id.startsWith('compact-')
-  const isHarvard = template.id.startsWith('harvard-')
+  const isHarvard = template.id.startsWith('harvard-') || template.id.startsWith('reddit-')
 
   const fontClass =
     theme.fontFamily === 'Times-Roman'
