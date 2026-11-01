@@ -3,6 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import FormWizard from './components/form/FormWizard'
 import LivePreview from './components/preview/LivePreview'
 import TemplatePicker from './components/picker/TemplatePicker'
+import ImportPdfModal from './components/form/ImportPdfModal'
 import { defaultResumeData } from './data/defaultResume'
 import { sampleResumeData } from './data/sampleResume'
 import { templates } from './templates/registry'
@@ -65,10 +66,25 @@ export default function App() {
     loadSavedTemplateId(templates[0].id)
   )
   const [isPickerOpen, setIsPickerOpen] = useState(false)
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
 
   const handleSelectTemplate = (id) => {
     setSelectedTemplateId(id)
     saveTemplateId(id)
+  }
+
+  // Handle successful AI PDF extraction and populate form
+  const handleImportSuccess = (parsedData) => {
+    const current = methods.getValues()
+    if (current?.personalInfo?.fullName) {
+      try {
+        localStorage.setItem(BACKUP_STORAGE_KEY, JSON.stringify(current))
+        setUserBackup(current)
+      } catch {
+        // Ignore quota errors
+      }
+    }
+    methods.reset(parsedData)
   }
 
   // Watch current values to know if sample is active
@@ -155,6 +171,15 @@ export default function App() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
+              {/* Import PDF Button */}
+              <button
+                type="button"
+                onClick={() => setIsImportModalOpen(true)}
+                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer flex items-center gap-1.5"
+              >
+                <span>Import PDF</span>
+              </button>
+
               {/* Dynamic Sample / Restore Button */}
               {isSampleActive || userBackup ? (
                 <button
@@ -248,6 +273,13 @@ export default function App() {
           onClose={() => setIsPickerOpen(false)}
           selectedTemplateId={selectedTemplateId}
           onSelectTemplate={handleSelectTemplate}
+        />
+
+        {/* AI PDF Import Modal */}
+        <ImportPdfModal
+          isOpen={isImportModalOpen}
+          onClose={() => setIsImportModalOpen(false)}
+          onImportSuccess={handleImportSuccess}
         />
       </div>
     </FormProvider>
