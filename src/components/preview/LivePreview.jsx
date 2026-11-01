@@ -148,15 +148,15 @@ export default function LivePreview({
         </div>
 
         {/* Stage: Soft neutral gray background with clearly visible scrollbar for the paper resume sheet */}
-        <div className="flex-1 min-h-0 overflow-y-scroll preview-scrollbar rounded-xl bg-slate-200/50 p-3 sm:p-6 flex flex-col items-center">
+        <div className="flex-1 min-h-0 overflow-y-scroll preview-scrollbar rounded-xl bg-slate-200/50 p-3 sm:p-6">
           {hasFadedContent && (
-            <p className="text-xs text-slate-500 mb-3 text-center select-none shrink-0">
+            <p className="text-xs text-slate-500 mb-3 text-center select-none">
               Faded text is an example. It disappears as you fill in your own.
             </p>
           )}
           <div
             style={getPaperAnimationStyles()}
-            className="w-full max-w-[650px] bg-white rounded-xs shadow-xl shadow-slate-900/10 border border-slate-200/60 overflow-hidden mx-auto mb-10 will-change-[transform,opacity]"
+            className="w-full max-w-[650px] shrink-0 bg-white rounded-xs shadow-xl shadow-slate-900/10 border border-slate-200/60 mx-auto mb-10 will-change-[transform,opacity]"
           >
             <HtmlResumePreview
               data={liveFormData}
