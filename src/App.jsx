@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import FormWizard from './components/form/FormWizard'
 import LivePreview from './components/preview/LivePreview'
-import DownloadButton from './components/preview/DownloadButton'
 import TemplatePicker from './components/picker/TemplatePicker'
 import { defaultResumeData } from './data/defaultResume'
 import { sampleResumeData } from './data/sampleResume'
@@ -183,13 +182,11 @@ export default function App() {
               >
                 Start Over
               </button>
-
-              <DownloadButton selectedTemplateId={selectedTemplateId} />
             </div>
           </div>
         </header>
 
-        <main className="mx-auto max-w-[1440px] px-4 sm:px-6 py-6 space-y-4">
+        <main className="mx-auto max-w-[1440px] px-4 sm:px-6 pt-6 pb-24 lg:pb-6 space-y-4">
           {/* One-time browser storage note */}
           {showStorageNotice && (
             <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-700">
