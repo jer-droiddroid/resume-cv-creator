@@ -15,14 +15,32 @@ import {
   useLocalStorageDraft,
 } from './hooks/useLocalStorageDraft'
 
+const BACKUP_STORAGE_KEY = 'student_resume_user_backup'
+
+// Helper to check if the current data is the sample data
+const isSampleData = (data) =>
+  data?.personalInfo?.fullName === sampleResumeData.personalInfo.fullName &&
+  data?.personalInfo?.email === sampleResumeData.personalInfo.email
+
 export default function App() {
-  // Initialize react-hook-form with any saved draft from localStorage
+  const [initialData] = useState(() => loadSavedDraft())
+
   const methods = useForm({
-    defaultValues: loadSavedDraft(),
+    defaultValues: initialData,
   })
 
   // Automatically save every form change to localStorage
   useLocalStorageDraft(methods.watch)
+
+  // Track backup of the user's real data before loading sample
+  const [userBackup, setUserBackup] = useState(() => {
+    try {
+      const raw = localStorage.getItem(BACKUP_STORAGE_KEY)
+      return raw ? JSON.parse(raw) : null
+    } catch {
+      return null
+    }
+  })
 
   // Selected template ID (stored separately from student data)
   const [selectedTemplateId, setSelectedTemplateId] = useState(() =>
@@ -35,13 +53,60 @@ export default function App() {
     saveTemplateId(id)
   }
 
-  // Reset form back to blank default state and clear localStorage draft
+  // Watch current values to know if sample is active
+  const currentValues = methods.watch()
+  const isSampleActive = isSampleData(currentValues)
+
+  // Load sample data while automatically saving a backup of user's work
+  const handleLoadSample = () => {
+    const current = methods.getValues()
+    const hasTypedData =
+      current?.personalInfo?.fullName && !isSampleData(current)
+
+    if (hasTypedData) {
+      // Save user's work into backup so they can restore it anytime
+      try {
+        localStorage.setItem(BACKUP_STORAGE_KEY, JSON.stringify(current))
+        setUserBackup(current)
+      } catch {
+        // Ignore quota errors
+      }
+    }
+
+    methods.reset(sampleResumeData)
+  }
+
+  // Restore the user's previously typed resume
+  const handleRestoreUserData = () => {
+    let backupToRestore = userBackup
+    if (!backupToRestore) {
+      try {
+        const raw = localStorage.getItem(BACKUP_STORAGE_KEY)
+        if (raw) backupToRestore = JSON.parse(raw)
+      } catch {
+        backupToRestore = null
+      }
+    }
+
+    if (backupToRestore) {
+      methods.reset(backupToRestore)
+      localStorage.removeItem(BACKUP_STORAGE_KEY)
+      setUserBackup(null)
+    } else {
+      // If no backup existed, start with a fresh blank resume
+      methods.reset(defaultResumeData)
+    }
+  }
+
+  // Reset form back to blank default state and clear localStorage draft & backup
   const handleStartOver = () => {
     const confirmed = window.confirm(
-      'Are you sure you want to start over? This will clear all your current entries.'
+      'Are you sure you want to start blank? This will clear all current entries.'
     )
     if (!confirmed) return
     clearSavedDraft()
+    localStorage.removeItem(BACKUP_STORAGE_KEY)
+    setUserBackup(null)
     methods.reset(defaultResumeData)
   }
 
@@ -74,13 +139,25 @@ export default function App() {
                 {isPickerOpen ? 'Hide Templates' : `Templates (${templates.length})`}
               </button>
 
-              <button
-                type="button"
-                onClick={() => methods.reset(sampleResumeData)}
-                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
-              >
-                Load Sample
-              </button>
+              {/* Dynamic Sample / Restore Button */}
+              {isSampleActive || userBackup ? (
+                <button
+                  type="button"
+                  onClick={handleRestoreUserData}
+                  className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 shadow-xs cursor-pointer flex items-center gap-1"
+                >
+                  <span>↩</span>
+                  <span>{userBackup ? 'Restore My Data' : 'Clear Sample (Start Blank)'}</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleLoadSample}
+                  className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
+                >
+                  Load Sample
+                </button>
+              )}
 
               <button
                 type="button"
@@ -95,7 +172,31 @@ export default function App() {
           </div>
         </header>
 
-        <main className="mx-auto max-w-7xl p-4 sm:p-6 space-y-6">
+        <main className="mx-auto max-w-7xl p-4 sm:p-6 space-y-4">
+          {/* Active Sample Data Notice Banner */}
+          {isSampleActive && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900 flex flex-wrap items-center justify-between gap-2 shadow-xs">
+              <div className="flex items-center gap-2">
+                <span className="text-base">📌</span>
+                <span>
+                  You are currently previewing sample student data (<strong>Maria Clara Santos</strong>).
+                  {userBackup
+                    ? ' Your previous entries were safely saved in the background.'
+                    : ' You can replace it with your own details or clear to a blank form.'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleRestoreUserData}
+                  className="rounded bg-amber-900 px-2.5 py-1 text-xs font-medium text-white hover:bg-amber-800 cursor-pointer"
+                >
+                  {userBackup ? 'Restore My Data' : 'Clear to Blank Form'}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Collapsible Template Picker Drawer */}
           {isPickerOpen && (
             <TemplatePicker
