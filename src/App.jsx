@@ -183,7 +183,7 @@ export default function App() {
     undoTimeoutRef.current = setTimeout(() => {
       setShowUndoNotice(false)
       undoDataRef.current = null
-    }, 3000)
+    }, 5000)
   }
 
   // Clear animation sequence (about 450ms total):
