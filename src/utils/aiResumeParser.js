@@ -160,3 +160,4 @@ export async function parsePdfResume(file, userApiKey = '') {
 
   return JSON.parse(contentText)
 }
+

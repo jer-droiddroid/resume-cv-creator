@@ -43,16 +43,13 @@ export default function ExperienceStep() {
         </button>
       </div>
 
-      {/* Google & Reddit XYZ Bullet Formula Tip */}
-      <div className="rounded-lg border border-emerald-200 bg-emerald-50/70 p-3 text-xs text-emerald-950 flex items-start gap-2">
-        <span className="text-base leading-none">🎯</span>
-        <div>
-          <strong className="font-semibold">The XYZ Formula (Google &amp; r/resumes standard):</strong> Frame each accomplishment as:
-          <span className="font-medium text-emerald-800 italic block mt-0.5">
-            "Accomplished [X] as measured by [Y], by doing [Z]"
-          </span>
-          Start with a strong action verb (<em>Developed, Spearheaded, Reduced, Automated</em>) instead of passive phrasing like <em>"Responsible for"</em> or <em>"Helped with"</em>.
-        </div>
+      {/* Tip callout */}
+      <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
+        <strong className="font-semibold text-slate-900">Tip:</strong> Frame each accomplishment using the formula:
+        <span className="font-medium text-slate-800 italic block mt-0.5">
+          "Accomplished [X] as measured by [Y], by doing [Z]"
+        </span>
+        Start with a strong action verb (<em>developed, spearheaded, reduced, automated</em>) instead of passive phrasing like <em>"responsible for"</em> or <em>"helped with"</em>.
       </div>
 
       {fields.length === 0 && (

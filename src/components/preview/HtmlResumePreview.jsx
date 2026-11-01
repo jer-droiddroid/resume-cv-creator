@@ -12,6 +12,7 @@ import { DEFAULT_SECTIONS } from '../../data/defaultResume'
  * - FIX 2: Shows faded sample placeholder content from sampleResume.js for any section that is empty
  * - As the student types their own data, faded text disappears and real data takes its place
  * - Downloaded PDF only uses real data; sample content never appears in downloaded PDF
+ * - break-words and [overflow-wrap:anywhere] ensure long words, URLs, and test text wrap cleanly
  */
 export default function HtmlResumePreview({ data, theme, templateId }) {
   const configuredSections =
@@ -88,7 +89,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
           <div key="summary" className="mb-4">
             {renderHeading('Summary', overrides)}
             <p
-              className={`text-[13px] leading-relaxed ${
+              className={`text-[13px] leading-relaxed break-words [overflow-wrap:anywhere] ${
                 isReal
                   ? 'text-slate-700'
                   : 'text-slate-500 opacity-40 select-none italic'
@@ -118,7 +119,9 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
                 <div key={idx} className="text-[13px]">
                   <div className="flex justify-between items-baseline gap-2">
                     <span
-                      className={`font-bold ${isReal ? 'text-slate-900' : 'text-slate-700'}`}
+                      className={`font-bold break-words [overflow-wrap:anywhere] ${
+                        isReal ? 'text-slate-900' : 'text-slate-700'
+                      }`}
                     >
                       {edu.school}
                     </span>
@@ -127,12 +130,18 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
                     </span>
                   </div>
                   {edu.degree && (
-                    <div className={isReal ? 'italic text-slate-700' : 'text-slate-600'}>
+                    <div
+                      className={`break-words [overflow-wrap:anywhere] ${
+                        isReal ? 'italic text-slate-700' : 'text-slate-600'
+                      }`}
+                    >
                       {edu.degree}
                     </div>
                   )}
                   {edu.details && (
-                    <div className="text-xs text-slate-600 mt-0.5">{edu.details}</div>
+                    <div className="text-xs text-slate-600 mt-0.5 break-words [overflow-wrap:anywhere]">
+                      {edu.details}
+                    </div>
                   )}
                 </div>
               ))}
@@ -159,7 +168,9 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
                 <div key={idx} className="text-[13px]">
                   <div className="flex justify-between items-baseline gap-2">
                     <span
-                      className={`font-bold ${isReal ? 'text-slate-900' : 'text-slate-700'}`}
+                      className={`font-bold break-words [overflow-wrap:anywhere] ${
+                        isReal ? 'text-slate-900' : 'text-slate-700'
+                      }`}
                     >
                       {exp.company || exp.title}
                     </span>
@@ -168,7 +179,11 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
                     </span>
                   </div>
                   {exp.company && exp.title && (
-                    <div className={isReal ? 'italic text-slate-700' : 'text-slate-600'}>
+                    <div
+                      className={`break-words [overflow-wrap:anywhere] ${
+                        isReal ? 'italic text-slate-700' : 'text-slate-600'
+                      }`}
+                    >
                       {exp.title}
                     </div>
                   )}
@@ -177,7 +192,12 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
                       {exp.bullets
                         .filter((b) => b && b.trim())
                         .map((b, bIdx) => (
-                          <li key={bIdx}>{b}</li>
+                          <li
+                            key={bIdx}
+                            className="break-words [overflow-wrap:anywhere]"
+                          >
+                            {b}
+                          </li>
                         ))}
                     </ul>
                   )}
@@ -208,7 +228,9 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
                   <div key={idx} className="text-[13px]">
                     <div className="flex justify-between items-baseline gap-2">
                       <span
-                        className={`font-bold ${isReal ? 'text-slate-900' : 'text-slate-700'}`}
+                        className={`font-bold break-words [overflow-wrap:anywhere] ${
+                          isReal ? 'text-slate-900' : 'text-slate-700'
+                        }`}
                       >
                         {org.organization || org.title}
                       </span>
@@ -217,14 +239,23 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
                       </span>
                     </div>
                     {org.organization && org.title && (
-                      <div className={isReal ? 'italic text-slate-700' : 'text-slate-600'}>
+                      <div
+                        className={`break-words [overflow-wrap:anywhere] ${
+                          isReal ? 'italic text-slate-700' : 'text-slate-600'
+                        }`}
+                      >
                         {org.title}
                       </div>
                     )}
                     {bullets.length > 0 && (
                       <ul className="mt-1 space-y-1 list-disc pl-4 text-xs text-slate-700 leading-normal">
                         {bullets.map((b, bIdx) => (
-                          <li key={bIdx}>{b}</li>
+                          <li
+                            key={bIdx}
+                            className="break-words [overflow-wrap:anywhere]"
+                          >
+                            {b}
+                          </li>
                         ))}
                       </ul>
                     )}
@@ -254,21 +285,27 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
                 <div key={idx} className="text-[13px]">
                   <div className="flex justify-between items-baseline gap-2">
                     <span
-                      className={`font-bold ${isReal ? 'text-slate-900' : 'text-slate-700'}`}
+                      className={`font-bold break-words [overflow-wrap:anywhere] ${
+                        isReal ? 'text-slate-900' : 'text-slate-700'
+                      }`}
                     >
                       {p.name}
                     </span>
                     {p.link && (
-                      <span className="text-xs text-slate-500 shrink-0">{p.link}</span>
+                      <span className="text-xs text-slate-500 shrink-0 break-words [overflow-wrap:anywhere]">
+                        {p.link}
+                      </span>
                     )}
                   </div>
                   {p.techStack && (
-                    <div className="italic text-xs text-slate-600">
+                    <div className="italic text-xs text-slate-600 break-words [overflow-wrap:anywhere]">
                       Tech: {p.techStack}
                     </div>
                   )}
                   {p.description && (
-                    <p className="text-xs text-slate-700 mt-0.5">{p.description}</p>
+                    <p className="text-xs text-slate-700 mt-0.5 break-words [overflow-wrap:anywhere]">
+                      {p.description}
+                    </p>
                   )}
                 </div>
               ))}
@@ -287,7 +324,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
           <div key="skills" className="mb-4">
             {renderHeading('Skills', overrides)}
             <p
-              className={`text-xs leading-relaxed ${
+              className={`text-xs leading-relaxed break-words [overflow-wrap:anywhere] ${
                 isReal
                   ? 'text-slate-700'
                   : 'text-slate-500 opacity-40 select-none italic'
@@ -316,7 +353,9 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
               }`}
             >
               {awardList.map((award, idx) => (
-                <li key={idx}>{award}</li>
+                <li key={idx} className="break-words [overflow-wrap:anywhere]">
+                  {award}
+                </li>
               ))}
             </ul>
           </div>
@@ -340,7 +379,9 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
               }`}
             >
               {certList.map((cert, idx) => (
-                <li key={idx}>{cert}</li>
+                <li key={idx} className="break-words [overflow-wrap:anywhere]">
+                  {cert}
+                </li>
               ))}
             </ul>
           </div>
@@ -362,7 +403,9 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
     )
 
     return (
-      <div className={`w-full min-h-[960px] bg-white flex ${fontClass}`}>
+      <div
+        className={`w-full min-h-[960px] bg-white flex break-words [overflow-wrap:anywhere] ${fontClass}`}
+      >
         {/* Tinted Left Sidebar */}
         <div
           className="w-[34%] p-6 sm:p-7 border-r space-y-5"
@@ -373,7 +416,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
         >
           <div>
             <h1
-              className={`text-lg font-bold tracking-tight mb-2 ${
+              className={`text-lg font-bold tracking-tight mb-2 break-words [overflow-wrap:anywhere] ${
                 isNameSample ? 'text-slate-400 opacity-60 italic' : ''
               }`}
               style={{ color: isNameSample ? undefined : theme.accentColor }}
@@ -389,7 +432,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
                 }`}
               >
                 {displayContactItems.map((c, idx) => (
-                  <div key={idx} className="break-words">
+                  <div key={idx} className="break-words [overflow-wrap:anywhere]">
                     {c}
                   </div>
                 ))}
@@ -417,14 +460,16 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
     )
 
     return (
-      <div className={`w-full min-h-[960px] bg-white p-7 sm:p-9 ${fontClass}`}>
+      <div
+        className={`w-full min-h-[960px] bg-white p-7 sm:p-9 break-words [overflow-wrap:anywhere] ${fontClass}`}
+      >
         {/* Header */}
         <div
           className="pb-3 mb-5 border-b"
           style={{ borderColor: theme.accentColor }}
         >
           <h1
-            className={`text-xl font-bold tracking-tight mb-2 ${
+            className={`text-xl font-bold tracking-tight mb-2 break-words [overflow-wrap:anywhere] ${
               isNameSample ? 'text-slate-400 opacity-60 italic' : ''
             }`}
             style={{ color: isNameSample ? undefined : theme.accentColor }}
@@ -433,7 +478,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
           </h1>
           {displayContactItems.length > 0 && (
             <div
-              className={`text-xs ${
+              className={`text-xs break-words [overflow-wrap:anywhere] ${
                 hasRealContact
                   ? 'text-slate-600'
                   : 'text-slate-400 opacity-50 select-none italic'
@@ -459,18 +504,20 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
   // Header Banner Layout
   if (isBanner) {
     return (
-      <div className={`w-full min-h-[960px] bg-white ${fontClass}`}>
+      <div
+        className={`w-full min-h-[960px] bg-white break-words [overflow-wrap:anywhere] ${fontClass}`}
+      >
         {/* Colored Header Banner */}
         <div
           className="px-7 py-6 sm:px-9 text-white"
           style={{ backgroundColor: theme.accentColor }}
         >
-          <h1 className="text-2xl font-bold tracking-tight mb-2">
+          <h1 className="text-2xl font-bold tracking-tight mb-2 break-words [overflow-wrap:anywhere]">
             {displayName}
           </h1>
           {displayContactItems.length > 0 && (
             <div
-              className={`text-xs ${
+              className={`text-xs break-words [overflow-wrap:anywhere] ${
                 hasRealContact
                   ? 'text-slate-100/90'
                   : 'text-white/60 select-none italic'
@@ -491,12 +538,14 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
 
   // Centered Harvard / Standard Layout or SingleColumn
   return (
-    <div className={`w-full min-h-[960px] bg-white p-7 sm:p-9 ${fontClass}`}>
+    <div
+      className={`w-full min-h-[960px] bg-white p-7 sm:p-9 break-words [overflow-wrap:anywhere] ${fontClass}`}
+    >
       {/* Header */}
       {isHarvard ? (
         <div className="text-center mb-6">
           <h1
-            className={`text-xl font-bold uppercase tracking-wide mb-2 ${
+            className={`text-xl font-bold uppercase tracking-wide mb-2 break-words [overflow-wrap:anywhere] ${
               isNameSample ? 'text-slate-400 opacity-60 italic' : ''
             }`}
             style={{ color: isNameSample ? undefined : theme.accentColor }}
@@ -505,7 +554,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
           </h1>
           {displayContactItems.length > 0 && (
             <div
-              className={`text-xs ${
+              className={`text-xs break-words [overflow-wrap:anywhere] ${
                 hasRealContact
                   ? 'text-slate-600'
                   : 'text-slate-400 opacity-50 select-none italic'
@@ -521,7 +570,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
           style={{ borderColor: theme.accentColor }}
         >
           <h1
-            className={`text-lg font-bold ${
+            className={`text-lg font-bold break-words [overflow-wrap:anywhere] ${
               isNameSample ? 'text-slate-400 opacity-60 italic' : ''
             }`}
             style={{ color: isNameSample ? undefined : theme.accentColor }}
@@ -530,7 +579,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
           </h1>
           {displayContactItems.length > 0 && (
             <div
-              className={`text-xs text-right max-w-[60%] ${
+              className={`text-xs text-right max-w-[60%] break-words [overflow-wrap:anywhere] ${
                 hasRealContact
                   ? 'text-slate-600'
                   : 'text-slate-400 opacity-50 select-none italic'
@@ -546,7 +595,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
           style={{ borderColor: theme.accentColor }}
         >
           <h1
-            className={`text-xl font-bold mb-2 ${
+            className={`text-xl font-bold mb-2 break-words [overflow-wrap:anywhere] ${
               isNameSample ? 'text-slate-400 opacity-60 italic' : ''
             }`}
             style={{ color: isNameSample ? undefined : theme.accentColor }}
@@ -555,7 +604,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
           </h1>
           {displayContactItems.length > 0 && (
             <div
-              className={`text-xs ${
+              className={`text-xs break-words [overflow-wrap:anywhere] ${
                 hasRealContact
                   ? 'text-slate-600'
                   : 'text-slate-400 opacity-50 select-none italic'

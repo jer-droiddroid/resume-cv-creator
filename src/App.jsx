@@ -232,7 +232,6 @@ export default function App() {
           {isSampleActive && (
             <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900 flex flex-wrap items-center justify-between gap-2 shadow-xs">
               <div className="flex items-center gap-2">
-                <span className="text-base">📌</span>
                 <span>
                   You are currently previewing sample student data (<strong>Maria Clara Santos</strong>).
                   {userBackup

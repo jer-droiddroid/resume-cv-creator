@@ -29,3 +29,4 @@ export async function extractTextFromPdf(file) {
     throw new Error('Could not read this PDF. Please make sure it is not password-protected.')
   }
 }
+

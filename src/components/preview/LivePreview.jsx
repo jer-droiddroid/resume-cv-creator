@@ -98,13 +98,13 @@ export default function LivePreview({ selectedTemplateId, onOpenPicker }) {
         </div>
 
         {/* Stage: Soft neutral gray background with floating paper resume sheet */}
-        <div className="flex-1 overflow-y-auto rounded-xl bg-slate-200/50 p-3 sm:p-6 flex flex-col items-center">
+        <div className="flex-1 overflow-y-auto rounded-xl bg-slate-200/50 p-3 sm:p-6 flex flex-col items-center [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent]">
           {hasFadedContent && (
             <p className="text-xs text-slate-500 mb-3 text-center select-none shrink-0">
               Faded text is an example. It disappears as you fill in your own.
             </p>
           )}
-          <div className="w-full max-w-[650px] bg-white rounded-xs shadow-xl shadow-slate-900/10 border border-slate-200/60 overflow-hidden self-start mx-auto">
+          <div className="w-full max-w-[650px] bg-white rounded-xs shadow-xl shadow-slate-900/10 border border-slate-200/60 overflow-hidden self-start mx-auto mb-12">
             <HtmlResumePreview
               data={liveFormData}
               theme={template.theme}
