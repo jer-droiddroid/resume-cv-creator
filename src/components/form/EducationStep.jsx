@@ -1,5 +1,6 @@
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { createEmptyEducation } from '../../data/defaultResume'
+import MonthYearPicker from './MonthYearPicker'
 
 export default function EducationStep() {
   const { control, register } = useFormContext()
@@ -99,24 +100,14 @@ export default function EducationStep() {
 
               <div>
                 <label className="block text-xs font-medium text-slate-700 mb-1">Start Date</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Aug 2023"
-                  {...register(`education.${index}.startDate`)}
-                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
-                />
+                <MonthYearPicker name={`education.${index}.startDate`} />
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-slate-700 mb-1">
                   End Date (or Expected)
                 </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Present or Jun 2027"
-                  {...register(`education.${index}.endDate`)}
-                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
-                />
+                <MonthYearPicker name={`education.${index}.endDate`} allowPresent />
               </div>
 
               <div className="sm:col-span-2">

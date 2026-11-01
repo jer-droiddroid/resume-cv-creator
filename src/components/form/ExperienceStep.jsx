@@ -1,5 +1,6 @@
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { createEmptyExperience } from '../../data/defaultResume'
+import MonthYearPicker from './MonthYearPicker'
 
 export default function ExperienceStep() {
   const { control, register, setValue } = useFormContext()
@@ -129,22 +130,12 @@ export default function ExperienceStep() {
                   <label className="block text-xs font-medium text-slate-700 mb-1">
                     Start Date
                   </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Jun 2025"
-                    {...register(`experience.${index}.startDate`)}
-                    className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
-                  />
+                  <MonthYearPicker name={`experience.${index}.startDate`} />
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-slate-700 mb-1">End Date</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Aug 2025"
-                    {...register(`experience.${index}.endDate`)}
-                    className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
-                  />
+                  <MonthYearPicker name={`experience.${index}.endDate`} allowPresent />
                 </div>
               </div>
 

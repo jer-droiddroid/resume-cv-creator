@@ -1,6 +1,7 @@
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { createEmptyOrganization } from '../../data/defaultResume'
 import { ROLE_TEMPLATES, generateBullets } from '../../data/roleTemplates'
+import MonthYearPicker from './MonthYearPicker'
 
 export default function OrganizationsStep() {
   const { control, register } = useFormContext()
@@ -126,22 +127,12 @@ export default function OrganizationsStep() {
                   <label className="block text-xs font-medium text-slate-700 mb-1">
                     Start Date
                   </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Sep 2024"
-                    {...register(`organizations.${index}.startDate`)}
-                    className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
-                  />
+                  <MonthYearPicker name={`organizations.${index}.startDate`} />
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-slate-700 mb-1">End Date</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Present"
-                    {...register(`organizations.${index}.endDate`)}
-                    className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
-                  />
+                  <MonthYearPicker name={`organizations.${index}.endDate`} allowPresent />
                 </div>
               </div>
 
