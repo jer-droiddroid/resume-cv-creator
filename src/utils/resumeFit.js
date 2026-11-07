@@ -43,6 +43,9 @@ export function estimateContentScore(data) {
   if (active.includes('certifications')) {
     score += (data.certifications || []).filter(Boolean).length
   }
+  if (active.includes('ojt')) {
+    score += 1.5
+  }
 
   return score
 }

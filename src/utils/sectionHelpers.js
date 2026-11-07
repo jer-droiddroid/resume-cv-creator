@@ -47,6 +47,12 @@ export function isSectionNonEmpty(sectionId, data) {
     case 'certifications':
       return Array.isArray(data.certifications) && data.certifications.some(hasText)
 
+    case 'ojt':
+      return (
+        hasText(data.ojtInfo?.requiredHours) ||
+        hasText(data.ojtInfo?.preferredStartDate)
+      )
+
     default:
       return false
   }
@@ -68,3 +74,54 @@ export function getActiveSections(data) {
     .map((sec) => sec.id)
 }
 
+const SUFFIX_TOKENS = new Set(['JR', 'JR.', 'SR', 'SR.', 'II', 'III', 'IV', 'V'])
+
+/**
+ * Formats a clean PDF filename.
+ * - Standard mode: "Alex_Carter_Resume.pdf" or "Alex_Carter_CV.pdf"
+ * - OJT mode: "Lastname_Firstname_BSIT_OJT_Resume.pdf"
+ */
+export function buildFileName(data) {
+  const rawName = data?.personalInfo?.fullName?.trim() || ''
+  const suffix = data?.documentType === 'cv' ? 'CV' : 'Resume'
+  const isOjt =
+    Boolean(data?.isOjtMode) ||
+    Boolean(data?.ojtInfo?.courseCode?.trim()) ||
+    Boolean(data?.ojtInfo?.requiredHours?.trim())
+
+  const sanitize = (str) =>
+    (str || '').replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '')
+
+  if (isOjt) {
+    let lastName = 'Lastname'
+    let firstName = 'Firstname'
+
+    if (rawName) {
+      if (rawName.includes(',')) {
+        const [lastPart, ...restParts] = rawName.split(',')
+        lastName = sanitize(lastPart) || 'Lastname'
+        firstName = sanitize(restParts.join(' ')) || 'Firstname'
+      } else {
+        const parts = rawName.split(/\s+/).filter(Boolean)
+        if (parts.length === 1) {
+          lastName = sanitize(parts[0])
+          firstName = ''
+        } else {
+          let endIdx = parts.length - 1
+          if (parts.length > 2 && SUFFIX_TOKENS.has(parts[endIdx].toUpperCase())) {
+            endIdx -= 1
+          }
+          lastName = sanitize(parts[endIdx])
+          firstName = sanitize(parts.slice(0, endIdx).join('_'))
+        }
+      }
+    }
+
+    const courseCode = sanitize(data?.ojtInfo?.courseCode?.trim().toUpperCase())
+    const segments = [lastName, firstName, courseCode, 'OJT', suffix].filter(Boolean)
+    return `${segments.join('_')}.pdf`
+  }
+
+  const safeName = sanitize(rawName) || 'Student'
+  return `${safeName}_${suffix}.pdf`
+}

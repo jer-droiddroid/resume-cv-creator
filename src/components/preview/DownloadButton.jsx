@@ -2,14 +2,7 @@ import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { getTemplateById } from '../../templates/registry'
 import { getFittedTheme } from '../../utils/resumeFit'
-
-// Build a clean filename like "Alex_Carter_Resume.pdf" or "Alex_Carter_CV.pdf"
-function buildFileName(data) {
-  const rawName = data?.personalInfo?.fullName?.trim() || 'Student'
-  const safeName = rawName.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '')
-  const suffix = data?.documentType === 'cv' ? 'CV' : 'Resume'
-  return `${safeName}_${suffix}.pdf`
-}
+import { buildFileName } from '../../utils/sectionHelpers'
 
 /**
  * Generates and downloads the PDF on demand using @react-pdf/renderer's pdf().toBlob().

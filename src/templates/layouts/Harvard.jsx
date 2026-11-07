@@ -130,7 +130,7 @@ export default function Harvard({ data, theme }) {
         return (
           <View key="summary" style={styles.section}>
             <Text style={styles.sectionHeading} minPresenceAhead={36}>
-              Summary
+              {data?.isOjtMode ? 'Career Objective' : 'Summary'}
             </Text>
             <Text style={styles.bodyText}>{data.summary}</Text>
           </View>
@@ -154,6 +154,11 @@ export default function Harvard({ data, theme }) {
                   </View>
                   {edu.degree ? <Text style={styles.subTitle}>{edu.degree}</Text> : null}
                   {edu.details ? <Text style={styles.detailsText}>{edu.details}</Text> : null}
+                  {edu.coursework ? (
+                    <Text style={styles.detailsText}>
+                      Relevant Coursework: {edu.coursework}
+                    </Text>
+                  ) : null}
                 </View>
               ))}
           </View>
@@ -291,6 +296,27 @@ export default function Harvard({ data, theme }) {
                   <Text style={styles.bulletText}>{cert}</Text>
                 </View>
               ))}
+          </View>
+        )
+
+      case 'ojt':
+        return (
+          <View key="ojt" style={styles.section} wrap={false}>
+            <Text style={styles.sectionHeading} minPresenceAhead={36}>
+              OJT Availability
+            </Text>
+            {data.ojtInfo?.requiredHours ? (
+              <View style={styles.skillsInline}>
+                <Text style={styles.skillsLabel}>Required OJT Hours:</Text>
+                <Text style={styles.bodyText}>{data.ojtInfo.requiredHours}</Text>
+              </View>
+            ) : null}
+            {data.ojtInfo?.preferredStartDate ? (
+              <View style={styles.skillsInline}>
+                <Text style={styles.skillsLabel}>Preferred Start Date:</Text>
+                <Text style={styles.bodyText}>{data.ojtInfo.preferredStartDate}</Text>
+              </View>
+            ) : null}
           </View>
         )
 

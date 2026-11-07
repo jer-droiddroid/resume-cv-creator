@@ -121,6 +121,18 @@ export default function EducationStep() {
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
                 />
               </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  Relevant Coursework (Optional)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Database Management Systems, Systems Analysis and Design, Web Development"
+                  {...register(`education.${index}.coursework`)}
+                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
+                />
+              </div>
             </div>
           </div>
         ))}

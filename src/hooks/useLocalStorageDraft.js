@@ -42,11 +42,22 @@ export function loadSavedDraft() {
           visible: typeof sec.visible === 'boolean' ? sec.visible : true,
         }
       })
+      // Append any newly introduced sections (such as 'ojt') if missing from saved draft
+      const existingIds = new Set(sections.map((s) => s.id))
+      for (const defSec of DEFAULT_SECTIONS) {
+        if (!existingIds.has(defSec.id)) {
+          sections.push({ id: defSec.id, visible: defSec.visible })
+        }
+      }
     }
 
     return {
       ...defaultResumeData,
       ...parsed,
+      ojtInfo: {
+        ...defaultResumeData.ojtInfo,
+        ...(parsed.ojtInfo || {}),
+      },
       personalInfo: {
         ...defaultResumeData.personalInfo,
         ...(parsed.personalInfo || {}),

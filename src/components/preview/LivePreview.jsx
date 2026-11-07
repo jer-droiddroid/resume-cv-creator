@@ -34,7 +34,9 @@ export default function LivePreview({
       ? liveFormData.sections
       : DEFAULT_SECTIONS
 
-  const visibleSections = configuredSections.filter((sec) => sec.visible !== false)
+  const visibleSections = configuredSections.filter(
+    (sec) => sec.visible !== false && (sec.id !== 'ojt' || liveFormData?.isOjtMode)
+  )
   const hasEmptySection = visibleSections.some(
     (sec) => !isSectionNonEmpty(sec.id, liveFormData)
   )

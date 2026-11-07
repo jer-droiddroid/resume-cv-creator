@@ -2,7 +2,7 @@ import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { getActiveSections } from '../../utils/sectionHelpers'
 import { getContactItems, renderResumeSection } from '../sectionRenderer'
 
-const SIDEBAR_SECTIONS = new Set(['education', 'skills', 'awards', 'certifications'])
+const SIDEBAR_SECTIONS = new Set(['education', 'skills', 'awards', 'certifications', 'ojt'])
 
 const createStyles = (theme) =>
   StyleSheet.create({

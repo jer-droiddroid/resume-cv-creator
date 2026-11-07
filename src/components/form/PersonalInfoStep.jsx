@@ -1,11 +1,14 @@
 import { useFormContext } from 'react-hook-form'
+import { buildFileName } from '../../utils/sectionHelpers'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default function PersonalInfoStep() {
   const { register, watch, setValue } = useFormContext()
-  const documentType = watch('documentType') || 'resume'
-  const emailValue = watch('personalInfo.email') || ''
+  const formValues = watch()
+  const documentType = formValues?.documentType || 'resume'
+  const isOjtMode = Boolean(formValues?.isOjtMode)
+  const emailValue = formValues?.personalInfo?.email || ''
   const isEmailInvalid = emailValue.trim().length > 0 && !EMAIL_REGEX.test(emailValue.trim())
 
   return (
@@ -71,6 +74,71 @@ export default function PersonalInfoStep() {
             <option value="PHP">PHP (₱)</option>
             <option value="SGD">SGD (S$)</option>
           </select>
+        </div>
+
+        {/* OJT / Practicum Mode Toggle */}
+        <div className="sm:col-span-2 pt-2 border-t border-slate-200/80">
+          <label className="flex items-start gap-2.5 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              {...register('isOjtMode')}
+              className="mt-0.5 h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
+            />
+            <div className="text-xs">
+              <span className="font-semibold text-slate-900">
+                OJT / Practicum Application Mode
+              </span>
+              <p className="text-slate-500 mt-0.5">
+                Adds required OJT hours &amp; start date, renames Summary to Career Objective, and formats your PDF filename as{' '}
+                <code className="text-[11px] bg-white px-1 py-0.5 rounded border border-slate-200 text-slate-700">
+                  Lastname_Firstname_Course_OJT_Resume.pdf
+                </code>
+              </p>
+            </div>
+          </label>
+
+          {isOjtMode && (
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white p-3 rounded-md border border-slate-200">
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  Course Code
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. BSIT, BSBA, BSHM"
+                  {...register('ojtInfo.courseCode')}
+                  className="w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:border-slate-800 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  Required OJT Hours
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 486 hours"
+                  {...register('ojtInfo.requiredHours')}
+                  className="w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:border-slate-800 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  Preferred Start Date
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. January 15, 2026"
+                  {...register('ojtInfo.preferredStartDate')}
+                  className="w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:border-slate-800 focus:outline-none"
+                />
+              </div>
+              <div className="sm:col-span-3 text-[11px] text-slate-500 flex items-center justify-between pt-1 border-t border-slate-100">
+                <span>
+                  PDF filename preview: <strong className="text-slate-700">{buildFileName(formValues)}</strong>
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

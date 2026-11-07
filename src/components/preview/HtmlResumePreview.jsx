@@ -84,10 +84,11 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
       case 'summary': {
         const isReal = isSectionNonEmpty('summary', data)
         const summaryText = isReal ? data.summary : sampleResumeData.summary
+        const summaryHeading = data?.isOjtMode ? 'Career Objective' : 'Summary'
 
         return (
           <div key="summary" className="mb-4">
-            {renderHeading('Summary', overrides)}
+            {renderHeading(summaryHeading, overrides)}
             <p
               className={`text-[13px] leading-relaxed break-words [overflow-wrap:anywhere] ${
                 isReal
@@ -141,6 +142,11 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
                   {edu.details && (
                     <div className="text-xs text-slate-600 mt-0.5 break-words [overflow-wrap:anywhere]">
                       {edu.details}
+                    </div>
+                  )}
+                  {edu.coursework && (
+                    <div className="text-xs text-slate-600 mt-0.5 break-words [overflow-wrap:anywhere]">
+                      <span className="font-semibold">Relevant Coursework:</span> {edu.coursework}
                     </div>
                   )}
                 </div>
@@ -388,6 +394,38 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
         )
       }
 
+      case 'ojt': {
+        const isReal = isSectionNonEmpty('ojt', data)
+        if (!isReal && !data?.isOjtMode) return null
+        const ojtSource = isReal ? data.ojtInfo : sampleResumeData.ojtInfo
+
+        return (
+          <div key="ojt" className="mb-4">
+            {renderHeading('OJT Availability', overrides)}
+            <div
+              className={`text-xs space-y-1 ${
+                isReal
+                  ? 'text-slate-700'
+                  : 'text-slate-500 opacity-40 select-none italic'
+              }`}
+            >
+              {ojtSource?.requiredHours && (
+                <div>
+                  <span className="font-semibold">Required OJT Hours:</span>{' '}
+                  {ojtSource.requiredHours}
+                </div>
+              )}
+              {ojtSource?.preferredStartDate && (
+                <div>
+                  <span className="font-semibold">Preferred Start Date:</span>{' '}
+                  {ojtSource.preferredStartDate}
+                </div>
+              )}
+            </div>
+          </div>
+        )
+      }
+
       default:
         return null
     }
@@ -396,10 +434,10 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
   // Sidebar Layout
   if (isSidebar) {
     const sidebarSections = visibleSectionIds.filter((id) =>
-      ['education', 'skills', 'awards', 'certifications'].includes(id)
+      ['education', 'skills', 'awards', 'certifications', 'ojt'].includes(id)
     )
     const mainSections = visibleSectionIds.filter(
-      (id) => !['education', 'skills', 'awards', 'certifications'].includes(id)
+      (id) => !['education', 'skills', 'awards', 'certifications', 'ojt'].includes(id)
     )
 
     return (
@@ -453,10 +491,10 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
   // Two Column Layout
   if (isTwoCol) {
     const mainSections = visibleSectionIds.filter(
-      (id) => !['education', 'skills', 'awards', 'certifications'].includes(id)
+      (id) => !['education', 'skills', 'awards', 'certifications', 'ojt'].includes(id)
     )
     const sideSections = visibleSectionIds.filter((id) =>
-      ['education', 'skills', 'awards', 'certifications'].includes(id)
+      ['education', 'skills', 'awards', 'certifications', 'ojt'].includes(id)
     )
 
     return (

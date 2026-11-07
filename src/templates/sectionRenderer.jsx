@@ -107,7 +107,7 @@ export function renderResumeSection(sectionId, data, theme, styleOverrides = {})
       return (
         <View key="summary" style={styles.section}>
           <Text style={styles.sectionHeading} minPresenceAhead={36}>
-            Summary
+            {data?.isOjtMode ? 'Career Objective' : 'Summary'}
           </Text>
           <Text style={styles.bodyText}>{data.summary}</Text>
         </View>
@@ -131,6 +131,9 @@ export function renderResumeSection(sectionId, data, theme, styleOverrides = {})
                 </View>
                 {edu.degree ? <Text style={styles.itemSubtitle}>{edu.degree}</Text> : null}
                 {edu.details ? <Text style={styles.bodyText}>{edu.details}</Text> : null}
+                {edu.coursework ? (
+                  <Text style={styles.bodyText}>Relevant Coursework: {edu.coursework}</Text>
+                ) : null}
               </View>
             ))}
         </View>
@@ -267,6 +270,25 @@ export function renderResumeSection(sectionId, data, theme, styleOverrides = {})
                 <Text style={styles.bulletText}>{cert}</Text>
               </View>
             ))}
+        </View>
+      )
+
+    case 'ojt':
+      return (
+        <View key="ojt" style={styles.section} wrap={false}>
+          <Text style={styles.sectionHeading} minPresenceAhead={36}>
+            OJT Availability
+          </Text>
+          {data.ojtInfo?.requiredHours ? (
+            <Text style={styles.bodyText}>
+              Required OJT Hours: {data.ojtInfo.requiredHours}
+            </Text>
+          ) : null}
+          {data.ojtInfo?.preferredStartDate ? (
+            <Text style={styles.bodyText}>
+              Preferred Start Date: {data.ojtInfo.preferredStartDate}
+            </Text>
+          ) : null}
         </View>
       )
 

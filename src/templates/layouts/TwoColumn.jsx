@@ -3,7 +3,7 @@ import { getActiveSections } from '../../utils/sectionHelpers'
 import { getContactItems, renderResumeSection } from '../sectionRenderer'
 
 // Sections that fit naturally in the narrower right column
-const NARROW_COLUMN_IDS = new Set(['education', 'skills', 'awards', 'certifications'])
+const NARROW_COLUMN_IDS = new Set(['education', 'skills', 'awards', 'certifications', 'ojt'])
 
 const createStyles = (theme) =>
   StyleSheet.create({

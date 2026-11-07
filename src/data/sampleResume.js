@@ -2,6 +2,12 @@
 // and faded placeholder examples without touching the student's real input.
 export const sampleResumeData = {
   documentType: 'resume',
+  isOjtMode: false,
+  ojtInfo: {
+    courseCode: 'BSIT',
+    requiredHours: '486 hours',
+    preferredStartDate: 'January 15, 2026',
+  },
   personalInfo: {
     fullName: 'Alex Carter',
     email: 'alex.carter@university.edu',
@@ -19,6 +25,8 @@ export const sampleResumeData = {
       startDate: 'September 2022',
       endDate: 'May 2026',
       details: "Dean's List (GPA: 3.85/4.0), Academic Excellence Scholarship",
+      coursework:
+        'Database Management Systems, Systems Analysis and Design, Web Development, Object-Oriented Programming',
     },
   ],
   experience: [
@@ -82,5 +90,6 @@ export const sampleResumeData = {
     { id: 'skills', visible: true },
     { id: 'awards', visible: true },
     { id: 'certifications', visible: true },
+    { id: 'ojt', visible: true },
   ],
 }

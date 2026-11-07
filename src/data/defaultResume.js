@@ -1,6 +1,6 @@
 // Ordered list of toggleable and reorderable resume sections
 export const DEFAULT_SECTIONS = [
-  { id: 'summary', label: 'Summary', visible: true },
+  { id: 'summary', label: 'Summary / Objective', visible: true },
   { id: 'education', label: 'Education', visible: true },
   { id: 'experience', label: 'Experience', visible: true },
   { id: 'organizations', label: 'Organizations', visible: true },
@@ -8,6 +8,7 @@ export const DEFAULT_SECTIONS = [
   { id: 'skills', label: 'Skills', visible: true },
   { id: 'awards', label: 'Awards', visible: true },
   { id: 'certifications', label: 'Certifications', visible: true },
+  { id: 'ojt', label: 'OJT Availability', visible: true },
 ]
 
 // Helper factories to create a blank item when the student clicks "Add" in the form
@@ -17,6 +18,7 @@ export const createEmptyEducation = () => ({
   startDate: '',
   endDate: '',
   details: '',
+  coursework: '',
 })
 
 export const createEmptyExperience = () => ({
@@ -48,6 +50,12 @@ export const createEmptyProject = () => ({
 // Switching templates only changes how this object is rendered, never the data itself.
 export const defaultResumeData = {
   documentType: 'resume', // "resume" | "cv"
+  isOjtMode: false,
+  ojtInfo: {
+    courseCode: '',
+    requiredHours: '',
+    preferredStartDate: '',
+  },
   personalInfo: {
     fullName: '',
     email: '',
@@ -67,4 +75,3 @@ export const defaultResumeData = {
   currency: 'USD',
   sections: DEFAULT_SECTIONS.map(({ id, visible }) => ({ id, visible })),
 }
-
