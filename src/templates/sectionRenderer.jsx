@@ -54,6 +54,8 @@ export const createSectionStyles = (theme, options = {}) => {
       gap: 6,
     },
     itemTitle: {
+      flex: 1,
+      paddingRight: 8,
       fontFamily: theme.fontFamilyBold,
       fontSize: theme.fontSize.itemTitle,
       color: textColor,
@@ -65,6 +67,8 @@ export const createSectionStyles = (theme, options = {}) => {
       marginBottom: 2,
     },
     dateText: {
+      flexShrink: 0,
+      textAlign: 'right',
       fontSize: theme.fontSize.small,
       color: mutedColor,
     },
@@ -102,7 +106,9 @@ export function renderResumeSection(sectionId, data, theme, styleOverrides = {})
     case 'summary':
       return (
         <View key="summary" style={styles.section}>
-          <Text style={styles.sectionHeading}>Summary</Text>
+          <Text style={styles.sectionHeading} minPresenceAhead={36}>
+            Summary
+          </Text>
           <Text style={styles.bodyText}>{data.summary}</Text>
         </View>
       )
@@ -110,11 +116,13 @@ export function renderResumeSection(sectionId, data, theme, styleOverrides = {})
     case 'education':
       return (
         <View key="education" style={styles.section}>
-          <Text style={styles.sectionHeading}>Education</Text>
+          <Text style={styles.sectionHeading} minPresenceAhead={48}>
+            Education
+          </Text>
           {data.education
             .filter((edu) => edu.school || edu.degree)
             .map((edu, index) => (
-              <View key={index} style={styles.itemContainer}>
+              <View key={index} style={styles.itemContainer} wrap={false}>
                 <View style={styles.rowBetween}>
                   <Text style={styles.itemTitle}>{edu.school}</Text>
                   <Text style={styles.dateText}>
@@ -131,11 +139,13 @@ export function renderResumeSection(sectionId, data, theme, styleOverrides = {})
     case 'experience':
       return (
         <View key="experience" style={styles.section}>
-          <Text style={styles.sectionHeading}>Experience</Text>
+          <Text style={styles.sectionHeading} minPresenceAhead={48}>
+            Experience
+          </Text>
           {data.experience
             .filter((exp) => exp.company || exp.title)
             .map((exp, index) => (
-              <View key={index} style={styles.itemContainer}>
+              <View key={index} style={styles.itemContainer} wrap={false}>
                 <View style={styles.rowBetween}>
                   <Text style={styles.itemTitle}>{exp.title}</Text>
                   <Text style={styles.dateText}>
@@ -159,13 +169,15 @@ export function renderResumeSection(sectionId, data, theme, styleOverrides = {})
     case 'organizations':
       return (
         <View key="organizations" style={styles.section}>
-          <Text style={styles.sectionHeading}>Leadership &amp; Organizations</Text>
+          <Text style={styles.sectionHeading} minPresenceAhead={48}>
+            Leadership &amp; Organizations
+          </Text>
           {data.organizations
             .filter((org) => org.organization || org.title)
             .map((org, index) => {
               const bullets = generateBullets(org, currency)
               return (
-                <View key={index} style={styles.itemContainer}>
+                <View key={index} style={styles.itemContainer} wrap={false}>
                   <View style={styles.rowBetween}>
                     <Text style={styles.itemTitle}>{org.title}</Text>
                     <Text style={styles.dateText}>
@@ -190,11 +202,13 @@ export function renderResumeSection(sectionId, data, theme, styleOverrides = {})
     case 'projects':
       return (
         <View key="projects" style={styles.section}>
-          <Text style={styles.sectionHeading}>Projects</Text>
+          <Text style={styles.sectionHeading} minPresenceAhead={48}>
+            Projects
+          </Text>
           {data.projects
             .filter((proj) => proj.name || proj.description)
             .map((proj, index) => (
-              <View key={index} style={styles.itemContainer}>
+              <View key={index} style={styles.itemContainer} wrap={false}>
                 <View style={styles.rowBetween}>
                   <Text style={styles.itemTitle}>{proj.name}</Text>
                   {proj.link ? <Text style={styles.dateText}>{proj.link}</Text> : null}
@@ -212,8 +226,10 @@ export function renderResumeSection(sectionId, data, theme, styleOverrides = {})
 
     case 'skills':
       return (
-        <View key="skills" style={styles.section}>
-          <Text style={styles.sectionHeading}>Skills</Text>
+        <View key="skills" style={styles.section} wrap={false}>
+          <Text style={styles.sectionHeading} minPresenceAhead={36}>
+            Skills
+          </Text>
           <Text style={styles.bodyText}>
             {data.skills.filter((s) => s && s.trim()).join(' • ')}
           </Text>
@@ -223,11 +239,13 @@ export function renderResumeSection(sectionId, data, theme, styleOverrides = {})
     case 'awards':
       return (
         <View key="awards" style={styles.section}>
-          <Text style={styles.sectionHeading}>Awards &amp; Honors</Text>
+          <Text style={styles.sectionHeading} minPresenceAhead={36}>
+            Awards &amp; Honors
+          </Text>
           {data.awards
             .filter((a) => a && a.trim())
             .map((award, index) => (
-              <View key={index} style={styles.bulletRow}>
+              <View key={index} style={styles.bulletRow} wrap={false}>
                 <Text style={styles.bulletDot}>•</Text>
                 <Text style={styles.bulletText}>{award}</Text>
               </View>
@@ -238,11 +256,13 @@ export function renderResumeSection(sectionId, data, theme, styleOverrides = {})
     case 'certifications':
       return (
         <View key="certifications" style={styles.section}>
-          <Text style={styles.sectionHeading}>Certifications</Text>
+          <Text style={styles.sectionHeading} minPresenceAhead={36}>
+            Certifications
+          </Text>
           {data.certifications
             .filter((c) => c && c.trim())
             .map((cert, index) => (
-              <View key={index} style={styles.bulletRow}>
+              <View key={index} style={styles.bulletRow} wrap={false}>
                 <Text style={styles.bulletDot}>•</Text>
                 <Text style={styles.bulletText}>{cert}</Text>
               </View>

@@ -52,8 +52,11 @@ const createHarvardStyles = (theme) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'baseline',
+      gap: 6,
     },
     institutionName: {
+      flex: 1,
+      paddingRight: 8,
       fontFamily: theme.fontFamilyBold,
       fontSize: theme.fontSize.itemTitle,
     },
@@ -62,11 +65,13 @@ const createHarvardStyles = (theme) =>
       fontSize: theme.fontSize.body,
     },
     dateText: {
+      flexShrink: 0,
       fontFamily: theme.fontFamilyBold,
       fontSize: theme.fontSize.small,
       textAlign: 'right',
     },
     bodyText: {
+      flex: 1,
       fontSize: theme.fontSize.body,
     },
     detailsText: {
@@ -88,6 +93,7 @@ const createHarvardStyles = (theme) =>
     },
     skillsInline: {
       flexDirection: 'row',
+      flexWrap: 'wrap',
       marginBottom: 3,
     },
     skillsLabel: {
@@ -123,7 +129,9 @@ export default function Harvard({ data, theme }) {
       case 'summary':
         return (
           <View key="summary" style={styles.section}>
-            <Text style={styles.sectionHeading}>Summary</Text>
+            <Text style={styles.sectionHeading} minPresenceAhead={36}>
+              Summary
+            </Text>
             <Text style={styles.bodyText}>{data.summary}</Text>
           </View>
         )
@@ -131,11 +139,13 @@ export default function Harvard({ data, theme }) {
       case 'education':
         return (
           <View key="education" style={styles.section}>
-            <Text style={styles.sectionHeading}>Education</Text>
+            <Text style={styles.sectionHeading} minPresenceAhead={48}>
+              Education
+            </Text>
             {data.education
               .filter((edu) => edu.school || edu.degree)
               .map((edu, index) => (
-                <View key={index} style={styles.itemContainer}>
+                <View key={index} style={styles.itemContainer} wrap={false}>
                   <View style={styles.rowBetween}>
                     <Text style={styles.institutionName}>{edu.school}</Text>
                     <Text style={styles.dateText}>
@@ -152,11 +162,13 @@ export default function Harvard({ data, theme }) {
       case 'experience':
         return (
           <View key="experience" style={styles.section}>
-            <Text style={styles.sectionHeading}>Experience</Text>
+            <Text style={styles.sectionHeading} minPresenceAhead={48}>
+              Experience
+            </Text>
             {data.experience
               .filter((exp) => exp.company || exp.title)
               .map((exp, index) => (
-                <View key={index} style={styles.itemContainer}>
+                <View key={index} style={styles.itemContainer} wrap={false}>
                   <View style={styles.rowBetween}>
                     <Text style={styles.institutionName}>{exp.company}</Text>
                     <Text style={styles.dateText}>
@@ -180,13 +192,15 @@ export default function Harvard({ data, theme }) {
       case 'organizations':
         return (
           <View key="organizations" style={styles.section}>
-            <Text style={styles.sectionHeading}>Leadership &amp; Activities</Text>
+            <Text style={styles.sectionHeading} minPresenceAhead={48}>
+              Leadership &amp; Activities
+            </Text>
             {data.organizations
               .filter((org) => org.organization || org.title)
               .map((org, index) => {
                 const bullets = generateBullets(org, currency)
                 return (
-                  <View key={index} style={styles.itemContainer}>
+                  <View key={index} style={styles.itemContainer} wrap={false}>
                     <View style={styles.rowBetween}>
                       <Text style={styles.institutionName}>{org.organization}</Text>
                       <Text style={styles.dateText}>
@@ -209,11 +223,13 @@ export default function Harvard({ data, theme }) {
       case 'projects':
         return (
           <View key="projects" style={styles.section}>
-            <Text style={styles.sectionHeading}>Projects</Text>
+            <Text style={styles.sectionHeading} minPresenceAhead={48}>
+              Projects
+            </Text>
             {data.projects
               .filter((proj) => proj.name || proj.description)
               .map((proj, index) => (
-                <View key={index} style={styles.itemContainer}>
+                <View key={index} style={styles.itemContainer} wrap={false}>
                   <View style={styles.rowBetween}>
                     <Text style={styles.institutionName}>{proj.name}</Text>
                     {proj.link ? <Text style={styles.dateText}>{proj.link}</Text> : null}
@@ -231,8 +247,10 @@ export default function Harvard({ data, theme }) {
 
       case 'skills':
         return (
-          <View key="skills" style={styles.section}>
-            <Text style={styles.sectionHeading}>Skills &amp; Interests</Text>
+          <View key="skills" style={styles.section} wrap={false}>
+            <Text style={styles.sectionHeading} minPresenceAhead={36}>
+              Skills &amp; Interests
+            </Text>
             <View style={styles.skillsInline}>
               <Text style={styles.skillsLabel}>Skills:</Text>
               <Text style={styles.bodyText}>
@@ -245,11 +263,13 @@ export default function Harvard({ data, theme }) {
       case 'awards':
         return (
           <View key="awards" style={styles.section}>
-            <Text style={styles.sectionHeading}>Honors &amp; Awards</Text>
+            <Text style={styles.sectionHeading} minPresenceAhead={36}>
+              Honors &amp; Awards
+            </Text>
             {data.awards
               .filter((a) => a && a.trim())
               .map((award, index) => (
-                <View key={index} style={styles.bulletRow}>
+                <View key={index} style={styles.bulletRow} wrap={false}>
                   <Text style={styles.bulletDot}>•</Text>
                   <Text style={styles.bulletText}>{award}</Text>
                 </View>
@@ -260,11 +280,13 @@ export default function Harvard({ data, theme }) {
       case 'certifications':
         return (
           <View key="certifications" style={styles.section}>
-            <Text style={styles.sectionHeading}>Certifications</Text>
+            <Text style={styles.sectionHeading} minPresenceAhead={36}>
+              Certifications
+            </Text>
             {data.certifications
               .filter((c) => c && c.trim())
               .map((cert, index) => (
-                <View key={index} style={styles.bulletRow}>
+                <View key={index} style={styles.bulletRow} wrap={false}>
                   <Text style={styles.bulletDot}>•</Text>
                   <Text style={styles.bulletText}>{cert}</Text>
                 </View>

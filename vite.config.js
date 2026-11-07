@@ -5,4 +5,27 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    chunkSizeWarningLimit: 1600,
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            {
+              name: 'react-vendor',
+              test: /node_modules[\\/](react|react-dom|react-hook-form)[\\/]/,
+            },
+            {
+              name: 'pdf-renderer',
+              test: /node_modules[\\/]@react-pdf[\\/]/,
+            },
+            {
+              name: 'pdf-extractor',
+              test: /node_modules[\\/]pdfjs-dist[\\/]/,
+            },
+          ],
+        },
+      },
+    },
+  },
 })

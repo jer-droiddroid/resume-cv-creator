@@ -85,6 +85,13 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'No resume text provided.' })
   }
 
+  if (text.length > 50000) {
+    return res.status(413).json({
+      error: 'PAYLOAD_TOO_LARGE',
+      message: 'Resume text exceeds maximum allowed length.',
+    })
+  }
+
   // Use environment variable from Vercel or user-provided key
   const apiKey = userApiKey || process.env.GEMINI_API_KEY
 

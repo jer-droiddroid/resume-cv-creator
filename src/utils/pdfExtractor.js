@@ -1,14 +1,12 @@
-import * as pdfjsLib from 'pdfjs-dist'
-
-// Use Mozilla CDN worker for pdfjs in browser
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`
-
 /**
  * Extracts all plain text lines from an uploaded PDF file in the browser.
- * Runs 100% locally on the student's device.
+ * Lazy-loads pdfjs-dist only when the student actually imports a PDF.
  */
 export async function extractTextFromPdf(file) {
   try {
+    const pdfjsLib = await import('pdfjs-dist')
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`
+
     const arrayBuffer = await file.arrayBuffer()
     const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer })
     const pdf = await loadingTask.promise
@@ -29,4 +27,3 @@ export async function extractTextFromPdf(file) {
     throw new Error('Could not read this PDF. Please make sure it is not password-protected.')
   }
 }
-

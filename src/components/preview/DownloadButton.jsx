@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { pdf } from '@react-pdf/renderer'
 import { getTemplateById } from '../../templates/registry'
 import { getFittedTheme } from '../../utils/resumeFit'
 
@@ -20,16 +19,19 @@ function buildFileName(data) {
 export default function DownloadButton({ selectedTemplateId }) {
   const { getValues } = useFormContext()
   const [isGenerating, setIsGenerating] = useState(false)
+  const [exportError, setExportError] = useState('')
 
   const handleDownload = async () => {
     try {
       setIsGenerating(true)
+      setExportError('')
       const currentData = getValues()
       const template = getTemplateById(selectedTemplateId)
       const LayoutComponent = template.layout
       const effectiveTheme = getFittedTheme(template.theme, currentData)
 
-      // Generate the PDF blob from the active template component
+      // Lazy-load the PDF generator when exporting
+      const { pdf } = await import('@react-pdf/renderer')
       const blob = await pdf(
         <LayoutComponent data={currentData} theme={effectiveTheme} />
       ).toBlob()
@@ -45,21 +47,27 @@ export default function DownloadButton({ selectedTemplateId }) {
       URL.revokeObjectURL(url)
     } catch (err) {
       console.error('Failed to generate PDF for download:', err)
-      alert('Could not generate PDF. Please check your entries and try again.')
+      setExportError('Could not export PDF. Check your entries and try again.')
     } finally {
       setIsGenerating(false)
     }
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleDownload}
-      disabled={isGenerating}
-      className="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-slate-800 disabled:opacity-50 cursor-pointer"
-    >
-      <span>{isGenerating ? 'Preparing PDF...' : 'Download PDF'}</span>
-    </button>
+    <div className="inline-flex flex-col items-end">
+      <button
+        type="button"
+        onClick={handleDownload}
+        disabled={isGenerating}
+        className="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-slate-800 disabled:opacity-50 cursor-pointer"
+      >
+        <span>{isGenerating ? 'Preparing PDF...' : 'Download PDF'}</span>
+      </button>
+      {exportError && (
+        <span role="alert" className="mt-1 text-[11px] text-[#C0392B]">
+          {exportError}
+        </span>
+      )}
+    </div>
   )
 }
-

@@ -404,7 +404,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
 
     return (
       <div
-        className={`w-full min-h-[960px] bg-white flex break-words [overflow-wrap:anywhere] ${fontClass}`}
+        className={`w-full min-h-[919px] bg-white flex break-words [overflow-wrap:anywhere] ${fontClass}`}
       >
         {/* Tinted Left Sidebar */}
         <div
@@ -461,7 +461,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
 
     return (
       <div
-        className={`w-full min-h-[960px] bg-white p-7 sm:p-9 break-words [overflow-wrap:anywhere] ${fontClass}`}
+        className={`w-full min-h-[919px] bg-white p-7 sm:p-9 break-words [overflow-wrap:anywhere] ${fontClass}`}
       >
         {/* Header */}
         <div
@@ -505,7 +505,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
   if (isBanner) {
     return (
       <div
-        className={`w-full min-h-[960px] bg-white break-words [overflow-wrap:anywhere] ${fontClass}`}
+        className={`w-full min-h-[919px] bg-white break-words [overflow-wrap:anywhere] ${fontClass}`}
       >
         {/* Colored Header Banner */}
         <div
@@ -539,7 +539,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
   // Centered Harvard / Standard Layout or SingleColumn
   return (
     <div
-      className={`w-full min-h-[960px] bg-white p-7 sm:p-9 break-words [overflow-wrap:anywhere] ${fontClass}`}
+      className={`w-full min-h-[919px] bg-white p-7 sm:p-9 break-words [overflow-wrap:anywhere] ${fontClass}`}
     >
       {/* Header */}
       {isHarvard ? (

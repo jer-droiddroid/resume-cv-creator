@@ -1,8 +1,12 @@
 import { useFormContext } from 'react-hook-form'
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export default function PersonalInfoStep() {
   const { register, watch, setValue } = useFormContext()
   const documentType = watch('documentType') || 'resume'
+  const emailValue = watch('personalInfo.email') || ''
+  const isEmailInvalid = emailValue.trim().length > 0 && !EMAIL_REGEX.test(emailValue.trim())
 
   return (
     <div className="space-y-4">
@@ -86,10 +90,20 @@ export default function PersonalInfoStep() {
           <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
           <input
             type="email"
+            aria-invalid={isEmailInvalid}
             placeholder="alex.carter@university.edu"
             {...register('personalInfo.email')}
-            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-slate-800 focus:outline-none"
+            className={`w-full rounded-md border bg-white px-3 py-2 text-sm focus:outline-none ${
+              isEmailInvalid
+                ? 'border-[#C0392B] focus:border-[#C0392B]'
+                : 'border-slate-300 focus:border-slate-800'
+            }`}
           />
+          {isEmailInvalid && (
+            <p className="mt-1 text-xs text-[#C0392B]">
+              Enter a valid email address like name@university.edu.
+            </p>
+          )}
         </div>
 
         <div>
@@ -120,6 +134,9 @@ export default function PersonalInfoStep() {
             {...register('personalInfo.linkedin')}
             className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-slate-800 focus:outline-none"
           />
+          <p className="mt-1 text-xs text-slate-500">
+            Include your profile handle, e.g. linkedin.com/in/yourname
+          </p>
         </div>
 
         <div className="sm:col-span-2">
@@ -132,9 +149,11 @@ export default function PersonalInfoStep() {
             {...register('personalInfo.portfolio')}
             className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-slate-800 focus:outline-none"
           />
+          <p className="mt-1 text-xs text-slate-500">
+            Optional personal website, portfolio, or GitHub profile URL.
+          </p>
         </div>
       </div>
     </div>
   )
 }
-
