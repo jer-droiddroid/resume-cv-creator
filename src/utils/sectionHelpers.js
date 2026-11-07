@@ -49,8 +49,9 @@ export function isSectionNonEmpty(sectionId, data) {
 
     case 'ojt':
       return (
-        hasText(data.ojtInfo?.requiredHours) ||
-        hasText(data.ojtInfo?.preferredStartDate)
+        Boolean(data.isOjtMode) &&
+        (hasText(data.ojtInfo?.requiredHours) ||
+          hasText(data.ojtInfo?.preferredStartDate))
       )
 
     default:
@@ -84,10 +85,7 @@ const SUFFIX_TOKENS = new Set(['JR', 'JR.', 'SR', 'SR.', 'II', 'III', 'IV', 'V']
 export function buildFileName(data) {
   const rawName = data?.personalInfo?.fullName?.trim() || ''
   const suffix = data?.documentType === 'cv' ? 'CV' : 'Resume'
-  const isOjt =
-    Boolean(data?.isOjtMode) ||
-    Boolean(data?.ojtInfo?.courseCode?.trim()) ||
-    Boolean(data?.ojtInfo?.requiredHours?.trim())
+  const isOjt = Boolean(data?.isOjtMode)
 
   const sanitize = (str) =>
     (str || '').replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '')

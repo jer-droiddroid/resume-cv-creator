@@ -3,7 +3,7 @@ import { DEFAULT_SECTIONS } from '../../data/defaultResume'
 
 // Friendly human-readable names for each section
 const SECTION_LABELS = {
-  summary: 'Professional Summary',
+  summary: 'Professional Summary / Career Objective',
   education: 'Education',
   experience: 'Work & Internship Experience',
   organizations: 'Leadership & Student Organizations',
@@ -11,6 +11,7 @@ const SECTION_LABELS = {
   skills: 'Skills',
   awards: 'Awards & Honors',
   certifications: 'Certifications',
+  ojt: 'OJT Availability',
 }
 
 export default function SectionSettingsStep() {
@@ -22,6 +23,7 @@ export default function SectionSettingsStep() {
 
   // Watch the actual form values in state (useFieldArray's field.id is an internal React key UUID)
   const sectionsData = useWatch({ control, name: 'sections' }) || []
+  const isOjtMode = Boolean(useWatch({ control, name: 'isOjtMode' }))
 
   return (
     <div className="space-y-4">
@@ -48,6 +50,10 @@ export default function SectionSettingsStep() {
             actualItem.label ||
             DEFAULT_SECTIONS[index]?.label ||
             sectionKey
+
+          if (sectionKey === 'ojt' && !isOjtMode) {
+            return null
+          }
 
           return (
             <div

@@ -395,8 +395,8 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
       }
 
       case 'ojt': {
+        if (!data?.isOjtMode) return null
         const isReal = isSectionNonEmpty('ojt', data)
-        if (!isReal && !data?.isOjtMode) return null
         const ojtSource = isReal ? data.ojtInfo : sampleResumeData.ojtInfo
 
         return (
