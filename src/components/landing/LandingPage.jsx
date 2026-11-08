@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { sampleResumeData } from '../../data/sampleResume'
 import { templates, TEMPLATE_CATEGORIES } from '../../templates/registry'
 
@@ -22,7 +22,7 @@ function HeroPaperPreview({ template, onUseTemplate }) {
         : 'font-sans'
 
   return (
-    <div className="rounded-[10px] border border-[#E3E8EE] bg-white p-4 sm:p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)]">
+    <div className="rounded-[10px] border border-[#E3E8EE] bg-white p-4 sm:p-6 shadow-[0_4px_20px_rgba(16,24,40,0.06)] transition-shadow duration-300 hover:shadow-[0_12px_32px_rgba(16,24,40,0.09)]">
       {/* Mini preview toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-[#E3E8EE]">
         <div className="flex items-center gap-1.5">
@@ -35,10 +35,10 @@ function HeroPaperPreview({ template, onUseTemplate }) {
                 key={tpl.id}
                 type="button"
                 onClick={() => onUseTemplate(tpl.id, false)}
-                className={`rounded-[6px] px-2.5 py-1 text-xs font-medium transition cursor-pointer ${
+                className={`rounded-[6px] px-2.5 py-1 text-xs font-medium transition-all duration-200 cursor-pointer ${
                   active
-                    ? 'bg-[#1F4D8F] text-white font-semibold'
-                    : 'bg-[#F6F8FA] text-[#5B6678] hover:text-[#1A2233] border border-[#E3E8EE]'
+                    ? 'bg-[#1F4D8F] text-white font-semibold shadow-2xs scale-[1.02]'
+                    : 'bg-[#F6F8FA] text-[#5B6678] hover:text-[#1A2233] hover:bg-[#EEF2F6] border border-[#E3E8EE]'
                 }`}
               >
                 {tpl.name}
@@ -50,16 +50,17 @@ function HeroPaperPreview({ template, onUseTemplate }) {
         <button
           type="button"
           onClick={() => onUseTemplate(template.id, true)}
-          className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] cursor-pointer"
+          className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-all duration-200 cursor-pointer"
         >
           Use template
         </button>
       </div>
 
       {/* Paper stage */}
-      <div className="mt-4 rounded-[8px] bg-[#EEF2F6] p-4 sm:p-6">
+      <div className="mt-4 rounded-[8px] bg-[#EEF2F6] p-4 sm:p-6 overflow-hidden">
         <div
-          className={`mx-auto w-full max-w-[460px] rounded-[4px] bg-white border border-[#E3E8EE] shadow-sm overflow-hidden text-[10px] leading-relaxed select-none ${fontClass}`}
+          key={template.id}
+          className={`animate-paper-morph mx-auto w-full max-w-[460px] rounded-[4px] bg-white border border-[#E3E8EE] shadow-sm overflow-hidden text-[10px] leading-relaxed select-none transition-colors duration-300 ${fontClass}`}
           style={{ color: theme.textColor }}
         >
           {/* Header */}
@@ -281,6 +282,33 @@ export default function LandingPage({
       : 'harvard-classic'
   )
   const [activeCategory, setActiveCategory] = useState('All')
+  const pageRef = useRef(null)
+
+  useEffect(() => {
+    const root = pageRef.current
+    if (!root) return
+
+    const elements = root.querySelectorAll('.reveal-item')
+    if (typeof IntersectionObserver === 'undefined') {
+      elements.forEach((el) => el.classList.add('is-visible'))
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    )
+
+    elements.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
 
   const heroTemplate =
     templates.find((t) => t.id === heroTemplateId) || templates[0]
@@ -298,9 +326,12 @@ export default function LandingPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#F6F8FA] text-[#1A2233]">
+    <div
+      ref={pageRef}
+      className="min-h-screen bg-[#F6F8FA] text-[#1A2233] animate-page-enter"
+    >
       {/* Header */}
-      <header className="sticky top-0 z-20 border-b border-[#E3E8EE] bg-white">
+      <header className="sticky top-0 z-20 border-b border-[#E3E8EE] bg-white/95 backdrop-blur-xs transition-colors">
         <div className="mx-auto flex max-w-[1280px] items-center justify-between px-4 sm:px-6 py-3.5">
           <a
             href="#top"
@@ -308,7 +339,7 @@ export default function LandingPage({
               e.preventDefault()
               window.scrollTo({ top: 0, behavior: 'smooth' })
             }}
-            className="inline-flex items-center gap-2 text-xl sm:text-2xl font-brand font-bold tracking-[-0.02em] text-[#1A2233] hover:opacity-85 focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] rounded-sm"
+            className="inline-flex items-center gap-2 text-xl sm:text-2xl font-brand font-bold tracking-[-0.02em] text-[#1A2233] hover:opacity-85 transition-opacity duration-200 focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] rounded-sm"
           >
             <img
               src="/papel-logo.png"
@@ -319,13 +350,13 @@ export default function LandingPage({
           </a>
 
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-[#5B6678]">
-            <a href="#features" className="hover:text-[#1A2233] transition">
+            <a href="#features" className="hover:text-[#1A2233] transition-colors duration-200">
               Features
             </a>
-            <a href="#templates" className="hover:text-[#1A2233] transition">
+            <a href="#templates" className="hover:text-[#1A2233] transition-colors duration-200">
               Templates
             </a>
-            <a href="#how-it-works" className="hover:text-[#1A2233] transition">
+            <a href="#how-it-works" className="hover:text-[#1A2233] transition-colors duration-200">
               How it works
             </a>
           </nav>
@@ -335,7 +366,7 @@ export default function LandingPage({
               <button
                 type="button"
                 onClick={onStartBuilder}
-                className="hidden sm:inline-flex items-center justify-center h-10 px-3.5 rounded-[6px] border border-[#E3E8EE] bg-white text-sm font-medium text-[#1A2233] hover:bg-[#F6F8FA] cursor-pointer"
+                className="hidden sm:inline-flex items-center justify-center h-10 px-3.5 rounded-[6px] border border-[#E3E8EE] bg-white text-sm font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-all duration-200 cursor-pointer"
               >
                 Continue saved draft
               </button>
@@ -343,7 +374,7 @@ export default function LandingPage({
             <button
               type="button"
               onClick={onStartBuilder}
-              className="inline-flex items-center justify-center h-10 px-4 rounded-[6px] bg-[#1F4D8F] text-sm font-semibold text-white hover:bg-[#173b6e] active:translate-y-[0.5px] transition cursor-pointer"
+              className="inline-flex items-center justify-center h-10 px-4 rounded-[6px] bg-[#1F4D8F] text-sm font-semibold text-white hover:bg-[#173b6e] hover:-translate-y-[1px] active:translate-y-[0.5px] transition-all duration-200 cursor-pointer"
             >
               {hasSavedDraft ? 'Open builder' : 'Build your resume'}
             </button>
@@ -355,25 +386,37 @@ export default function LandingPage({
       <main id="top" className="mx-auto max-w-[1280px] px-4 sm:px-6 pt-12 pb-20 space-y-20">
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1 text-xs font-medium text-[#5B6678] shadow-[0_1px_2px_rgba(16,24,40,0.06)]">
+            <div
+              style={{ animationDelay: '0ms' }}
+              className="animate-fade-up inline-flex items-center gap-2 rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1 text-xs font-medium text-[#5B6678] shadow-[0_1px_2px_rgba(16,24,40,0.06)]"
+            >
               <span>Free student resume &amp; CV maker</span>
               <span className="text-[#E3E8EE]">•</span>
               <span>No sign-up required</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-bold tracking-tight text-[#1A2233] leading-[1.18] max-w-[22ch]">
+            <h1
+              style={{ animationDelay: '70ms' }}
+              className="animate-fade-up text-3xl sm:text-4xl lg:text-[40px] font-bold tracking-tight text-[#1A2233] leading-[1.18] max-w-[22ch]"
+            >
               Fill in your details once. Switch templates anytime.
             </h1>
 
-            <p className="text-base text-[#5B6678] leading-relaxed max-w-[60ch]">
+            <p
+              style={{ animationDelay: '140ms' }}
+              className="animate-fade-up text-base text-[#5B6678] leading-relaxed max-w-[60ch]"
+            >
               Build a clean, one-page student resume, OJT practicum application, or multi-page academic CV. Your data stays separated from the design so you can change layouts in one click, and your work stays privately in your browser.
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+            <div
+              style={{ animationDelay: '210ms' }}
+              className="animate-fade-up flex flex-wrap items-center gap-3 pt-1"
+            >
               <button
                 type="button"
                 onClick={onStartBuilder}
-                className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] bg-[#1F4D8F] text-sm font-semibold text-white hover:bg-[#173b6e] active:translate-y-[0.5px] transition cursor-pointer"
+                className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] bg-[#1F4D8F] text-sm font-semibold text-white hover:bg-[#173b6e] hover:-translate-y-[1px] active:translate-y-[0.5px] transition-all duration-200 cursor-pointer"
               >
                 {hasSavedDraft ? 'Continue your resume' : 'Start building for free'}
               </button>
@@ -381,7 +424,7 @@ export default function LandingPage({
               <button
                 type="button"
                 onClick={onOpenImportFromLanding}
-                className="inline-flex items-center justify-center h-11 px-4 rounded-[6px] border border-[#E3E8EE] bg-white text-sm font-medium text-[#1A2233] hover:bg-[#F6F8FA] transition cursor-pointer"
+                className="inline-flex items-center justify-center h-11 px-4 rounded-[6px] border border-[#E3E8EE] bg-white text-sm font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] hover:-translate-y-[1px] active:translate-y-[0.5px] transition-all duration-200 cursor-pointer"
               >
                 Import existing PDF
               </button>
@@ -389,14 +432,17 @@ export default function LandingPage({
               <button
                 type="button"
                 onClick={onLoadSampleAndStart}
-                className="inline-flex items-center justify-center h-11 px-3 text-sm font-medium text-[#5B6678] hover:text-[#1A2233] underline underline-offset-4 cursor-pointer"
+                className="inline-flex items-center justify-center h-11 px-3 text-sm font-medium text-[#5B6678] hover:text-[#1A2233] underline underline-offset-4 transition-colors duration-200 cursor-pointer"
               >
                 Try with sample data
               </button>
             </div>
 
             {/* Key guarantees */}
-            <div className="pt-4 border-t border-[#E3E8EE] grid grid-cols-3 gap-4 max-w-[520px]">
+            <div
+              style={{ animationDelay: '280ms' }}
+              className="animate-fade-up pt-4 border-t border-[#E3E8EE] grid grid-cols-3 gap-4 max-w-[520px]"
+            >
               <div>
                 <div className="text-sm font-bold text-[#1A2233]">15 Templates</div>
                 <div className="text-xs text-[#5B6678] mt-0.5">
@@ -419,7 +465,10 @@ export default function LandingPage({
           </div>
 
           {/* Interactive Hero Preview */}
-          <div className="lg:col-span-6">
+          <div
+            style={{ animationDelay: '160ms' }}
+            className="animate-fade-up lg:col-span-6"
+          >
             <HeroPaperPreview
               template={heroTemplate}
               onUseTemplate={handleHeroTemplateInteraction}
@@ -429,7 +478,7 @@ export default function LandingPage({
 
         {/* Features Grid */}
         <section id="features" className="space-y-6 scroll-mt-20">
-          <div className="max-w-[65ch]">
+          <div className="reveal-item max-w-[65ch]">
             <h2 className="text-xl sm:text-2xl font-bold text-[#1A2233]">
               Designed for students, interns, and first-time applicants
             </h2>
@@ -439,7 +488,10 @@ export default function LandingPage({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2">
+            <div
+              style={{ transitionDelay: '0ms' }}
+              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2"
+            >
               <div className="text-xs font-semibold text-[#1F4D8F]">
                 Decoupled Data &amp; Design
               </div>
@@ -451,7 +503,10 @@ export default function LandingPage({
               </p>
             </div>
 
-            <div className="rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2">
+            <div
+              style={{ transitionDelay: '90ms' }}
+              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2"
+            >
               <div className="text-xs font-semibold text-[#1F4D8F]">
                 Student Organization Builder
               </div>
@@ -463,7 +518,10 @@ export default function LandingPage({
               </p>
             </div>
 
-            <div className="rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2">
+            <div
+              style={{ transitionDelay: '180ms' }}
+              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2"
+            >
               <div className="text-xs font-semibold text-[#1F4D8F]">
                 OJT &amp; Practicum Mode
               </div>
@@ -483,7 +541,7 @@ export default function LandingPage({
 
         {/* Template Showcase */}
         <section id="templates" className="space-y-6 scroll-mt-20">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="reveal-item flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-[65ch]">
               <h2 className="text-xl sm:text-2xl font-bold text-[#1A2233]">
                 Start with a clean template
@@ -499,10 +557,10 @@ export default function LandingPage({
                   key={category}
                   type="button"
                   onClick={() => setActiveCategory(category)}
-                  className={`rounded-[6px] px-3 py-1.5 text-xs font-medium transition cursor-pointer ${
+                  className={`rounded-[6px] px-3 py-1.5 text-xs font-medium transition-all duration-200 cursor-pointer ${
                     activeCategory === category
-                      ? 'bg-[#1F4D8F] text-white font-semibold'
-                      : 'bg-white text-[#5B6678] border border-[#E3E8EE] hover:text-[#1A2233]'
+                      ? 'bg-[#1F4D8F] text-white font-semibold shadow-2xs scale-[1.02]'
+                      : 'bg-white text-[#5B6678] border border-[#E3E8EE] hover:text-[#1A2233] hover:bg-[#F6F8FA]'
                   }`}
                 >
                   {category}
@@ -511,8 +569,8 @@ export default function LandingPage({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTemplates.map((tpl) => {
+          <div className="reveal-item grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredTemplates.map((tpl, index) => {
               const { theme } = tpl
               const isHarvard = tpl.id.startsWith('harvard-') || tpl.id.startsWith('reddit-')
               const isBanner = tpl.id.startsWith('banner-')
@@ -520,12 +578,13 @@ export default function LandingPage({
 
               return (
                 <div
-                  key={tpl.id}
-                  className="rounded-[10px] border border-[#E3E8EE] bg-white p-4 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-4"
+                  key={`${activeCategory}-${tpl.id}`}
+                  style={{ animationDelay: `${index * 60}ms` }}
+                  className="group animate-paper-morph papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-4 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-4"
                 >
-                  <div className="rounded-[6px] bg-[#EEF2F6] p-4 flex items-center justify-center">
+                  <div className="rounded-[6px] bg-[#EEF2F6] p-4 flex items-center justify-center overflow-hidden">
                     <div
-                      className="w-full max-w-[220px] h-48 rounded-[3px] bg-white border border-[#E3E8EE] shadow-2xs overflow-hidden flex flex-col text-[6px] leading-tight select-none"
+                      className="w-full max-w-[220px] h-48 rounded-[3px] bg-white border border-[#E3E8EE] shadow-2xs overflow-hidden flex flex-col text-[6px] leading-tight select-none transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.02] group-hover:shadow-md"
                       style={{ color: theme.textColor }}
                     >
                       {isBanner ? (
@@ -671,7 +730,7 @@ export default function LandingPage({
                     <button
                       type="button"
                       onClick={() => onSelectTemplateAndStart(tpl.id)}
-                      className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-semibold text-[#1A2233] hover:bg-[#F6F8FA] cursor-pointer"
+                      className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-semibold text-[#1A2233] group-hover:bg-[#1F4D8F] group-hover:text-white group-hover:border-[#1F4D8F] transition-colors duration-200 cursor-pointer"
                     >
                       Use template
                     </button>
@@ -684,7 +743,7 @@ export default function LandingPage({
 
         {/* How It Works */}
         <section id="how-it-works" className="space-y-6 scroll-mt-20">
-          <div className="max-w-[65ch]">
+          <div className="reveal-item max-w-[65ch]">
             <h2 className="text-xl sm:text-2xl font-bold text-[#1A2233]">
               How Papel works
             </h2>
@@ -694,7 +753,10 @@ export default function LandingPage({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2">
+            <div
+              style={{ transitionDelay: '0ms' }}
+              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2"
+            >
               <span className="inline-flex items-center justify-center w-6 h-6 rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] text-xs font-bold text-[#1F4D8F]">
                 1
               </span>
@@ -706,7 +768,10 @@ export default function LandingPage({
               </p>
             </div>
 
-            <div className="rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2">
+            <div
+              style={{ transitionDelay: '90ms' }}
+              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2"
+            >
               <span className="inline-flex items-center justify-center w-6 h-6 rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] text-xs font-bold text-[#1F4D8F]">
                 2
               </span>
@@ -718,7 +783,10 @@ export default function LandingPage({
               </p>
             </div>
 
-            <div className="rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2">
+            <div
+              style={{ transitionDelay: '180ms' }}
+              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2"
+            >
               <span className="inline-flex items-center justify-center w-6 h-6 rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] text-xs font-bold text-[#1F4D8F]">
                 3
               </span>
@@ -733,7 +801,7 @@ export default function LandingPage({
         </section>
 
         {/* Bottom CTA Panel */}
-        <section className="rounded-[10px] border border-[#E3E8EE] bg-white p-6 sm:p-8 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <section className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 sm:p-8 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="space-y-1 max-w-[60ch]">
             <h2 className="text-xl font-bold text-[#1A2233]">
               Ready to build your student resume?
@@ -747,7 +815,7 @@ export default function LandingPage({
             <button
               type="button"
               onClick={onStartBuilder}
-              className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] bg-[#1F4D8F] text-sm font-semibold text-white hover:bg-[#173b6e] transition cursor-pointer"
+              className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] bg-[#1F4D8F] text-sm font-semibold text-white hover:bg-[#173b6e] hover:-translate-y-[1px] active:translate-y-[0.5px] transition-all duration-200 cursor-pointer"
             >
               {hasSavedDraft ? 'Continue your resume' : 'Open resume builder'}
             </button>
@@ -777,3 +845,4 @@ export default function LandingPage({
     </div>
   )
 }
+

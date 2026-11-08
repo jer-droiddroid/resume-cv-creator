@@ -299,7 +299,7 @@ export default function App() {
           onLoadSampleAndStart={handleLoadSampleAndStart}
         />
       ) : (
-        <div className="min-h-screen bg-slate-100 text-slate-900">
+        <div className="min-h-screen bg-slate-100 text-slate-900 animate-page-enter">
           {/* Sticky Top Header */}
           <header className="border-b border-slate-200 bg-white px-4 sm:px-6 py-3.5 sticky top-0 z-20">
             <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
