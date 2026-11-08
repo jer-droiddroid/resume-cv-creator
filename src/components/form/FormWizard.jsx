@@ -227,14 +227,20 @@ export default function FormWizard({ disabled = false }) {
           Back
         </button>
 
-        <button
-          type="button"
-          onClick={goNext}
-          disabled={disabled}
-          className="rounded-[6px] bg-[#1F4D8F] px-4 py-1.5 text-sm font-semibold text-white hover:bg-[#173b6e] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors"
-        >
-          {isLastStep ? 'Finish' : 'Next'}
-        </button>
+        {isLastStep ? (
+          <span className="text-xs font-medium text-[#5B6678]">
+            All steps complete — ready to download PDF
+          </span>
+        ) : (
+          <button
+            type="button"
+            onClick={goNext}
+            disabled={disabled}
+            className="rounded-[6px] bg-[#1F4D8F] px-4 py-1.5 text-sm font-semibold text-white hover:bg-[#173b6e] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors"
+          >
+            Next
+          </button>
+        )}
       </div>
     </div>
   )
