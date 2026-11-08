@@ -146,6 +146,7 @@ export async function parsePdfResume(file, userApiKey = '') {
       generationConfig: {
         response_mime_type: 'application/json',
         temperature: 0.1,
+        thinkingConfig: { thinkingBudget: 0 },
       },
     }),
   })

@@ -130,6 +130,9 @@ export default async function handler(req, res) {
           generationConfig: {
             response_mime_type: 'application/json',
             temperature: 0.1,
+             ...(model.startsWith('gemini-2.5')
+              ? { thinkingConfig: { thinkingBudget: 0 } }
+              : {}),
           },
         }),
       })
