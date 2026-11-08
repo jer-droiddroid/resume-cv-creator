@@ -75,12 +75,36 @@ Rules:
 3. Extract each bullet point cleanly, starting with a strong action verb.
 4. If a field or section is not mentioned in the resume, leave strings empty ("") and arrays empty ([]).`
 
+async function fetchWithTimeout(url, options = {}, timeoutMs = 20000) {
+  const controller = new AbortController()
+  const externalSignal = options.signal
+  const onExternalAbort = () => controller.abort()
+
+  if (externalSignal) {
+    if (externalSignal.aborted) {
+      controller.abort()
+    } else {
+      externalSignal.addEventListener('abort', onExternalAbort, { once: true })
+    }
+  }
+
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    return await fetch(url, { ...options, signal: controller.signal })
+  } finally {
+    clearTimeout(timer)
+    if (externalSignal) {
+      externalSignal.removeEventListener('abort', onExternalAbort)
+    }
+  }
+}
+
 /**
  * Parses a PDF file into our structured resume format using Gemini AI.
  * 1. Extracts raw text in-browser using pdfjs-dist.
  * 2. Sends extracted text to /api/parse-resume (or directly to Gemini if user provided a key).
  */
-export async function parsePdfResume(file, userApiKey = '') {
+export async function parsePdfResume(file, userApiKey = '', signal = undefined) {
   // Step 1: Extract plain text from PDF in browser
   const rawText = await extractTextFromPdf(file)
 
@@ -91,11 +115,16 @@ export async function parsePdfResume(file, userApiKey = '') {
   // Step 2: Try Vercel Serverless Function first
   let apiErrorToThrow = null
   try {
-    const res = await fetch('/api/parse-resume', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: rawText, userApiKey }),
-    })
+    const res = await fetchWithTimeout(
+      '/api/parse-resume',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: rawText, userApiKey }),
+        signal,
+      },
+      20000
+    )
 
     if (res.ok) {
       const result = await res.json()
@@ -115,7 +144,13 @@ export async function parsePdfResume(file, userApiKey = '') {
         apiErrorToThrow = new Error(errJson.message)
       }
     }
-  } catch {
+  } catch (err) {
+    if (signal?.aborted) {
+      throw new Error('CANCELLED')
+    }
+    if (err?.name === 'AbortError' && !userApiKey) {
+      throw new Error('Resume extraction timed out after 20 seconds. Please try again.')
+    }
     // Network error or local Vite dev server without /api/parse-resume route;
     // allow fallback to direct client call below
   }
@@ -130,26 +165,42 @@ export async function parsePdfResume(file, userApiKey = '') {
     throw new Error('NO_API_KEY')
   }
 
-  const directRes = await fetch(`${GEMINI_DIRECT_URL}?key=${directKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [
-        {
-          parts: [
+  let directRes
+  try {
+    directRes = await fetchWithTimeout(
+      `${GEMINI_DIRECT_URL}?key=${directKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal,
+        body: JSON.stringify({
+          contents: [
             {
-              text: `${SYSTEM_PROMPT}\n\nResume Text:\n"""\n${rawText.slice(0, 15000)}\n"""`,
+              parts: [
+                {
+                  text: `${SYSTEM_PROMPT}\n\nResume Text:\n"""\n${rawText.slice(0, 15000)}\n"""`,
+                },
+              ],
             },
           ],
-        },
-      ],
-      generationConfig: {
-        response_mime_type: 'application/json',
-        temperature: 0.1,
-        thinkingConfig: { thinkingBudget: 0 },
+          generationConfig: {
+            response_mime_type: 'application/json',
+            temperature: 0.1,
+            thinkingConfig: { thinkingBudget: 0 },
+          },
+        }),
       },
-    }),
-  })
+      20000
+    )
+  } catch (err) {
+    if (signal?.aborted) {
+      throw new Error('CANCELLED')
+    }
+    if (err?.name === 'AbortError') {
+      throw new Error('Resume extraction timed out after 20 seconds. Please try again.')
+    }
+    throw err
+  }
 
   if (!directRes.ok) {
     if (directRes.status === 429) {
