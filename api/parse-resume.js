@@ -1,5 +1,11 @@
-const GEMINI_API_URL =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
+const GEMINI_MODELS = [
+  'gemini-2.5-flash',
+  'gemini-2.5-flash-lite',
+  'gemini-flash-latest',
+]
+
+const getGeminiUrl = (model) =>
+  `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`
 
 const SYSTEM_PROMPT = `You are an expert resume parsing engine.
 Parse the following raw resume text and extract all information into a single clean JSON object matching this exact schema:
@@ -104,52 +110,67 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: `${SYSTEM_PROMPT}\n\nResume Text:\n"""\n${text.slice(0, 15000)}\n"""`,
-              },
-            ],
-          },
-        ],
-        generationConfig: {
-          response_mime_type: 'application/json',
-          temperature: 0.1,
-        },
-      }),
-    })
+    let lastErrorStatus = 500
+    let lastErrorMessage = 'Failed to process resume with Gemini API.'
 
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}))
-      if (response.status === 429) {
-        return res.status(429).json({
-          error: 'RATE_LIMIT',
-          message: 'The free AI limit was temporarily reached. Please wait a few seconds and try again.',
+    for (const model of GEMINI_MODELS) {
+      const response = await fetch(`${getGeminiUrl(model)}?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `${SYSTEM_PROMPT}\n\nResume Text:\n"""\n${text.slice(0, 15000)}\n"""`,
+                },
+              ],
+            },
+          ],
+          generationConfig: {
+            response_mime_type: 'application/json',
+            temperature: 0.1,
+          },
+        }),
+      })
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}))
+        if (response.status === 429) {
+          return res.status(429).json({
+            error: 'RATE_LIMIT',
+            message:
+              'The free AI limit was temporarily reached. Please wait a few seconds and try again.',
+          })
+        }
+        lastErrorStatus = response.status
+        lastErrorMessage =
+          errData?.error?.message || 'Failed to process resume with Gemini API.'
+        // Try next fallback model if current model is deprecated/unavailable (404)
+        if (response.status === 404) {
+          continue
+        }
+        break
+      }
+
+      const data = await response.json()
+      const contentText = data?.candidates?.[0]?.content?.parts?.[0]?.text
+
+      if (!contentText) {
+        return res.status(500).json({
+          error: 'EMPTY_RESPONSE',
+          message: 'AI did not return parsed resume content.',
         })
       }
-      return res.status(response.status).json({
-        error: 'AI_ERROR',
-        message: errData?.error?.message || 'Failed to process resume with Gemini API.',
-      })
+
+      const parsedJson = JSON.parse(contentText)
+      return res.status(200).json({ success: true, data: parsedJson })
     }
 
-    const data = await response.json()
-    const contentText = data?.candidates?.[0]?.content?.parts?.[0]?.text
-
-    if (!contentText) {
-      return res.status(500).json({
-        error: 'EMPTY_RESPONSE',
-        message: 'AI did not return parsed resume content.',
-      })
-    }
-
-    const parsedJson = JSON.parse(contentText)
-    return res.status(200).json({ success: true, data: parsedJson })
+    return res.status(lastErrorStatus).json({
+      error: 'AI_ERROR',
+      message: lastErrorMessage,
+    })
   } catch (err) {
     console.error('Serverless parse-resume error:', err)
     return res.status(500).json({

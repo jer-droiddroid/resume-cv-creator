@@ -1,7 +1,7 @@
 import { extractTextFromPdf } from './pdfExtractor'
 
 const GEMINI_DIRECT_URL =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
+  'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
 
 const SYSTEM_PROMPT = `You are an expert resume parsing engine.
 Parse the following raw resume text and extract all information into a single clean JSON object matching this exact schema:
@@ -89,6 +89,7 @@ export async function parsePdfResume(file, userApiKey = '') {
   }
 
   // Step 2: Try Vercel Serverless Function first
+  let apiErrorToThrow = null
   try {
     const res = await fetch('/api/parse-resume', {
       method: 'POST',
@@ -102,20 +103,25 @@ export async function parsePdfResume(file, userApiKey = '') {
         return result.data
       }
     } else if (res.status === 429) {
-      throw new Error('The free AI parsing limit was temporarily reached. Please wait a few seconds and try again.')
+      apiErrorToThrow = new Error(
+        'The free AI parsing limit was temporarily reached. Please wait a few seconds and try again.'
+      )
     } else {
       const errJson = await res.json().catch(() => ({}))
       // If error is missing API key and user provided no key, propagate message
       if (errJson?.error === 'NO_API_KEY' && !userApiKey) {
-        throw new Error('NO_API_KEY')
+        apiErrorToThrow = new Error('NO_API_KEY')
+      } else if (errJson?.message) {
+        apiErrorToThrow = new Error(errJson.message)
       }
     }
-  } catch (err) {
-    if (err.message === 'NO_API_KEY' || err.message.includes('free AI parsing limit')) {
-      throw err
-    }
-    // If /api/parse-resume 404ed (e.g. running on local Vite dev server without Vercel CLI)
-    // and user has an API key, we fallback to direct call below
+  } catch {
+    // Network error or local Vite dev server without /api/parse-resume route;
+    // allow fallback to direct client call below
+  }
+
+  if (apiErrorToThrow) {
+    throw apiErrorToThrow
   }
 
   // Fallback: If user provided key or VITE_GEMINI_API_KEY is available
