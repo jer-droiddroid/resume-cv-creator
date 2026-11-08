@@ -1,11 +1,29 @@
-const GEMINI_MODELS = [
-  'gemini-2.5-flash',
-  'gemini-2.5-flash-lite',
-  'gemini-flash-latest',
-]
+const PRIMARY_MODEL = 'gemini-3.8-flash'
 
 const getGeminiUrl = (model) =>
   `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`
+
+async function resolveFallbackFlashModel(apiKey) {
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`
+    )
+    if (!res.ok) return 'gemini-flash-latest'
+    const data = await res.json()
+    const models = data?.models || []
+    const flashModel = models.find(
+      (m) =>
+        m.name?.includes('flash') &&
+        !m.name?.includes('2.0') &&
+        !m.name?.includes('1.5') &&
+        Array.isArray(m.supportedGenerationMethods) &&
+        m.supportedGenerationMethods.includes('generateContent')
+    )
+    return flashModel ? flashModel.name.replace(/^models\//, '') : 'gemini-flash-latest'
+  } catch {
+    return 'gemini-flash-latest'
+  }
+}
 
 const SYSTEM_PROMPT = `You are an expert resume parsing engine.
 Parse the following raw resume text and extract all information into a single clean JSON object matching this exact schema:
@@ -110,70 +128,65 @@ export default async function handler(req, res) {
   }
 
   try {
-    let lastErrorStatus = 500
-    let lastErrorMessage = 'Failed to process resume with Gemini API.'
-
-    for (const model of GEMINI_MODELS) {
-      const response = await fetch(`${getGeminiUrl(model)}?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
+    const payload = {
+      contents: [
+        {
+          parts: [
             {
-              parts: [
-                {
-                  text: `${SYSTEM_PROMPT}\n\nResume Text:\n"""\n${text.slice(0, 15000)}\n"""`,
-                },
-              ],
+              text: `${SYSTEM_PROMPT}\n\nResume Text:\n"""\n${text.slice(0, 12000)}\n"""`,
             },
           ],
-          generationConfig: {
-            response_mime_type: 'application/json',
-            temperature: 0.1,
-             ...(model.startsWith('gemini-2.5')
-              ? { thinkingConfig: { thinkingBudget: 0 } }
-              : {}),
-          },
-        }),
-      })
-
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}))
-        if (response.status === 429) {
-          return res.status(429).json({
-            error: 'RATE_LIMIT',
-            message:
-              'The free AI limit was temporarily reached. Please wait a few seconds and try again.',
-          })
-        }
-        lastErrorStatus = response.status
-        lastErrorMessage =
-          errData?.error?.message || 'Failed to process resume with Gemini API.'
-        // Try next fallback model if current model is deprecated/unavailable (404)
-        if (response.status === 404) {
-          continue
-        }
-        break
-      }
-
-      const data = await response.json()
-      const contentText = data?.candidates?.[0]?.content?.parts?.[0]?.text
-
-      if (!contentText) {
-        return res.status(500).json({
-          error: 'EMPTY_RESPONSE',
-          message: 'AI did not return parsed resume content.',
-        })
-      }
-
-      const parsedJson = JSON.parse(contentText)
-      return res.status(200).json({ success: true, data: parsedJson })
+        },
+      ],
+      generationConfig: {
+        response_mime_type: 'application/json',
+        temperature: 0.1,
+      },
     }
 
-    return res.status(lastErrorStatus).json({
-      error: 'AI_ERROR',
-      message: lastErrorMessage,
+    let response = await fetch(`${getGeminiUrl(PRIMARY_MODEL)}?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
     })
+
+    if (response.status === 404) {
+      const fallbackModel = await resolveFallbackFlashModel(apiKey)
+      response = await fetch(`${getGeminiUrl(fallbackModel)}?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+    }
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}))
+      if (response.status === 429) {
+        return res.status(429).json({
+          error: 'RATE_LIMIT',
+          message:
+            'The free AI limit was temporarily reached. Please wait a few seconds and try again.',
+        })
+      }
+      return res.status(response.status).json({
+        error: 'AI_ERROR',
+        message:
+          errData?.error?.message || 'Failed to process resume with Gemini API.',
+      })
+    }
+
+    const data = await response.json()
+    const contentText = data?.candidates?.[0]?.content?.parts?.[0]?.text
+
+    if (!contentText) {
+      return res.status(500).json({
+        error: 'EMPTY_RESPONSE',
+        message: 'AI did not return parsed resume content.',
+      })
+    }
+
+    const parsedJson = JSON.parse(contentText)
+    return res.status(200).json({ success: true, data: parsedJson })
   } catch (err) {
     console.error('Serverless parse-resume error:', err)
     return res.status(500).json({

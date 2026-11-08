@@ -1,7 +1,7 @@
 import { extractTextFromPdf } from './pdfExtractor'
 
 const GEMINI_DIRECT_URL =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
+  'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent'
 
 const SYSTEM_PROMPT = `You are an expert resume parsing engine.
 Parse the following raw resume text and extract all information into a single clean JSON object matching this exact schema:
@@ -75,7 +75,7 @@ Rules:
 3. Extract each bullet point cleanly, starting with a strong action verb.
 4. If a field or section is not mentioned in the resume, leave strings empty ("") and arrays empty ([]).`
 
-async function fetchWithTimeout(url, options = {}, timeoutMs = 20000) {
+async function fetchWithTimeout(url, options = {}, timeoutMs = 45000) {
   const controller = new AbortController()
   const externalSignal = options.signal
   const onExternalAbort = () => controller.abort()
@@ -123,7 +123,7 @@ export async function parsePdfResume(file, userApiKey = '', signal = undefined) 
         body: JSON.stringify({ text: rawText, userApiKey }),
         signal,
       },
-      20000
+      45000
     )
 
     if (res.ok) {
@@ -149,7 +149,7 @@ export async function parsePdfResume(file, userApiKey = '', signal = undefined) 
       throw new Error('CANCELLED')
     }
     if (err?.name === 'AbortError' && !userApiKey) {
-      throw new Error('Resume extraction timed out after 20 seconds. Please try again.')
+      throw new Error('Resume extraction timed out. Please try again.')
     }
     // Network error or local Vite dev server without /api/parse-resume route;
     // allow fallback to direct client call below
@@ -178,7 +178,7 @@ export async function parsePdfResume(file, userApiKey = '', signal = undefined) 
             {
               parts: [
                 {
-                  text: `${SYSTEM_PROMPT}\n\nResume Text:\n"""\n${rawText.slice(0, 15000)}\n"""`,
+                  text: `${SYSTEM_PROMPT}\n\nResume Text:\n"""\n${rawText.slice(0, 12000)}\n"""`,
                 },
               ],
             },
@@ -186,18 +186,17 @@ export async function parsePdfResume(file, userApiKey = '', signal = undefined) 
           generationConfig: {
             response_mime_type: 'application/json',
             temperature: 0.1,
-            thinkingConfig: { thinkingBudget: 0 },
           },
         }),
       },
-      20000
+      45000
     )
   } catch (err) {
     if (signal?.aborted) {
       throw new Error('CANCELLED')
     }
     if (err?.name === 'AbortError') {
-      throw new Error('Resume extraction timed out after 20 seconds. Please try again.')
+      throw new Error('Resume extraction timed out. Please try again.')
     }
     throw err
   }
