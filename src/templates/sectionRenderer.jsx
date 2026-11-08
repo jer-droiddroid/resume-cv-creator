@@ -50,7 +50,7 @@ export const createSectionStyles = (theme, options = {}) => {
     rowBetween: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'baseline',
+      alignItems: 'flex-start',
       gap: 6,
     },
     itemTitle: {
@@ -78,6 +78,7 @@ export const createSectionStyles = (theme, options = {}) => {
     },
     bulletRow: {
       flexDirection: 'row',
+      alignItems: 'flex-start',
       marginTop: 2,
       paddingLeft: 3,
     },

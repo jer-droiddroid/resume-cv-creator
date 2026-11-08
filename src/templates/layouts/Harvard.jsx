@@ -51,7 +51,7 @@ const createHarvardStyles = (theme) =>
     rowBetween: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'baseline',
+      alignItems: 'flex-start',
       gap: 6,
     },
     institutionName: {
@@ -63,6 +63,7 @@ const createHarvardStyles = (theme) =>
     subTitle: {
       fontFamily: theme.fontFamilyItalic,
       fontSize: theme.fontSize.body,
+      marginTop: 1,
     },
     dateText: {
       flexShrink: 0,
@@ -71,8 +72,8 @@ const createHarvardStyles = (theme) =>
       textAlign: 'right',
     },
     bodyText: {
-      flex: 1,
       fontSize: theme.fontSize.body,
+      marginTop: 1.5,
     },
     detailsText: {
       fontSize: theme.fontSize.small,
@@ -80,6 +81,7 @@ const createHarvardStyles = (theme) =>
     },
     bulletRow: {
       flexDirection: 'row',
+      alignItems: 'flex-start',
       marginTop: 2,
       paddingLeft: 6,
     },
@@ -91,15 +93,13 @@ const createHarvardStyles = (theme) =>
       flex: 1,
       fontSize: theme.fontSize.body,
     },
-    skillsInline: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+    skillsRow: {
       marginBottom: 3,
+      fontSize: theme.fontSize.body,
     },
     skillsLabel: {
       fontFamily: theme.fontFamilyBold,
       fontSize: theme.fontSize.body,
-      marginRight: 4,
     },
     pageNumber: {
       position: 'absolute',
@@ -256,12 +256,10 @@ export default function Harvard({ data, theme }) {
             <Text style={styles.sectionHeading} minPresenceAhead={36}>
               Skills &amp; Interests
             </Text>
-            <View style={styles.skillsInline}>
-              <Text style={styles.skillsLabel}>Skills:</Text>
-              <Text style={styles.bodyText}>
-                {data.skills.filter((s) => s && s.trim()).join(', ')}
-              </Text>
-            </View>
+            <Text style={styles.skillsRow}>
+              <Text style={styles.skillsLabel}>Skills: </Text>
+              {data.skills.filter((s) => s && s.trim()).join(', ')}
+            </Text>
           </View>
         )
 
@@ -306,16 +304,16 @@ export default function Harvard({ data, theme }) {
               OJT Availability
             </Text>
             {data.ojtInfo?.requiredHours ? (
-              <View style={styles.skillsInline}>
-                <Text style={styles.skillsLabel}>Required OJT Hours:</Text>
-                <Text style={styles.bodyText}>{data.ojtInfo.requiredHours}</Text>
-              </View>
+              <Text style={styles.skillsRow}>
+                <Text style={styles.skillsLabel}>Required OJT Hours: </Text>
+                {data.ojtInfo.requiredHours}
+              </Text>
             ) : null}
             {data.ojtInfo?.preferredStartDate ? (
-              <View style={styles.skillsInline}>
-                <Text style={styles.skillsLabel}>Preferred Start Date:</Text>
-                <Text style={styles.bodyText}>{data.ojtInfo.preferredStartDate}</Text>
-              </View>
+              <Text style={styles.skillsRow}>
+                <Text style={styles.skillsLabel}>Preferred Start Date: </Text>
+                {data.ojtInfo.preferredStartDate}
+              </Text>
             ) : null}
           </View>
         )
