@@ -5,6 +5,7 @@ import LivePreview from './components/preview/LivePreview'
 import TemplatePicker from './components/picker/TemplatePicker'
 import ImportPdfModal from './components/form/ImportPdfModal'
 import ClearConfirmModal from './components/form/ClearConfirmModal'
+import LandingPage from './components/landing/LandingPage'
 import { defaultResumeData } from './data/defaultResume'
 import { sampleResumeData } from './data/sampleResume'
 import { templates } from './templates/registry'
@@ -66,12 +67,30 @@ export default function App() {
   const [selectedTemplateId, setSelectedTemplateId] = useState(() =>
     loadSavedTemplateId(templates[0].id)
   )
+  const [showLanding, setShowLanding] = useState(true)
   const [isPickerOpen, setIsPickerOpen] = useState(false)
   const [isImportModalOpen, setIsImportModalOpen] = useState(false)
 
   const handleSelectTemplate = (id) => {
     setSelectedTemplateId(id)
     saveTemplateId(id)
+  }
+
+  const handleStartBuilder = () => {
+    setShowLanding(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleSelectTemplateAndStart = (id) => {
+    handleSelectTemplate(id)
+    setShowLanding(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleOpenImportFromLanding = () => {
+    setShowLanding(false)
+    setIsImportModalOpen(true)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   // Handle successful AI PDF extraction and populate form
@@ -91,6 +110,9 @@ export default function App() {
   // Watch current values to know if sample is active
   const currentValues = methods.watch()
   const isSampleActive = isSampleData(currentValues)
+  const hasSavedDraft = Boolean(
+    currentValues?.personalInfo?.fullName && !isSampleActive
+  )
 
   // Load sample data while automatically saving a backup of user's work
   const handleLoadSample = () => {
@@ -109,6 +131,12 @@ export default function App() {
     }
 
     methods.reset(sampleResumeData)
+  }
+
+  const handleLoadSampleAndStart = () => {
+    handleLoadSample()
+    setShowLanding(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   // Restore the user's previously typed resume
@@ -261,52 +289,77 @@ export default function App() {
 
   return (
     <FormProvider {...methods}>
-      <div className="min-h-screen bg-slate-100 text-slate-900">
-        {/* Sticky Top Header */}
-        <header className="border-b border-slate-200 bg-white px-4 sm:px-6 py-3.5 sticky top-0 z-20">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
-            <div>
-              <h1 className="leading-none">
-                <a
-                  href="#top"
-                  onClick={(e) => {
-                    e.preventDefault()
+      {showLanding ? (
+        <LandingPage
+          hasSavedDraft={hasSavedDraft}
+          selectedTemplateId={selectedTemplateId}
+          onStartBuilder={handleStartBuilder}
+          onSelectTemplateAndStart={handleSelectTemplateAndStart}
+          onOpenImportFromLanding={handleOpenImportFromLanding}
+          onLoadSampleAndStart={handleLoadSampleAndStart}
+        />
+      ) : (
+        <div className="min-h-screen bg-slate-100 text-slate-900">
+          {/* Sticky Top Header */}
+          <header className="border-b border-slate-200 bg-white px-4 sm:px-6 py-3.5 sticky top-0 z-20">
+            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
+              <div>
+                <h1 className="leading-none">
+                  <a
+                    href="#top"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setShowLanding(true)
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }}
+                    title="Back to Papel home"
+                    className="group inline-flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 rounded-xs"
+                  >
+                    <img
+                      src="/papel-logo.png"
+                      alt=""
+                      aria-hidden="true"
+                      className="h-6 w-auto sm:h-7 shrink-0 object-contain"
+                    />
+                    <span className="font-brand font-bold text-lg sm:text-2xl text-slate-900 tracking-[-0.02em] group-hover:text-slate-700 transition">
+                      Papel
+                    </span>
+                  </a>
+                </h1>
+                <p className="text-xs text-slate-500 mt-1">
+                  Fill in your details once, then switch templates anytime.
+                </p>
+                <p
+                  aria-live="polite"
+                  className={`text-[11px] sm:text-xs mt-0.5 ${
+                    saveStatus === 'error'
+                      ? 'text-amber-700 font-medium'
+                      : 'text-slate-400'
+                  }`}
+                >
+                  {saveStatus === 'saving'
+                    ? 'Saving...'
+                    : saveStatus === 'error'
+                      ? "Couldn't save. Download your PDF so you don't lose your work."
+                      : 'Saved on this device'}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Back to Landing Page Button */}
+                <button
+                  type="button"
+                  disabled={isClearing}
+                  onClick={() => {
+                    setShowLanding(true)
                     window.scrollTo({ top: 0, behavior: 'smooth' })
                   }}
-                  className="group inline-flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 rounded-xs"
+                  className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 cursor-pointer"
                 >
-                  <img
-                    src="/papel-logo.png"
-                    alt=""
-                    aria-hidden="true"
-                    className="h-6 w-auto sm:h-7 shrink-0 object-contain"
-                  />
-                  <span className="font-brand font-bold text-lg sm:text-2xl text-slate-900 tracking-[-0.02em] group-hover:text-slate-700 transition">
-                    Papel
-                  </span>
-                </a>
-              </h1>
-              <p className="text-xs text-slate-500 mt-1">
-                Fill in your details once, then switch templates anytime.
-              </p>
-              <p
-                aria-live="polite"
-                className={`text-[11px] sm:text-xs mt-0.5 ${
-                  saveStatus === 'error'
-                    ? 'text-amber-700 font-medium'
-                    : 'text-slate-400'
-                }`}
-              >
-                {saveStatus === 'saving'
-                  ? 'Saving...'
-                  : saveStatus === 'error'
-                    ? "Couldn't save. Download your PDF so you don't lose your work."
-                    : 'Saved on this device'}
-              </p>
-            </div>
+                  Home
+                </button>
 
-            <div className="flex flex-wrap items-center gap-2">
-              {/* Import PDF Button */}
+                {/* Import PDF Button */}
               <button
                 type="button"
                 disabled={isClearing}
@@ -480,13 +533,14 @@ export default function App() {
           onSelectTemplate={handleSelectTemplate}
         />
 
-        {/* AI PDF Import Modal */}
-        <ImportPdfModal
-          isOpen={isImportModalOpen}
-          onClose={() => setIsImportModalOpen(false)}
-          onImportSuccess={handleImportSuccess}
-        />
-      </div>
+          {/* AI PDF Import Modal */}
+          <ImportPdfModal
+            isOpen={isImportModalOpen}
+            onClose={() => setIsImportModalOpen(false)}
+            onImportSuccess={handleImportSuccess}
+          />
+        </div>
+      )}
     </FormProvider>
   )
 }
