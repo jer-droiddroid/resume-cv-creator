@@ -111,12 +111,12 @@ export default function FormWizard({ disabled = false }) {
   }, [isMenuOpen, currentStepIndex])
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden">
+    <div className="rounded-[10px] border border-[#E3E8EE] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.06)] overflow-hidden">
       {/* Step Header with Progress Bar */}
-      <div className="border-b border-slate-200 bg-white px-5 pt-4 pb-3.5 space-y-2.5">
+      <div className="border-b border-[#E3E8EE] bg-white px-5 pt-4 pb-3.5 space-y-2.5">
         <div className="flex items-center justify-between gap-2">
           {/* Current Step Text */}
-          <div className="text-sm font-semibold text-slate-900 truncate">
+          <div className="text-sm font-semibold text-[#1A2233] truncate">
             Step {currentStepIndex + 1} of {totalSteps}: {currentStep.name}
           </div>
 
@@ -132,7 +132,7 @@ export default function FormWizard({ disabled = false }) {
               disabled={disabled}
               onClick={() => setIsMenuOpen((prev) => !prev)}
               onKeyDown={handleKeyDown}
-              className="rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+              className="rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
               All steps
             </button>
@@ -145,7 +145,7 @@ export default function FormWizard({ disabled = false }) {
                 role="menu"
                 aria-labelledby="all-steps-button"
                 onKeyDown={handleKeyDown}
-                className="absolute right-0 mt-1.5 w-60 max-w-[calc(100vw-2.5rem)] rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg z-30 divide-y divide-slate-100"
+                className="absolute right-0 mt-1.5 w-60 max-w-[calc(100vw-2.5rem)] rounded-[10px] border border-[#E3E8EE] bg-white p-1.5 shadow-lg z-30 divide-y divide-[#E3E8EE]"
               >
                 <div className="space-y-0.5 pb-1">
                   {WIZARD_STEPS.map((step, idx) => {
@@ -159,10 +159,10 @@ export default function FormWizard({ disabled = false }) {
                         role="menuitem"
                         type="button"
                         onClick={() => goToStep(idx)}
-                        className={`w-full flex items-center justify-between rounded-md px-2.5 py-1.5 text-xs text-left transition focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer ${
+                        className={`w-full flex items-center justify-between rounded-[6px] px-2.5 py-1.5 text-xs text-left transition focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer ${
                           isCurrent
-                            ? 'bg-slate-900 text-white font-medium'
-                            : 'text-slate-700 hover:bg-slate-100'
+                            ? 'bg-[#1F4D8F] text-white font-semibold'
+                            : 'text-[#1A2233] hover:bg-[#F6F8FA]'
                         }`}
                       >
                         <span className="truncate">
@@ -173,7 +173,7 @@ export default function FormWizard({ disabled = false }) {
                         {isVisited && !isCurrent && (
                           <span
                             aria-label="Completed"
-                            className="text-emerald-600 font-bold ml-2 shrink-0"
+                            className="text-[#1F4D8F] font-bold ml-2 shrink-0"
                           >
                             ✓
                           </span>
@@ -181,7 +181,7 @@ export default function FormWizard({ disabled = false }) {
                         {isCurrent && (
                           <span
                             aria-label="Current step"
-                            className="text-white/80 text-[11px] ml-2 shrink-0"
+                            className="text-white/85 text-[11px] ml-2 shrink-0"
                           >
                             Current
                           </span>
@@ -202,10 +202,10 @@ export default function FormWizard({ disabled = false }) {
           aria-valuemin={1}
           aria-valuemax={totalSteps}
           aria-label={`Step ${currentStepIndex + 1} of ${totalSteps}: ${currentStep.name}`}
-          className="w-full h-1 bg-slate-200 rounded-full overflow-hidden"
+          className="w-full h-1 bg-[#EEF2F6] rounded-full overflow-hidden"
         >
           <div
-            className="h-full bg-slate-900 rounded-full transition-all duration-300 ease-out"
+            className="h-full bg-[#1F4D8F] rounded-full transition-all duration-300 ease-out"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
@@ -217,12 +217,12 @@ export default function FormWizard({ disabled = false }) {
       </div>
 
       {/* Footer Navigation */}
-      <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-5 py-3">
+      <div className="flex items-center justify-between border-t border-[#E3E8EE] bg-[#F6F8FA] px-5 py-3">
         <button
           type="button"
           onClick={goPrev}
           disabled={disabled || currentStepIndex === 0}
-          className="rounded-md border border-slate-300 bg-white px-4 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-900"
+          className="rounded-[6px] border border-[#E3E8EE] bg-white px-4 py-1.5 text-sm font-medium text-[#1A2233] hover:bg-[#F6F8FA] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors"
         >
           Back
         </button>
@@ -231,7 +231,7 @@ export default function FormWizard({ disabled = false }) {
           type="button"
           onClick={goNext}
           disabled={disabled}
-          className="rounded-md bg-slate-900 px-4 py-1.5 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-900"
+          className="rounded-[6px] bg-[#1F4D8F] px-4 py-1.5 text-sm font-semibold text-white hover:bg-[#173b6e] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors"
         >
           {isLastStep ? 'Finish' : 'Next'}
         </button>

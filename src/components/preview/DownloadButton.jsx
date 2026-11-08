@@ -52,7 +52,7 @@ export default function DownloadButton({ selectedTemplateId }) {
         type="button"
         onClick={handleDownload}
         disabled={isGenerating}
-        className="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-slate-800 disabled:opacity-50 cursor-pointer"
+        className="inline-flex items-center gap-1.5 rounded-[6px] bg-[#1F4D8F] px-3.5 py-1.5 text-xs font-semibold text-white shadow-2xs hover:bg-[#173b6e] hover:-translate-y-[0.5px] active:translate-y-[0.5px] transition-all duration-200 disabled:opacity-50 cursor-pointer"
       >
         <span>{isGenerating ? 'Preparing PDF...' : 'Download PDF'}</span>
       </button>

@@ -87,11 +87,11 @@ export default function LivePreview({
 
   return (
     <>
-      <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-slate-100/80 p-3 sm:p-4 shadow-xs h-[calc(100vh-6rem)] min-h-[500px]">
+      <div className="flex flex-col rounded-[10px] border border-[#E3E8EE] bg-white p-3 sm:p-4 shadow-[0_1px_2px_rgba(16,24,40,0.06)] h-[calc(100vh-6rem)] min-h-[500px]">
         {/* Preview toolbar */}
         <div className="flex flex-wrap items-center justify-between gap-2 pb-3 px-1 shrink-0">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-slate-800">
+            <span className="text-xs font-semibold text-[#1A2233]">
               {template.name}
             </span>
 
@@ -99,7 +99,7 @@ export default function LivePreview({
             <div
               role="radiogroup"
               aria-label="Document format"
-              className="inline-flex rounded-md bg-white border border-slate-300 p-0.5 text-xs shadow-2xs"
+              className="inline-flex rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] p-0.5 text-xs"
             >
               <button
                 type="button"
@@ -107,10 +107,10 @@ export default function LivePreview({
                 disabled={isClearing}
                 aria-checked={isResumeMode}
                 onClick={() => setValue('documentType', 'resume', { shouldDirty: true })}
-                className={`rounded px-2.5 py-1 text-xs font-medium transition cursor-pointer disabled:opacity-50 ${
+                className={`rounded-[5px] px-2.5 py-1 text-xs font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 ${
                   isResumeMode
-                    ? 'bg-slate-900 text-white font-semibold shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    ? 'bg-[#1F4D8F] text-white font-semibold shadow-2xs'
+                    : 'text-[#5B6678] hover:text-[#1A2233]'
                 }`}
               >
                 Resume
@@ -121,10 +121,10 @@ export default function LivePreview({
                 disabled={isClearing}
                 aria-checked={!isResumeMode}
                 onClick={() => setValue('documentType', 'cv', { shouldDirty: true })}
-                className={`rounded px-2.5 py-1 text-xs font-medium transition cursor-pointer disabled:opacity-50 ${
+                className={`rounded-[5px] px-2.5 py-1 text-xs font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 ${
                   !isResumeMode
-                    ? 'bg-slate-900 text-white font-semibold shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    ? 'bg-[#1F4D8F] text-white font-semibold shadow-2xs'
+                    : 'text-[#5B6678] hover:text-[#1A2233]'
                 }`}
               >
                 CV
@@ -137,7 +137,7 @@ export default function LivePreview({
               type="button"
               disabled={isClearing}
               onClick={onOpenPicker}
-              className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 cursor-pointer"
+              className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-colors disabled:opacity-50 cursor-pointer"
             >
               Change Template
             </button>
@@ -150,15 +150,15 @@ export default function LivePreview({
         </div>
 
         {/* Stage: Soft neutral gray background with clearly visible scrollbar for the paper resume sheet */}
-        <div className="flex-1 min-h-0 overflow-y-scroll preview-scrollbar rounded-xl bg-slate-200/50 p-3 sm:p-6">
+        <div className="flex-1 min-h-0 overflow-y-scroll preview-scrollbar rounded-[8px] bg-[#EEF2F6] p-3 sm:p-6">
           {hasFadedContent && (
-            <p className="text-xs text-slate-500 mb-3 text-center select-none">
+            <p className="text-xs text-[#5B6678] mb-3 text-center select-none">
               Faded text is an example. It disappears as you fill in your own.
             </p>
           )}
           <div
             style={getPaperAnimationStyles()}
-            className="w-full max-w-[650px] shrink-0 bg-white rounded-xs shadow-xl shadow-slate-900/10 border border-slate-200/60 mx-auto mb-10 will-change-[transform,opacity]"
+            className="w-full max-w-[650px] shrink-0 bg-white rounded-[4px] shadow-[0_8px_24px_rgba(16,24,40,0.08)] border border-[#E3E8EE] mx-auto mb-10 will-change-[transform,opacity]"
           >
             <HtmlResumePreview
               data={liveFormData}
@@ -170,25 +170,25 @@ export default function LivePreview({
       </div>
 
       {/* Mobile sticky Download PDF action bar */}
-      <div className="fixed bottom-0 inset-x-0 p-3 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-xl flex items-center justify-between gap-2 z-30 lg:hidden">
+      <div className="fixed bottom-0 inset-x-0 p-3 bg-white/95 backdrop-blur-md border-t border-[#E3E8EE] shadow-xl flex items-center justify-between gap-2 z-30 lg:hidden">
         <div className="min-w-0">
-          <div className="text-xs font-semibold text-slate-900 truncate">
+          <div className="text-xs font-semibold text-[#1A2233] truncate">
             {template.name}
           </div>
           <div
             role="radiogroup"
             aria-label="Document format"
-            className="inline-flex rounded-md bg-slate-100 border border-slate-200 p-0.5 text-[11px] mt-1"
+            className="inline-flex rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] p-0.5 text-[11px] mt-1"
           >
             <button
               type="button"
               role="radio"
               aria-checked={isResumeMode}
               onClick={() => setValue('documentType', 'resume', { shouldDirty: true })}
-              className={`rounded px-2 py-0.5 font-medium transition cursor-pointer ${
+              className={`rounded-[4px] px-2 py-0.5 font-medium transition cursor-pointer ${
                 isResumeMode
-                  ? 'bg-slate-900 text-white font-semibold shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#1F4D8F] text-white font-semibold shadow-2xs'
+                  : 'text-[#5B6678] hover:text-[#1A2233]'
               }`}
             >
               Resume
@@ -198,10 +198,10 @@ export default function LivePreview({
               role="radio"
               aria-checked={!isResumeMode}
               onClick={() => setValue('documentType', 'cv', { shouldDirty: true })}
-              className={`rounded px-2 py-0.5 font-medium transition cursor-pointer ${
+              className={`rounded-[4px] px-2 py-0.5 font-medium transition cursor-pointer ${
                 !isResumeMode
-                  ? 'bg-slate-900 text-white font-semibold shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#1F4D8F] text-white font-semibold shadow-2xs'
+                  : 'text-[#5B6678] hover:text-[#1A2233]'
               }`}
             >
               CV
@@ -212,7 +212,7 @@ export default function LivePreview({
           <button
             type="button"
             onClick={onOpenPicker}
-            className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
+            className="rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] cursor-pointer"
           >
             Change
           </button>

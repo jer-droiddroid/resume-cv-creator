@@ -8,6 +8,27 @@ const FEATURED_TEMPLATE_IDS = [
   'banner-classic-slate',
 ]
 
+const ORG_ROLE_DEMOS = {
+  president: {
+    label: 'President',
+    metrics: '45 members • 6 events',
+    bullet:
+      'Led a 45-member student chapter and organized 6 technical workshops, increasing active semester participation by 35%.',
+  },
+  treasurer: {
+    label: 'Treasurer',
+    metrics: '$4,500 budget • 12 sponsors',
+    bullet:
+      'Managed a $4,500 annual chapter budget and secured 12 corporate sponsorships with 100% on-time financial reporting.',
+  },
+  events: {
+    label: 'Events Lead',
+    metrics: '220 attendees • 8 speakers',
+    bullet:
+      'Coordinated logistics and speaker outreach for a 220-attendee campus symposium featuring 8 industry engineers.',
+  },
+}
+
 function HeroPaperPreview({ template, onUseTemplate }) {
   const { theme } = template
   const isHarvard = template.id.startsWith('harvard-') || template.id.startsWith('reddit-')
@@ -282,6 +303,8 @@ export default function LandingPage({
       : 'harvard-classic'
   )
   const [activeCategory, setActiveCategory] = useState('All')
+  const [demoOjtMode, setDemoOjtMode] = useState(true)
+  const [demoOrgRole, setDemoOrgRole] = useState('president')
   const pageRef = useRef(null)
 
   useEffect(() => {
@@ -476,7 +499,7 @@ export default function LandingPage({
           </div>
         </section>
 
-        {/* Features Grid */}
+        {/* Features Asymmetric Bento Grid (Stitch taste-design) */}
         <section id="features" className="space-y-6 scroll-mt-20">
           <div className="reveal-item max-w-[65ch]">
             <h2 className="text-xl sm:text-2xl font-bold text-[#1A2233]">
@@ -487,54 +510,193 @@ export default function LandingPage({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* 7-column card: Interactive OJT & Practicum Mode Preview */}
             <div
               style={{ transitionDelay: '0ms' }}
-              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2"
+              className="reveal-item papel-card-hover lg:col-span-7 rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-5"
             >
-              <div className="text-xs font-semibold text-[#1F4D8F]">
-                Decoupled Data &amp; Design
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="space-y-1.5 max-w-[46ch]">
+                  <div className="text-xs font-semibold text-[#1F4D8F]">
+                    OJT &amp; Practicum Mode
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold text-[#1A2233]">
+                    One toggle for internship &amp; practicum requirements
+                  </h3>
+                  <p className="text-sm text-[#5B6678] leading-relaxed">
+                    Flip on OJT Mode to switch your summary heading to Career Objective, display required training hours and start date, and format your PDF filename automatically.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={demoOjtMode}
+                  onClick={() => setDemoOjtMode((prev) => !prev)}
+                  className={`inline-flex items-center gap-2 rounded-[6px] border px-3 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                    demoOjtMode
+                      ? 'border-[#1F4D8F] bg-[#1F4D8F] text-white'
+                      : 'border-[#E3E8EE] bg-[#F6F8FA] text-[#5B6678] hover:text-[#1A2233]'
+                  }`}
+                >
+                  <span>OJT Mode: {demoOjtMode ? 'ON' : 'OFF'}</span>
+                </button>
               </div>
-              <h3 className="text-base font-bold text-[#1A2233]">
-                Switch templates without re-typing
-              </h3>
-              <p className="text-sm text-[#5B6678] leading-relaxed">
-                Enter your education, experience, and skills once. Test how your resume looks in Harvard Classic, a two-column split, or a compact layout instantaneously.
-              </p>
+
+              {/* Interactive miniature paper diff */}
+              <div className="rounded-[8px] border border-[#E3E8EE] bg-[#F6F8FA] p-4 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                  <span className="font-medium text-[#5B6678]">Exported file name:</span>
+                  <code className="rounded-[4px] border border-[#E3E8EE] bg-white px-2 py-0.5 font-mono text-[11px] font-semibold text-[#1A2233]">
+                    {demoOjtMode
+                      ? 'Carter_Alex_BSCS_OJT_Resume.pdf'
+                      : 'Alex_Carter_Resume.pdf'}
+                  </code>
+                </div>
+
+                <div
+                  key={demoOjtMode ? 'ojt-on' : 'ojt-off'}
+                  className="animate-paper-morph rounded-[6px] border border-[#E3E8EE] bg-white p-3.5 text-xs space-y-2.5"
+                >
+                  <div>
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-[#1F4D8F] border-b border-[#E3E8EE] pb-0.5 mb-1">
+                      {demoOjtMode ? 'Career Objective' : 'Summary'}
+                    </div>
+                    <p className="text-[11px] text-[#5B6678] leading-relaxed">
+                      {demoOjtMode
+                        ? 'Fourth-year Computer Science student seeking an On-the-Job Training (OJT) software engineering internship...'
+                        : 'Computer Science undergraduate with experience in full-stack web development and student leadership...'}
+                    </p>
+                  </div>
+
+                  {demoOjtMode && (
+                    <div className="pt-1 border-t border-[#E3E8EE] flex flex-wrap gap-x-6 gap-y-1 text-[11px]">
+                      <div>
+                        <span className="font-semibold text-[#1A2233]">Required OJT Hours:</span>{' '}
+                        <span className="text-[#5B6678]">486 hours</span>
+                      </div>
+                      <div>
+                        <span className="font-semibold text-[#1A2233]">Preferred Start:</span>{' '}
+                        <span className="text-[#5B6678]">February 2027</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
+            {/* 5-column card: Interactive Student Organization Builder */}
             <div
               style={{ transitionDelay: '90ms' }}
-              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2"
+              className="reveal-item papel-card-hover lg:col-span-5 rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-5"
             >
-              <div className="text-xs font-semibold text-[#1F4D8F]">
-                Student Organization Builder
+              <div className="space-y-1.5">
+                <div className="text-xs font-semibold text-[#1F4D8F]">
+                  Student Organization Builder
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-[#1A2233]">
+                  Turn club roles into action bullets
+                </h3>
+                <p className="text-sm text-[#5B6678] leading-relaxed">
+                  Select your student organization role and plug in your numbers to generate quantified bullets.
+                </p>
               </div>
-              <h3 className="text-base font-bold text-[#1A2233]">
-                Turn club numbers into action bullets
-              </h3>
-              <p className="text-sm text-[#5B6678] leading-relaxed">
-                Select your role—President, Treasurer, or Marketing—and enter your numbers (members led, events organized, or budget managed) to generate strong action-verb bullets.
-              </p>
+
+              <div className="rounded-[8px] border border-[#E3E8EE] bg-[#F6F8FA] p-3.5 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-1.5">
+                  <div className="flex flex-wrap gap-1">
+                    {Object.entries(ORG_ROLE_DEMOS).map(([key, item]) => (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => setDemoOrgRole(key)}
+                        className={`rounded-[5px] px-2.5 py-1 text-[11px] font-medium transition-all duration-200 cursor-pointer ${
+                          demoOrgRole === key
+                            ? 'bg-[#1F4D8F] text-white font-semibold'
+                            : 'bg-white text-[#5B6678] border border-[#E3E8EE] hover:text-[#1A2233]'
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                  <span className="text-[11px] font-mono text-[#5B6678]">
+                    {ORG_ROLE_DEMOS[demoOrgRole].metrics}
+                  </span>
+                </div>
+
+                <div
+                  key={demoOrgRole}
+                  className="animate-paper-morph rounded-[6px] border border-[#E3E8EE] bg-white p-3 text-xs text-[#1A2233] leading-relaxed"
+                >
+                  <span className="font-bold text-[#1F4D8F] mr-1.5">•</span>
+                  {ORG_ROLE_DEMOS[demoOrgRole].bullet}
+                </div>
+              </div>
             </div>
 
+            {/* 5-column card: Decoupled Data & Design */}
             <div
-              style={{ transitionDelay: '180ms' }}
-              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2"
+              style={{ transitionDelay: '140ms' }}
+              className="reveal-item papel-card-hover lg:col-span-5 rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-4"
             >
-              <div className="text-xs font-semibold text-[#1F4D8F]">
-                OJT &amp; Practicum Mode
+              <div className="space-y-1.5">
+                <div className="text-xs font-semibold text-[#1F4D8F]">
+                  Decoupled Data &amp; Design
+                </div>
+                <h3 className="text-base font-bold text-[#1A2233]">
+                  Switch templates without re-typing
+                </h3>
+                <p className="text-sm text-[#5B6678] leading-relaxed">
+                  Your content is stored independently from the layout engine. Switch between 1-page Resume mode and multi-page Academic CV mode or test all 15 templates in one click.
+                </p>
               </div>
-              <h3 className="text-base font-bold text-[#1A2233]">
-                Built for internship requirements
-              </h3>
-              <p className="text-sm text-[#5B6678] leading-relaxed">
-                Include your required OJT hours, preferred start date, and relevant coursework, and automatically export as{' '}
-                <code className="text-xs bg-[#F6F8FA] px-1 py-0.5 rounded border border-[#E3E8EE]">
-                  Lastname_Firstname_Course_OJT_Resume.pdf
-                </code>
-                .
-              </p>
+
+              <div className="pt-2 border-t border-[#E3E8EE] flex flex-wrap gap-1.5 text-[11px] font-medium text-[#5B6678]">
+                <span className="rounded-[5px] bg-[#F6F8FA] border border-[#E3E8EE] px-2.5 py-1 text-[#1A2233]">
+                  1-Page Auto-Fit Resume
+                </span>
+                <span className="rounded-[5px] bg-[#F6F8FA] border border-[#E3E8EE] px-2.5 py-1 text-[#1A2233]">
+                  Multi-Page Academic CV
+                </span>
+                <span className="rounded-[5px] bg-[#F6F8FA] border border-[#E3E8EE] px-2.5 py-1 text-[#1A2233]">
+                  Custom Section Order
+                </span>
+              </div>
+            </div>
+
+            {/* 7-column card: Local Browser Privacy & Vector PDF */}
+            <div
+              style={{ transitionDelay: '200ms' }}
+              className="reveal-item papel-card-hover lg:col-span-7 rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-4"
+            >
+              <div className="space-y-1.5">
+                <div className="text-xs font-semibold text-[#1F4D8F]">
+                  Local-First Architecture
+                </div>
+                <h3 className="text-base font-bold text-[#1A2233]">
+                  Saved in your browser with crisp A4 vector PDF export
+                </h3>
+                <p className="text-sm text-[#5B6678] leading-relaxed">
+                  Papel autosaves every keystroke directly in your browser&apos;s local storage and generates selectable, ATS-parseable vector PDFs on your device—with zero watermarks, zero sign-up walls, and zero database tracking.
+                </p>
+              </div>
+
+              <div className="pt-2 border-t border-[#E3E8EE] grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div className="rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] px-3 py-2">
+                  <div className="font-bold text-[#1A2233]">Selectable Text</div>
+                  <div className="text-[11px] text-[#5B6678]">True vector PDF output</div>
+                </div>
+                <div className="rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] px-3 py-2">
+                  <div className="font-bold text-[#1A2233]">Orphan Protection</div>
+                  <div className="text-[11px] text-[#5B6678]">Clean page break rules</div>
+                </div>
+                <div className="rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] px-3 py-2">
+                  <div className="font-bold text-[#1A2233]">AI PDF Import</div>
+                  <div className="text-[11px] text-[#5B6678]">Pre-fill from old resumes</div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -741,61 +903,97 @@ export default function LandingPage({
           </div>
         </section>
 
-        {/* How It Works */}
-        <section id="how-it-works" className="space-y-6 scroll-mt-20">
-          <div className="reveal-item max-w-[65ch]">
+        {/* How It Works (Asymmetric Editorial Split) */}
+        <section
+          id="how-it-works"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start scroll-mt-20"
+        >
+          <div className="reveal-item lg:col-span-4 space-y-3">
+            <div className="text-xs font-semibold text-[#1F4D8F]">
+              Workflow
+            </div>
             <h2 className="text-xl sm:text-2xl font-bold text-[#1A2233]">
               How Papel works
             </h2>
-            <p className="text-sm text-[#5B6678] mt-1">
-              From blank page to a ready-to-submit A4 PDF in three steps.
+            <p className="text-sm text-[#5B6678] leading-relaxed">
+              From a blank page or an older resume PDF to a ready-to-submit A4 application in three focused steps.
             </p>
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={onStartBuilder}
+                className="inline-flex items-center justify-center h-9 px-3.5 rounded-[6px] border border-[#E3E8EE] bg-white text-xs font-semibold text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-all duration-200 cursor-pointer"
+              >
+                Jump into Step 1
+              </button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="lg:col-span-8 space-y-4">
             <div
               style={{ transitionDelay: '0ms' }}
-              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2"
+              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-5 sm:p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row sm:items-start justify-between gap-4"
             >
-              <span className="inline-flex items-center justify-center w-6 h-6 rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] text-xs font-bold text-[#1F4D8F]">
-                1
+              <div className="flex items-start gap-4">
+                <span className="inline-flex items-center justify-center w-7 h-7 rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] font-mono text-xs font-bold text-[#1F4D8F] shrink-0 mt-0.5">
+                  01
+                </span>
+                <div className="space-y-1">
+                  <h3 className="text-base font-bold text-[#1A2233]">
+                    Enter your details or import an existing PDF
+                  </h3>
+                  <p className="text-sm text-[#5B6678] leading-relaxed max-w-[56ch]">
+                    Fill in the 8-step guided form for education, coursework, internships, and projects—or upload an old PDF resume to pre-fill every section automatically.
+                  </p>
+                </div>
+              </div>
+              <span className="self-start rounded-[5px] bg-[#F6F8FA] border border-[#E3E8EE] px-2.5 py-1 font-mono text-[11px] text-[#5B6678] shrink-0">
+                8 guided steps
               </span>
-              <h3 className="text-base font-bold text-[#1A2233]">
-                Enter your details or import a PDF
-              </h3>
-              <p className="text-sm text-[#5B6678] leading-relaxed">
-                Fill in the guided steps for education, coursework, internships, and projects—or upload an old PDF resume to pre-fill the form.
-              </p>
             </div>
 
             <div
-              style={{ transitionDelay: '90ms' }}
-              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2"
+              style={{ transitionDelay: '80ms' }}
+              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-5 sm:p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row sm:items-start justify-between gap-4"
             >
-              <span className="inline-flex items-center justify-center w-6 h-6 rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] text-xs font-bold text-[#1F4D8F]">
-                2
+              <div className="flex items-start gap-4">
+                <span className="inline-flex items-center justify-center w-7 h-7 rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] font-mono text-xs font-bold text-[#1F4D8F] shrink-0 mt-0.5">
+                  02
+                </span>
+                <div className="space-y-1">
+                  <h3 className="text-base font-bold text-[#1A2233]">
+                    Customize section order, OJT mode, &amp; templates
+                  </h3>
+                  <p className="text-sm text-[#5B6678] leading-relaxed max-w-[56ch]">
+                    Reorder or hide sections, toggle between 1-page Resume mode and multi-page CV mode, or enable OJT Mode while watching the live A4 sheet update side-by-side.
+                  </p>
+                </div>
+              </div>
+              <span className="self-start rounded-[5px] bg-[#F6F8FA] border border-[#E3E8EE] px-2.5 py-1 font-mono text-[11px] text-[#5B6678] shrink-0">
+                Live A4 preview
               </span>
-              <h3 className="text-base font-bold text-[#1A2233]">
-                Customize sections &amp; templates
-              </h3>
-              <p className="text-sm text-[#5B6678] leading-relaxed">
-                Reorder sections, toggle between 1-page Resume mode and multi-page CV mode, or enable OJT Mode for practicum applications.
-              </p>
             </div>
 
             <div
-              style={{ transitionDelay: '180ms' }}
-              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] space-y-2"
+              style={{ transitionDelay: '160ms' }}
+              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-5 sm:p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row sm:items-start justify-between gap-4"
             >
-              <span className="inline-flex items-center justify-center w-6 h-6 rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] text-xs font-bold text-[#1F4D8F]">
-                3
+              <div className="flex items-start gap-4">
+                <span className="inline-flex items-center justify-center w-7 h-7 rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] font-mono text-xs font-bold text-[#1F4D8F] shrink-0 mt-0.5">
+                  03
+                </span>
+                <div className="space-y-1">
+                  <h3 className="text-base font-bold text-[#1A2233]">
+                    Download a crisp, ATS-readable vector PDF
+                  </h3>
+                  <p className="text-sm text-[#5B6678] leading-relaxed max-w-[56ch]">
+                    Export a true vector A4 PDF immediately. No account creation, no watermarks, and your draft stays saved locally in your browser.
+                  </p>
+                </div>
+              </div>
+              <span className="self-start rounded-[5px] bg-[#F6F8FA] border border-[#E3E8EE] px-2.5 py-1 font-mono text-[11px] text-[#5B6678] shrink-0">
+                Vector A4 PDF
               </span>
-              <h3 className="text-base font-bold text-[#1A2233]">
-                Download a clean vector PDF
-              </h3>
-              <p className="text-sm text-[#5B6678] leading-relaxed">
-                Export an ATS-readable A4 PDF immediately. No account creation, no paywall at the end, and your draft stays saved on your device.
-              </p>
             </div>
           </div>
         </section>

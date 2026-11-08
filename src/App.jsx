@@ -299,9 +299,9 @@ export default function App() {
           onLoadSampleAndStart={handleLoadSampleAndStart}
         />
       ) : (
-        <div className="min-h-screen bg-slate-100 text-slate-900 animate-page-enter">
+        <div className="min-h-screen bg-[#F6F8FA] text-[#1A2233] animate-page-enter">
           {/* Sticky Top Header */}
-          <header className="border-b border-slate-200 bg-white px-4 sm:px-6 py-3.5 sticky top-0 z-20">
+          <header className="border-b border-[#E3E8EE] bg-white/95 backdrop-blur-xs px-4 sm:px-6 py-3.5 sticky top-0 z-20">
             <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
               <div>
                 <h1 className="leading-none">
@@ -313,7 +313,7 @@ export default function App() {
                       window.scrollTo({ top: 0, behavior: 'smooth' })
                     }}
                     title="Back to Papel home"
-                    className="group inline-flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 rounded-xs"
+                    className="group inline-flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F4D8F] focus-visible:ring-offset-2 rounded-xs"
                   >
                     <img
                       src="/papel-logo.png"
@@ -321,20 +321,20 @@ export default function App() {
                       aria-hidden="true"
                       className="h-6 w-auto sm:h-7 shrink-0 object-contain"
                     />
-                    <span className="font-brand font-bold text-lg sm:text-2xl text-slate-900 tracking-[-0.02em] group-hover:text-slate-700 transition">
+                    <span className="font-brand font-bold text-lg sm:text-2xl text-[#1A2233] tracking-[-0.02em] group-hover:opacity-85 transition-opacity">
                       Papel
                     </span>
                   </a>
                 </h1>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-[#5B6678] mt-1">
                   Fill in your details once, then switch templates anytime.
                 </p>
                 <p
                   aria-live="polite"
                   className={`text-[11px] sm:text-xs mt-0.5 ${
                     saveStatus === 'error'
-                      ? 'text-amber-700 font-medium'
-                      : 'text-slate-400'
+                      ? 'text-[#C0392B] font-medium'
+                      : 'text-[#5B6678]'
                   }`}
                 >
                   {saveStatus === 'saving'
@@ -354,116 +354,116 @@ export default function App() {
                     setShowLanding(true)
                     window.scrollTo({ top: 0, behavior: 'smooth' })
                   }}
-                  className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 cursor-pointer"
+                  className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   Home
                 </button>
 
                 {/* Import PDF Button */}
-              <button
-                type="button"
-                disabled={isClearing}
-                onClick={() => setIsImportModalOpen(true)}
-                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
-              >
-                <span>Import PDF</span>
-              </button>
-
-              {/* Dynamic Sample / Restore Button */}
-              {isSampleActive || userBackup ? (
                 <button
                   type="button"
                   disabled={isClearing}
-                  onClick={handleRestoreUserData}
-                  className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50 shadow-xs cursor-pointer flex items-center gap-1"
+                  onClick={() => setIsImportModalOpen(true)}
+                  className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
                 >
-                  <span>↩</span>
-                  <span>{userBackup ? 'Restore My Data' : 'Clear Sample (Start Blank)'}</span>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  disabled={isClearing}
-                  onClick={handleLoadSample}
-                  className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 cursor-pointer"
-                >
-                  Load Sample
-                </button>
-              )}
-
-              {/* "More" Menu Dropdown */}
-              <div className="relative" ref={moreMenuRef}>
-                <button
-                  type="button"
-                  disabled={isClearing}
-                  id="more-menu-button"
-                  aria-haspopup="menu"
-                  aria-expanded={isMoreMenuOpen}
-                  onClick={() => setIsMoreMenuOpen((prev) => !prev)}
-                  className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer disabled:opacity-50 flex items-center gap-1"
-                >
-                  <span>More</span>
-                  <span className="text-[10px] text-slate-400">▾</span>
+                  <span>Import PDF</span>
                 </button>
 
-                {isMoreMenuOpen && (
-                  <div
-                    role="menu"
-                    aria-labelledby="more-menu-button"
-                    className="absolute right-0 mt-1.5 w-40 rounded-lg border border-slate-200 bg-white p-1 shadow-lg z-30"
+                {/* Dynamic Sample / Restore Button */}
+                {isSampleActive || userBackup ? (
+                  <button
+                    type="button"
+                    disabled={isClearing}
+                    onClick={handleRestoreUserData}
+                    className="rounded-[6px] bg-[#1F4D8F] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#173b6e] transition-colors disabled:opacity-50 shadow-2xs cursor-pointer flex items-center gap-1"
                   >
-                    <button
-                      type="button"
-                      role="menuitem"
-                      onClick={() => {
-                        setIsMoreMenuOpen(false)
-                        setIsClearModalOpen(true)
-                      }}
-                      className="w-full text-left rounded-md px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer"
-                    >
-                      Start over
-                    </button>
-                  </div>
+                    <span>↩</span>
+                    <span>{userBackup ? 'Restore My Data' : 'Clear Sample (Start Blank)'}</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={isClearing}
+                    onClick={handleLoadSample}
+                    className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-colors disabled:opacity-50 cursor-pointer"
+                  >
+                    Load Sample
+                  </button>
                 )}
+
+                {/* "More" Menu Dropdown */}
+                <div className="relative" ref={moreMenuRef}>
+                  <button
+                    type="button"
+                    disabled={isClearing}
+                    id="more-menu-button"
+                    aria-haspopup="menu"
+                    aria-expanded={isMoreMenuOpen}
+                    onClick={() => setIsMoreMenuOpen((prev) => !prev)}
+                    className="rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1"
+                  >
+                    <span>More</span>
+                    <span className="text-[10px] text-[#5B6678]">▾</span>
+                  </button>
+
+                  {isMoreMenuOpen && (
+                    <div
+                      role="menu"
+                      aria-labelledby="more-menu-button"
+                      className="absolute right-0 mt-1.5 w-40 rounded-[10px] border border-[#E3E8EE] bg-white p-1 shadow-lg z-30"
+                    >
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={() => {
+                          setIsMoreMenuOpen(false)
+                          setIsClearModalOpen(true)
+                        }}
+                        className="w-full text-left rounded-[6px] px-3 py-1.5 text-xs font-medium text-[#C0392B] hover:bg-[#C0392B]/10 cursor-pointer"
+                      >
+                        Start over
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        </header>
+          </header>
 
-        <main className="mx-auto max-w-[1440px] px-4 sm:px-6 pt-6 pb-24 lg:pb-6 space-y-4">
-          {/* Post-clear 3-second feedback notice with Undo */}
-          {showUndoNotice && (
-            <div
-              role="status"
-              aria-live="polite"
-              className="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs text-slate-800 shadow-sm flex items-center justify-between gap-3 animate-fade-in"
-            >
-              <span>Cleared. You&apos;re starting fresh.</span>
-              <button
-                type="button"
-                onClick={handleUndoClear}
-                className="font-semibold text-slate-900 underline hover:text-slate-700 cursor-pointer px-1.5 py-0.5 rounded focus:outline-none focus:ring-2 focus:ring-slate-900"
+          <main className="mx-auto max-w-[1440px] px-4 sm:px-6 pt-6 pb-24 lg:pb-6 space-y-4">
+            {/* Post-clear 3-second feedback notice with Undo */}
+            {showUndoNotice && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="rounded-[10px] border border-[#E3E8EE] bg-white px-4 py-2.5 text-xs text-[#1A2233] shadow-2xs flex items-center justify-between gap-3 animate-fade-in"
               >
-                Undo
-              </button>
-            </div>
-          )}
+                <span>Cleared. You&apos;re starting fresh.</span>
+                <button
+                  type="button"
+                  onClick={handleUndoClear}
+                  className="font-semibold text-[#1F4D8F] underline hover:text-[#173b6e] cursor-pointer px-1.5 py-0.5 rounded focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]"
+                >
+                  Undo
+                </button>
+              </div>
+            )}
 
-          {/* One-time browser storage note */}
-          {showStorageNotice && (
-            <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-700">
-              <span>
-                Your work is saved in this browser only. Clearing your browser data will delete it.
-              </span>
-              <button
-                type="button"
-                onClick={handleDismissNotice}
-                className="rounded-md border border-slate-300 bg-white px-3 py-1 text-xs font-medium text-slate-800 hover:bg-slate-100 shrink-0 focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer"
-              >
-                Got it
-              </button>
-            </div>
-          )}
+            {/* One-time browser storage note */}
+            {showStorageNotice && (
+              <div className="rounded-[10px] border border-[#E3E8EE] bg-white px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-[#5B6678]">
+                <span>
+                  Your work is saved in this browser only. Clearing your browser data will delete it.
+                </span>
+                <button
+                  type="button"
+                  onClick={handleDismissNotice}
+                  className="rounded-[6px] border border-[#E3E8EE] bg-[#F6F8FA] px-3 py-1 text-xs font-medium text-[#1A2233] hover:bg-[#EEF2F6] shrink-0 focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer"
+                >
+                  Got it
+                </button>
+              </div>
+            )}
 
           {/* Active Sample Data Notice Banner */}
           {isSampleActive && (
