@@ -350,7 +350,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
 
         return (
           <div key="awards" className="mb-4">
-            {renderHeading('Awards & Honors', overrides)}
+            {renderHeading(isHarvard ? 'Honors & Awards' : 'Awards & Honors', overrides)}
             <ul
               className={`space-y-1 list-disc pl-4 text-xs ${
                 isReal

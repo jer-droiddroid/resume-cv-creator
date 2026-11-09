@@ -23,6 +23,7 @@ const createHarvardStyles = (theme) =>
       fontSize: theme.fontSize.name + 2,
       letterSpacing: 0.8,
       textAlign: 'center',
+      textTransform: 'uppercase',
       marginBottom: 8,
     },
     contactLine: {
@@ -328,7 +329,7 @@ export default function Harvard({ data, theme }) {
       <Page size="A4" style={styles.page}>
         {/* Centered Harvard Header */}
         <View style={styles.header}>
-          <Text style={styles.name}>{personalInfo.fullName || 'YOUR NAME'}</Text>
+          <Text style={styles.name}>{(personalInfo.fullName || 'YOUR NAME').toUpperCase()}</Text>
           {contactItems.length > 0 && (
             <Text style={styles.contactLine}>{contactItems.join('  •  ')}</Text>
           )}

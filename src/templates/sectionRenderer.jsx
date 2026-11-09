@@ -174,7 +174,7 @@ export function renderResumeSection(sectionId, data, theme, styleOverrides = {})
       return (
         <View key="organizations" style={styles.section}>
           <Text style={styles.sectionHeading} minPresenceAhead={48}>
-            Leadership &amp; Organizations
+            Leadership &amp; Activities
           </Text>
           {data.organizations
             .filter((org) => org.organization || org.title)
