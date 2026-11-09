@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { parsePdfResume } from '../../utils/aiResumeParser'
 
 export default function ImportPdfModal({ isOpen, onClose, onImportSuccess }) {
@@ -8,18 +8,32 @@ export default function ImportPdfModal({ isOpen, onClose, onImportSuccess }) {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const fileInputRef = useRef(null)
+  const closeBtnRef = useRef(null)
   const abortControllerRef = useRef(null)
 
-  if (!isOpen) return null
-
-  const handleCancelOrClose = () => {
+  const handleCancelOrClose = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort()
       abortControllerRef.current = null
     }
     setIsLoading(false)
     onClose()
-  }
+  }, [onClose])
+
+  useEffect(() => {
+    if (!isOpen) return
+    closeBtnRef.current?.focus()
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        handleCancelOrClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, handleCancelOrClose])
+
+  if (!isOpen) return null
 
   const handleFileChange = (e) => {
     const selected = e.target.files?.[0]
@@ -67,26 +81,34 @@ export default function ImportPdfModal({ isOpen, onClose, onImportSuccess }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="import-pdf-dialog-title"
+      className="fixed inset-0 z-50 overflow-y-auto"
+    >
       {/* Backdrop */}
       <div
         onClick={handleCancelOrClose}
-        className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-[#1A2233]/40 backdrop-blur-xs transition-opacity"
       />
 
       <div className="min-h-full flex items-center justify-center p-4">
         <div className="relative w-full max-w-lg rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-2xl space-y-4">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-base font-bold text-[#1A2233]">Import from PDF</h2>
+              <h2 id="import-pdf-dialog-title" className="text-base font-bold text-[#1A2233]">
+                Import from PDF
+              </h2>
               <p className="text-xs text-[#5B6678] mt-0.5">
                 Upload your existing PDF resume to automatically fill out your form fields.
               </p>
             </div>
             <button
+              ref={closeBtnRef}
               type="button"
               onClick={handleCancelOrClose}
-              className="rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1 text-xs font-medium text-[#5B6678] hover:bg-[#F6F8FA] hover:text-[#1A2233] cursor-pointer"
+              className="rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1 text-xs font-medium text-[#5B6678] hover:bg-[#F6F8FA] hover:text-[#1A2233] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer"
             >
               Close
             </button>
@@ -94,8 +116,17 @@ export default function ImportPdfModal({ isOpen, onClose, onImportSuccess }) {
 
           {/* File Picker / Dropzone */}
           <div
+            role="button"
+            tabIndex={0}
+            aria-label="Select PDF resume file"
             onClick={() => !isLoading && fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-[10px] p-6 text-center transition cursor-pointer ${
+            onKeyDown={(e) => {
+              if (!isLoading && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault()
+                fileInputRef.current?.click()
+              }
+            }}
+            className={`border-2 border-dashed rounded-[10px] p-6 text-center transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] ${
               file
                 ? 'border-[#1F4D8F] bg-[#1F4D8F]/5'
                 : 'border-[#E3E8EE] hover:border-[#CBD5E1] bg-[#F6F8FA]'
@@ -113,7 +144,7 @@ export default function ImportPdfModal({ isOpen, onClose, onImportSuccess }) {
                 <p className="text-xs font-semibold text-[#1A2233] truncate max-w-xs mx-auto">
                   {file.name}
                 </p>
-                <p className="text-[11px] font-medium text-[#1F4D8F]">
+                <p className="text-xs font-medium text-[#1F4D8F]">
                   Ready to import (click to change file)
                 </p>
               </div>
@@ -122,7 +153,7 @@ export default function ImportPdfModal({ isOpen, onClose, onImportSuccess }) {
                 <p className="text-xs font-medium text-[#1A2233]">
                   Click to select your existing PDF resume
                 </p>
-                <p className="text-[11px] text-[#5B6678]">PDF files only (max 10MB)</p>
+                <p className="text-xs text-[#5B6678]">PDF files only (max 10MB)</p>
               </div>
             )}
           </div>
@@ -130,17 +161,18 @@ export default function ImportPdfModal({ isOpen, onClose, onImportSuccess }) {
           {/* Optional API Key Input if not yet set in Vercel environment */}
           {showKeyInput && (
             <div className="rounded-[8px] border border-[#E3E8EE] bg-[#F6F8FA] p-3 space-y-2">
-              <label className="block text-xs font-medium text-[#1A2233]">
+              <label htmlFor="import-gemini-api-key" className="block text-xs font-medium text-[#1A2233]">
                 Gemini API Key (Free)
               </label>
               <input
+                id="import-gemini-api-key"
                 type="password"
                 placeholder="Paste AI Studio API key here"
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs text-[#1A2233] focus:border-[#1F4D8F] focus:outline-none"
+                className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs text-[#1A2233] focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
               />
-              <p className="text-[11px] text-[#5B6678]">
+              <p className="text-xs text-[#5B6678]">
                 Get a 100% free key at{' '}
                 <a
                   href="https://aistudio.google.com"

@@ -1,4 +1,4 @@
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { createEmptyEducation } from '../../data/defaultResume'
 import MonthYearPicker from './MonthYearPicker'
 
@@ -8,134 +8,183 @@ export default function EducationStep() {
     control,
     name: 'education',
   })
+  const educationValues = useWatch({ control, name: 'education' }) || []
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">Education</h2>
-          <p className="text-sm text-slate-500">
-            Add your university, degree, honours, or relevant coursework.
+          <h2 className="text-lg font-semibold text-[#1A2233]">Education</h2>
+          <p className="text-sm text-[#5B6678]">
+            Add your university, degree, honors, or relevant coursework.
           </p>
         </div>
         <button
           type="button"
           onClick={() => append(createEmptyEducation())}
-          className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-800 cursor-pointer"
+          className="shrink-0 rounded-[6px] bg-[#1F4D8F] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#173b6e] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors cursor-pointer"
         >
           + Add Education
         </button>
       </div>
 
       {fields.length === 0 && (
-        <p className="text-sm text-slate-500 italic py-4 text-center border border-dashed border-slate-300 rounded-lg">
-          No education entries yet. Click "+ Add Education" above.
+        <p className="text-sm text-[#5B6678] italic py-5 text-center border border-dashed border-[#E3E8EE] bg-[#F6F8FA] rounded-[10px]">
+          No education entries yet. Click &ldquo;+ Add Education&rdquo; above.
         </p>
       )}
 
       <div className="space-y-4">
-        {fields.map((field, index) => (
-          <div
-            key={field.id}
-            className="rounded-lg border border-slate-200 bg-slate-50 p-4 space-y-3"
-          >
-            {/* Card header with reorder & delete controls */}
-            <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                Education #{index + 1}
-              </span>
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  disabled={index === 0}
-                  onClick={() => swap(index, index - 1)}
-                  className="rounded border border-slate-300 bg-white px-2 py-0.5 text-xs text-slate-700 hover:bg-slate-100 disabled:opacity-40 cursor-pointer"
-                  title="Move Up"
-                >
-                  ↑
-                </button>
-                <button
-                  type="button"
-                  disabled={index === fields.length - 1}
-                  onClick={() => swap(index, index + 1)}
-                  className="rounded border border-slate-300 bg-white px-2 py-0.5 text-xs text-slate-700 hover:bg-slate-100 disabled:opacity-40 cursor-pointer"
-                  title="Move Down"
-                >
-                  ↓
-                </button>
-                <button
-                  type="button"
-                  onClick={() => remove(index)}
-                  className="rounded border border-red-200 bg-red-50 px-2 py-0.5 text-xs text-red-600 hover:bg-red-100 cursor-pointer"
-                >
-                  Remove
-                </button>
+        {fields.map((field, index) => {
+          const schoolName = educationValues[index]?.school?.trim()
+
+          return (
+            <div
+              key={field.id}
+              className="rounded-[10px] border border-[#E3E8EE] bg-[#F6F8FA] p-4 space-y-3"
+            >
+              {/* Card header with reorder & delete controls */}
+              <div className="flex items-center justify-between border-b border-[#E3E8EE] pb-2.5 gap-2">
+                <span className="text-xs font-semibold text-[#1A2233] truncate">
+                  Education {index + 1}
+                  {schoolName ? ` — ${schoolName}` : ''}
+                </span>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    disabled={index === 0}
+                    onClick={() => swap(index, index - 1)}
+                    aria-label={`Move education entry ${index + 1} up`}
+                    title="Move up"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-[#E3E8EE] bg-white text-[#1A2233] hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-40 cursor-pointer transition-colors"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-3.5 w-3.5"
+                    >
+                      <path d="M8 12.5v-9" />
+                      <path d="M4.5 7 8 3.5 11.5 7" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    disabled={index === fields.length - 1}
+                    onClick={() => swap(index, index + 1)}
+                    aria-label={`Move education entry ${index + 1} down`}
+                    title="Move down"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-[#E3E8EE] bg-white text-[#1A2233] hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-40 cursor-pointer transition-colors"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-3.5 w-3.5"
+                    >
+                      <path d="M8 3.5v9" />
+                      <path d="M4.5 9 8 12.5 11.5 9" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    aria-label={`Remove education entry ${index + 1}`}
+                    className="inline-flex h-7 items-center rounded-[6px] border border-[#C0392B]/25 bg-white px-2.5 text-xs font-medium text-[#C0392B] hover:bg-[#C0392B]/8 focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer transition-colors"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor={`edu-school-${index}`}
+                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                  >
+                    School / University
+                  </label>
+                  <input
+                    id={`edu-school-${index}`}
+                    type="text"
+                    placeholder="e.g. State University"
+                    {...register(`education.${index}.school`)}
+                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor={`edu-degree-${index}`}
+                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                  >
+                    Degree / Program
+                  </label>
+                  <input
+                    id={`edu-degree-${index}`}
+                    type="text"
+                    placeholder="e.g. B.S. in Computer Science"
+                    {...register(`education.${index}.degree`)}
+                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                  />
+                </div>
+
+                <div>
+                  <span className="block text-xs font-medium text-[#1A2233] mb-1">Start Date</span>
+                  <MonthYearPicker name={`education.${index}.startDate`} />
+                </div>
+
+                <div>
+                  <span className="block text-xs font-medium text-[#1A2233] mb-1">
+                    End Date (or Expected)
+                  </span>
+                  <MonthYearPicker name={`education.${index}.endDate`} allowPresent />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor={`edu-details-${index}`}
+                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                  >
+                    Honors, GPA, or Highlights
+                  </label>
+                  <input
+                    id={`edu-details-${index}`}
+                    type="text"
+                    placeholder="e.g. Dean's List (GPA: 3.85/4.0), Academic Excellence Scholarship"
+                    {...register(`education.${index}.details`)}
+                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor={`edu-coursework-${index}`}
+                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                  >
+                    Relevant Coursework (Optional)
+                  </label>
+                  <input
+                    id={`edu-coursework-${index}`}
+                    type="text"
+                    placeholder="e.g. Database Management Systems, Systems Analysis and Design, Web Development"
+                    {...register(`education.${index}.coursework`)}
+                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                  />
+                </div>
               </div>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-slate-700 mb-1">
-                  School / University
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. State University"
-                  {...register(`education.${index}.school`)}
-                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
-                />
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-slate-700 mb-1">
-                  Degree / Program
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. B.S. in Computer Science"
-                  {...register(`education.${index}.degree`)}
-                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Start Date</label>
-                <MonthYearPicker name={`education.${index}.startDate`} />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
-                  End Date (or Expected)
-                </label>
-                <MonthYearPicker name={`education.${index}.endDate`} allowPresent />
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-slate-700 mb-1">
-                  Honors, GPA, or Highlights
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Dean's List (GPA: 3.85/4.0), Academic Excellence Scholarship"
-                  {...register(`education.${index}.details`)}
-                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
-                />
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-slate-700 mb-1">
-                  Relevant Coursework (Optional)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Database Management Systems, Systems Analysis and Design, Web Development"
-                  {...register(`education.${index}.coursework`)}
-                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-slate-800 focus:outline-none"
-                />
-              </div>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

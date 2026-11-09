@@ -163,7 +163,6 @@ export default function App() {
 
   // Clear everything & animation states
   const [isClearModalOpen, setIsClearModalOpen] = useState(false)
-  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
   const [isClearing, setIsClearing] = useState(false)
   const [clearingPhase, setClearingPhase] = useState('idle') // 'idle' | 'out' | 'prepare-in' | 'in' | 'reduced-out' | 'reduced-in'
   const [showUndoNotice, setShowUndoNotice] = useState(false)
@@ -171,29 +170,6 @@ export default function App() {
 
   const undoDataRef = useRef(null)
   const undoTimeoutRef = useRef(null)
-  const moreMenuRef = useRef(null)
-
-  // Close "More" dropdown when clicking outside or pressing Escape
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target)) {
-        setIsMoreMenuOpen(false)
-      }
-    }
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setIsMoreMenuOpen(false)
-      }
-    }
-    if (isMoreMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-      document.addEventListener('keydown', handleKeyDown)
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isMoreMenuOpen])
 
   useEffect(() => {
     return () => {
@@ -331,7 +307,7 @@ export default function App() {
                 </p>
                 <p
                   aria-live="polite"
-                  className={`text-[11px] sm:text-xs mt-0.5 ${
+                  className={`text-xs mt-0.5 ${
                     saveStatus === 'error'
                       ? 'text-[#C0392B] font-medium'
                       : 'text-[#5B6678]'
@@ -354,7 +330,7 @@ export default function App() {
                     setShowLanding(true)
                     window.scrollTo({ top: 0, behavior: 'smooth' })
                   }}
-                  className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-colors disabled:opacity-50 cursor-pointer"
+                  className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   Home
                 </button>
@@ -364,7 +340,7 @@ export default function App() {
                   type="button"
                   disabled={isClearing}
                   onClick={() => setIsImportModalOpen(true)}
-                  className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+                  className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
                 >
                   <span>Import PDF</span>
                 </button>
@@ -375,9 +351,21 @@ export default function App() {
                     type="button"
                     disabled={isClearing}
                     onClick={handleRestoreUserData}
-                    className="rounded-[6px] bg-[#1F4D8F] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#173b6e] transition-colors disabled:opacity-50 shadow-2xs cursor-pointer flex items-center gap-1"
+                    className="rounded-[6px] bg-[#1F4D8F] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#173b6e] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors disabled:opacity-50 shadow-2xs cursor-pointer flex items-center gap-1.5"
                   >
-                    <span>↩</span>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-3.5 w-3.5 shrink-0"
+                    >
+                      <path d="M3.5 6.5H10a3.5 3.5 0 1 1 0 7H6.5" />
+                      <path d="M6 4 3.5 6.5 6 9" />
+                    </svg>
                     <span>{userBackup ? 'Restore My Data' : 'Clear Sample (Start Blank)'}</span>
                   </button>
                 ) : (
@@ -385,47 +373,21 @@ export default function App() {
                     type="button"
                     disabled={isClearing}
                     onClick={handleLoadSample}
-                    className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-colors disabled:opacity-50 cursor-pointer"
+                    className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors disabled:opacity-50 cursor-pointer"
                   >
                     Load Sample
                   </button>
                 )}
 
-                {/* "More" Menu Dropdown */}
-                <div className="relative" ref={moreMenuRef}>
-                  <button
-                    type="button"
-                    disabled={isClearing}
-                    id="more-menu-button"
-                    aria-haspopup="menu"
-                    aria-expanded={isMoreMenuOpen}
-                    onClick={() => setIsMoreMenuOpen((prev) => !prev)}
-                    className="rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1"
-                  >
-                    <span>More</span>
-                    <span className="text-[10px] text-[#5B6678]">▾</span>
-                  </button>
-
-                  {isMoreMenuOpen && (
-                    <div
-                      role="menu"
-                      aria-labelledby="more-menu-button"
-                      className="absolute right-0 mt-1.5 w-40 rounded-[10px] border border-[#E3E8EE] bg-white p-1 shadow-lg z-30"
-                    >
-                      <button
-                        type="button"
-                        role="menuitem"
-                        onClick={() => {
-                          setIsMoreMenuOpen(false)
-                          setIsClearModalOpen(true)
-                        }}
-                        className="w-full text-left rounded-[6px] px-3 py-1.5 text-xs font-medium text-[#C0392B] hover:bg-[#C0392B]/10 cursor-pointer"
-                      >
-                        Start over
-                      </button>
-                    </div>
-                  )}
-                </div>
+                {/* Direct Start Over Action */}
+                <button
+                  type="button"
+                  disabled={isClearing}
+                  onClick={() => setIsClearModalOpen(true)}
+                  className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#C0392B] hover:bg-[#C0392B]/8 hover:border-[#C0392B]/30 focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  Start over
+                </button>
               </div>
             </div>
           </header>
@@ -436,7 +398,7 @@ export default function App() {
               <div
                 role="status"
                 aria-live="polite"
-                className="rounded-[10px] border border-[#E3E8EE] bg-white px-4 py-2.5 text-xs text-[#1A2233] shadow-2xs flex items-center justify-between gap-3 animate-fade-in"
+                className="rounded-[10px] border border-[#E3E8EE] bg-white px-4 py-2.5 text-xs text-[#1A2233] shadow-2xs flex items-center justify-between gap-3 animate-fade-up"
               >
                 <span>Cleared. You&apos;re starting fresh.</span>
                 <button
@@ -467,7 +429,7 @@ export default function App() {
 
           {/* Active Sample Data Notice Banner */}
           {isSampleActive && (
-            <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900 flex flex-wrap items-center justify-between gap-2 shadow-xs">
+            <div className="rounded-[10px] border border-[#1F4D8F]/25 bg-[#1F4D8F]/[0.06] px-4 py-2.5 text-xs text-[#1A2233] flex flex-wrap items-center justify-between gap-2 shadow-2xs">
               <div className="flex items-center gap-2">
                 <span>
                   You are currently previewing sample student data (<strong>{sampleResumeData.personalInfo.fullName}</strong>).
@@ -481,7 +443,7 @@ export default function App() {
                   type="button"
                   disabled={isClearing}
                   onClick={handleRestoreUserData}
-                  className="rounded bg-amber-900 px-2.5 py-1 text-xs font-medium text-white hover:bg-amber-800 disabled:opacity-50 cursor-pointer"
+                  className="rounded-[6px] bg-[#1F4D8F] px-3 py-1 text-xs font-semibold text-white hover:bg-[#173b6e] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-50 cursor-pointer transition-colors"
                 >
                   {userBackup ? 'Restore My Data' : 'Clear to Blank Form'}
                 </button>

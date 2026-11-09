@@ -178,7 +178,7 @@ export default function LivePreview({
           <div
             role="radiogroup"
             aria-label="Document format"
-            className="inline-flex rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] p-0.5 text-[11px] mt-1"
+            className="inline-flex rounded-[6px] bg-[#F6F8FA] border border-[#E3E8EE] p-0.5 text-xs mt-1"
           >
             <button
               type="button"

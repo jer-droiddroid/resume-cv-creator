@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
+import { useFormContext } from 'react-hook-form'
+import { isSectionNonEmpty } from '../../utils/sectionHelpers'
 import PersonalInfoStep from './PersonalInfoStep'
 import SummaryStep from './SummaryStep'
 import EducationStep from './EducationStep'
@@ -20,6 +22,8 @@ const WIZARD_STEPS = [
 ]
 
 export default function FormWizard({ disabled = false }) {
+  const { watch } = useFormContext()
+  const formValues = watch()
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [visitedSteps, setVisitedSteps] = useState(() => new Set([0]))
@@ -31,15 +35,32 @@ export default function FormWizard({ disabled = false }) {
   const currentStep = WIZARD_STEPS[currentStepIndex]
   const CurrentStepComponent = currentStep.component
   const totalSteps = WIZARD_STEPS.length
-  const progressPercent = ((currentStepIndex + 1) / totalSteps) * 100
   const isLastStep = currentStepIndex === totalSteps - 1
+
+  const isStepCompleted = (stepId, idx) => {
+    if (stepId === 'personal') {
+      const fullName = formValues?.personalInfo?.fullName?.trim() || ''
+      const email = formValues?.personalInfo?.email?.trim() || ''
+      return fullName.length > 0 || email.length > 0
+    }
+    if (stepId === 'skills') {
+      return (
+        isSectionNonEmpty('skills', formValues) ||
+        isSectionNonEmpty('awards', formValues) ||
+        isSectionNonEmpty('certifications', formValues)
+      )
+    }
+    if (stepId === 'settings') {
+      return visitedSteps.has(idx) && idx !== currentStepIndex
+    }
+    return isSectionNonEmpty(stepId, formValues)
+  }
 
   // Track visited steps
   const goToStep = (index) => {
     setCurrentStepIndex(index)
     setVisitedSteps((prev) => new Set(prev).add(index))
     setIsMenuOpen(false)
-    menuButtonRef.current?.focus()
   }
 
   const goPrev = () => {
@@ -150,7 +171,7 @@ export default function FormWizard({ disabled = false }) {
                 <div className="space-y-0.5 pb-1">
                   {WIZARD_STEPS.map((step, idx) => {
                     const isCurrent = idx === currentStepIndex
-                    const isVisited = visitedSteps.has(idx)
+                    const isCompleted = isStepCompleted(step.id, idx)
 
                     return (
                       <button
@@ -158,7 +179,10 @@ export default function FormWizard({ disabled = false }) {
                         ref={(el) => (itemRefs.current[idx] = el)}
                         role="menuitem"
                         type="button"
-                        onClick={() => goToStep(idx)}
+                        onClick={() => {
+                          goToStep(idx)
+                          menuButtonRef.current?.focus()
+                        }}
                         className={`w-full flex items-center justify-between rounded-[6px] px-2.5 py-1.5 text-xs text-left transition focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer ${
                           isCurrent
                             ? 'bg-[#1F4D8F] text-white font-semibold'
@@ -169,19 +193,30 @@ export default function FormWizard({ disabled = false }) {
                           {idx + 1}. {step.name}
                         </span>
 
-                        {/* Visited Checkmark */}
-                        {isVisited && !isCurrent && (
+                        {/* Completed Content Checkmark */}
+                        {isCompleted && !isCurrent && (
                           <span
                             aria-label="Completed"
-                            className="text-[#1F4D8F] font-bold ml-2 shrink-0"
+                            className="inline-flex items-center text-[#1F4D8F] ml-2 shrink-0"
                           >
-                            ✓
+                            <svg
+                              aria-hidden="true"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="h-3.5 w-3.5"
+                            >
+                              <path d="m3.5 8.5 3 3 6-6.5" />
+                            </svg>
                           </span>
                         )}
                         {isCurrent && (
                           <span
                             aria-label="Current step"
-                            className="text-white/85 text-[11px] ml-2 shrink-0"
+                            className="text-white/90 text-xs ml-2 shrink-0"
                           >
                             Current
                           </span>
@@ -195,19 +230,39 @@ export default function FormWizard({ disabled = false }) {
           </div>
         </div>
 
-        {/* Thin 4px Progress Bar */}
+        {/* Interactive 8-Step Segmented Progress Strip */}
         <div
-          role="progressbar"
-          aria-valuenow={currentStepIndex + 1}
-          aria-valuemin={1}
-          aria-valuemax={totalSteps}
-          aria-label={`Step ${currentStepIndex + 1} of ${totalSteps}: ${currentStep.name}`}
-          className="w-full h-1 bg-[#EEF2F6] rounded-full overflow-hidden"
+          role="group"
+          aria-label="Resume builder steps"
+          className="grid grid-cols-8 gap-1.5"
         >
-          <div
-            className="h-full bg-[#1F4D8F] rounded-full transition-all duration-300 ease-out"
-            style={{ width: `${progressPercent}%` }}
-          />
+          {WIZARD_STEPS.map((step, idx) => {
+            const isCurrent = idx === currentStepIndex
+            const isCompleted = isStepCompleted(step.id, idx)
+
+            return (
+              <button
+                key={step.id}
+                type="button"
+                disabled={disabled}
+                onClick={() => goToStep(idx)}
+                title={`Step ${idx + 1}: ${step.name}`}
+                aria-label={`Step ${idx + 1}: ${step.name}${isCurrent ? ' (current)' : isCompleted ? ' (completed)' : ''}`}
+                aria-current={isCurrent ? 'step' : undefined}
+                className="group py-1 focus:outline-none cursor-pointer disabled:cursor-not-allowed"
+              >
+                <span
+                  className={`block h-1.5 w-full rounded-full transition-all duration-200 group-focus-visible:ring-2 group-focus-visible:ring-[#1F4D8F] group-focus-visible:ring-offset-1 ${
+                    isCurrent
+                      ? 'bg-[#1F4D8F]'
+                      : isCompleted
+                        ? 'bg-[#1F4D8F]/45 group-hover:bg-[#1F4D8F]/70'
+                        : 'bg-[#EEF2F6] group-hover:bg-[#CBD5E1]'
+                  }`}
+                />
+              </button>
+            )
+          })}
         </div>
       </div>
 

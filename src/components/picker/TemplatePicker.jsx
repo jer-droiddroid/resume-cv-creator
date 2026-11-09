@@ -24,16 +24,16 @@ function TemplateCard({ template, isSelected, onSelect }) {
     <button
       type="button"
       onClick={() => onSelect(template.id)}
-      className={`group flex flex-col rounded-xl border text-left transition overflow-hidden cursor-pointer ${
+      className={`group flex flex-col rounded-[10px] border text-left transition overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] ${
         isSelected
-          ? 'border-slate-900 ring-2 ring-slate-900 bg-slate-50'
-          : 'border-slate-200 bg-white hover:border-slate-400 hover:shadow-xs'
+          ? 'border-[#1F4D8F] ring-2 ring-[#1F4D8F] bg-[#F6F8FA]'
+          : 'border-[#E3E8EE] bg-white hover:border-[#CBD5E1] hover:shadow-xs'
       }`}
     >
       {/* Thumbnail preview area (uses sampleResumeData) */}
-      <div className="relative h-48 w-full bg-slate-100 p-2.5 flex items-center justify-center overflow-hidden border-b border-slate-200">
+      <div className="relative h-48 w-full bg-[#EEF2F6] p-2.5 flex items-center justify-center overflow-hidden border-b border-[#E3E8EE]">
         <div
-          className={`h-full w-34 rounded bg-white shadow-xs border border-slate-200 overflow-hidden flex flex-col text-[5.5px] leading-tight select-none ${fontClass}`}
+          className={`h-full w-34 rounded-[4px] bg-white shadow-xs border border-[#E3E8EE] overflow-hidden flex flex-col text-[5.5px] leading-tight select-none ${fontClass}`}
           style={{ color: theme.textColor }}
         >
           {isBanner ? (
@@ -200,7 +200,7 @@ function TemplateCard({ template, isSelected, onSelect }) {
         </div>
 
         {isSelected && (
-          <span className="absolute top-2 right-2 rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-semibold text-white shadow-xs">
+          <span className="absolute top-2 right-2 rounded-[6px] bg-[#1F4D8F] px-2 py-0.5 text-xs font-semibold text-white shadow-xs">
             Selected
           </span>
         )}
@@ -209,11 +209,11 @@ function TemplateCard({ template, isSelected, onSelect }) {
       {/* Card footer */}
       <div className="p-2.5 flex items-center justify-between">
         <div className="min-w-0 pr-1">
-          <p className="text-xs font-semibold text-slate-900 truncate">{template.name}</p>
-          <p className="text-[11px] text-slate-500">{template.category}</p>
+          <p className="text-xs font-semibold text-[#1A2233] truncate">{template.name}</p>
+          <p className="text-xs text-[#5B6678]">{template.category}</p>
         </div>
         <span
-          className="h-3.5 w-3.5 shrink-0 rounded-full border border-slate-300"
+          className="h-3.5 w-3.5 shrink-0 rounded-full border border-[#E3E8EE]"
           style={{ backgroundColor: theme.accentColor }}
           title={`Accent: ${theme.name}`}
         />
@@ -247,43 +247,50 @@ export default function TemplatePicker({ isOpen, onClose, selectedTemplateId, on
       : templates.filter((t) => t.category === activeCategory)
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="template-picker-title"
+      className="fixed inset-0 z-50 overflow-hidden"
+    >
       {/* Backdrop */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-[#1A2233]/40 backdrop-blur-xs transition-opacity"
       />
 
       {/* Drawer Container: slides in from right on desktop, bottom on mobile */}
-      <div className="fixed inset-x-0 bottom-0 sm:inset-y-0 sm:right-0 sm:left-auto w-full sm:w-[480px] md:w-[520px] max-h-[85vh] sm:max-h-full bg-white shadow-2xl flex flex-col rounded-t-2xl sm:rounded-none z-10 transition-transform">
+      <div className="fixed inset-x-0 bottom-0 sm:inset-y-0 sm:right-0 sm:left-auto w-full sm:w-[480px] md:w-[520px] max-h-[85vh] sm:max-h-full bg-white shadow-2xl flex flex-col rounded-t-[10px] sm:rounded-none z-10 transition-transform">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-[#E3E8EE] px-5 py-4">
           <div>
-            <h2 className="text-base font-semibold text-slate-900">Choose a Template</h2>
-            <p className="text-xs text-slate-500">
+            <h2 id="template-picker-title" className="text-base font-semibold text-[#1A2233]">
+              Choose a Template
+            </h2>
+            <p className="text-xs text-[#5B6678]">
               Pick a design to instantly change your resume layout.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100 cursor-pointer"
+            className="rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer transition-colors"
           >
             Close
           </button>
         </div>
 
         {/* Category Filter Pills */}
-        <div className="flex items-center gap-1.5 px-5 py-3 border-b border-slate-100 bg-slate-50/50 overflow-x-auto">
+        <div className="flex items-center gap-1.5 px-5 py-3 border-b border-[#E3E8EE] bg-[#F6F8FA] overflow-x-auto">
           {TEMPLATE_CATEGORIES.map((category) => (
             <button
               key={category}
               type="button"
               onClick={() => setActiveCategory(category)}
-              className={`rounded-full px-3 py-1 text-xs font-medium transition cursor-pointer whitespace-nowrap ${
+              className={`rounded-[6px] px-3 py-1 text-xs font-medium transition cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] ${
                 activeCategory === category
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+                  ? 'bg-[#1F4D8F] text-white font-semibold shadow-2xs'
+                  : 'bg-white border border-[#E3E8EE] text-[#5B6678] hover:text-[#1A2233] hover:bg-[#EEF2F6]'
               }`}
             >
               {category}

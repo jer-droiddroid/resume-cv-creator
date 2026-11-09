@@ -85,8 +85,7 @@ export default function MonthYearPicker({ name, allowPresent = false }) {
       setValue(name, '')
       return
     }
-    const effectiveYear = parsedYear || String(currentYear)
-    setValue(name, newMonth ? `${newMonth} ${effectiveYear}` : effectiveYear)
+    setValue(name, newMonth ? (parsedYear ? `${newMonth} ${parsedYear}` : newMonth) : parsedYear)
   }
 
   const handleYearChange = (e) => {
@@ -95,7 +94,7 @@ export default function MonthYearPicker({ name, allowPresent = false }) {
       setValue(name, '')
       return
     }
-    setValue(name, parsedMonth ? `${parsedMonth} ${newYear}` : newYear)
+    setValue(name, parsedMonth ? (newYear ? `${parsedMonth} ${newYear}` : parsedMonth) : newYear)
   }
 
   const handleTogglePresent = (e) => {
@@ -111,10 +110,11 @@ export default function MonthYearPicker({ name, allowPresent = false }) {
       <div className="grid grid-cols-2 gap-1.5">
         {/* Month Dropdown */}
         <select
+          aria-label="Month"
           value={isPresent ? '' : parsedMonth}
           disabled={isPresent}
           onChange={handleMonthChange}
-          className="w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:border-slate-800 focus:outline-none disabled:bg-slate-100 disabled:text-slate-400 cursor-pointer"
+          className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1.5 text-xs text-[#1A2233] focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20 disabled:bg-[#EEF2F6] disabled:text-[#5B6678] cursor-pointer"
         >
           <option value="">Month</option>
           {MONTHS.map((m) => (
@@ -126,10 +126,11 @@ export default function MonthYearPicker({ name, allowPresent = false }) {
 
         {/* Year Dropdown */}
         <select
+          aria-label="Year"
           value={isPresent ? '' : parsedYear}
           disabled={isPresent}
           onChange={handleYearChange}
-          className="w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:border-slate-800 focus:outline-none disabled:bg-slate-100 disabled:text-slate-400 cursor-pointer"
+          className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1.5 text-xs text-[#1A2233] focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20 disabled:bg-[#EEF2F6] disabled:text-[#5B6678] cursor-pointer"
         >
           <option value="">Year</option>
           {YEARS.map((y) => (
@@ -142,12 +143,12 @@ export default function MonthYearPicker({ name, allowPresent = false }) {
 
       {/* "Present / Current" option for End Date */}
       {allowPresent && (
-        <label className="flex items-center gap-1.5 text-[11px] text-slate-600 cursor-pointer select-none">
+        <label className="flex items-center gap-1.5 text-xs text-[#5B6678] cursor-pointer select-none">
           <input
             type="checkbox"
             checked={isPresent}
             onChange={handleTogglePresent}
-            className="h-3.5 w-3.5 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
+            className="h-3.5 w-3.5 rounded border-[#E3E8EE] accent-[#1F4D8F] text-[#1F4D8F] focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer"
           />
           <span>Currently here (Present)</span>
         </label>

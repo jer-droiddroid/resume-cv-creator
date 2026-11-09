@@ -28,14 +28,14 @@ export default function SectionSettingsStep() {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-lg font-semibold text-slate-900">Section Order &amp; Visibility</h2>
-        <p className="text-sm text-slate-500">
+        <h2 className="text-lg font-semibold text-[#1A2233]">Section Order &amp; Visibility</h2>
+        <p className="text-sm text-[#5B6678]">
           Reorder how sections appear on your PDF, or uncheck a section to hide it completely.
           (Empty sections are hidden automatically.)
         </p>
       </div>
 
-      <div className="divide-y divide-slate-200 rounded-lg border border-slate-200 bg-white">
+      <div className="divide-y divide-[#E3E8EE] rounded-[10px] border border-[#E3E8EE] bg-white overflow-hidden">
         {fields.map((field, index) => {
           // Resolve the human-readable section ID from the form data
           const actualItem = sectionsData[index] || {}
@@ -58,35 +58,63 @@ export default function SectionSettingsStep() {
           return (
             <div
               key={field.id}
-              className="flex items-center justify-between px-4 py-3 hover:bg-slate-50"
+              className="flex items-center justify-between px-4 py-3 hover:bg-[#F6F8FA] transition-colors gap-2"
             >
-              <label className="flex items-center gap-3 cursor-pointer select-none">
+              <label className="flex items-center gap-3 cursor-pointer select-none min-w-0">
                 <input
                   type="checkbox"
                   {...register(`sections.${index}.visible`)}
-                  className="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
+                  className="h-4 w-4 shrink-0 rounded border-[#E3E8EE] accent-[#1F4D8F] text-[#1F4D8F] focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer"
                 />
-                <span className="text-sm font-medium text-slate-800">{label}</span>
+                <span className="text-sm font-medium text-[#1A2233] truncate">{label}</span>
               </label>
 
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 shrink-0">
                 <button
                   type="button"
                   disabled={index === 0}
                   onClick={() => swap(index, index - 1)}
-                  className="rounded border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-40 cursor-pointer"
+                  aria-label={`Move ${label} section up`}
+                  className="inline-flex items-center gap-1 rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1 text-xs font-medium text-[#1A2233] hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-40 cursor-pointer transition-colors"
                   title="Move section up"
                 >
-                  ↑ Up
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-3 w-3"
+                  >
+                    <path d="M8 12.5v-9" />
+                    <path d="M4.5 7 8 3.5 11.5 7" />
+                  </svg>
+                  <span>Up</span>
                 </button>
                 <button
                   type="button"
                   disabled={index === fields.length - 1}
                   onClick={() => swap(index, index + 1)}
-                  className="rounded border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-40 cursor-pointer"
+                  aria-label={`Move ${label} section down`}
+                  className="inline-flex items-center gap-1 rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1 text-xs font-medium text-[#1A2233] hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-40 cursor-pointer transition-colors"
                   title="Move section down"
                 >
-                  ↓ Down
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-3 w-3"
+                  >
+                    <path d="M8 3.5v9" />
+                    <path d="M4.5 9 8 12.5 11.5 9" />
+                  </svg>
+                  <span>Down</span>
                 </button>
               </div>
             </div>

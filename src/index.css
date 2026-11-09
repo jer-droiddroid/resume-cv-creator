@@ -49,7 +49,7 @@
 /* Clearly visible, modern scrollbar for the preview stage */
 .preview-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #475569 #cbd5e1;
+  scrollbar-color: #5B6678 #DCE3EC;
 }
 
 .preview-scrollbar::-webkit-scrollbar {
@@ -58,23 +58,36 @@
 }
 
 .preview-scrollbar::-webkit-scrollbar-track {
-  background: #cbd5e1;
+  background: #DCE3EC;
   border-radius: 9999px;
   margin: 6px 0;
 }
 
 .preview-scrollbar::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: #5B6678;
   border-radius: 9999px;
-  border: 2px solid #cbd5e1;
+  border: 2px solid #DCE3EC;
 }
 
 .preview-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #1e293b;
+  background: #1F4D8F;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-page);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: rgba(31, 77, 143, 0.14);
+  color: #1A2233;
 }
 
 /* Smooth entrance & morph keyframes */
