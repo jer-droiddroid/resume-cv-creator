@@ -1,5 +1,11 @@
+import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { buildFileName } from '../../utils/sectionHelpers'
+import {
+  INTERNATIONAL_COUNTRIES,
+  formatLocation,
+  parseLocation,
+} from '../../data/internationalLocations'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -10,6 +16,61 @@ export default function PersonalInfoStep() {
   const isOjtMode = Boolean(formValues?.isOjtMode)
   const emailValue = formValues?.personalInfo?.email || ''
   const isEmailInvalid = emailValue.trim().length > 0 && !EMAIL_REGEX.test(emailValue.trim())
+
+  const locationValue = formValues?.personalInfo?.location || ''
+  const [isCustomMode, setIsCustomMode] = useState(false)
+
+  // Derive parsed country and city directly from form location
+  const parsed = parseLocation(locationValue)
+  const selectedCountry = parsed.country || ''
+  const isCustomCity = isCustomMode || parsed.isCustomCity
+  const currentCity = parsed.city || ''
+
+  const currentCountryObj = INTERNATIONAL_COUNTRIES.find((c) => c.name === selectedCountry)
+  const availableCities = currentCountryObj?.cities || []
+
+  const handleCountryChange = (e) => {
+    const nextCountry = e.target.value
+
+    const countryObj = INTERNATIONAL_COUNTRIES.find((c) => c.name === nextCountry)
+    const cities = countryObj?.cities || []
+
+    if (nextCountry && cities.length === 0) {
+      setIsCustomMode(true)
+      const formatted = formatLocation(nextCountry, currentCity)
+      setValue('personalInfo.location', formatted, { shouldDirty: true })
+      return
+    }
+
+    if (isCustomCity && currentCity.trim()) {
+      const formatted = formatLocation(nextCountry, currentCity)
+      setValue('personalInfo.location', formatted, { shouldDirty: true })
+      return
+    }
+
+    setIsCustomMode(false)
+    const formatted = formatLocation(nextCountry, '')
+    setValue('personalInfo.location', formatted, { shouldDirty: true })
+  }
+
+  const handleCityChange = (e) => {
+    const val = e.target.value
+    if (val === '__custom__') {
+      setIsCustomMode(true)
+      const formatted = formatLocation(selectedCountry, currentCity)
+      setValue('personalInfo.location', formatted, { shouldDirty: true })
+    } else {
+      setIsCustomMode(false)
+      const formatted = formatLocation(selectedCountry, val)
+      setValue('personalInfo.location', formatted, { shouldDirty: true })
+    }
+  }
+
+  const handleCustomCityChange = (e) => {
+    const text = e.target.value
+    const formatted = formatLocation(selectedCountry, text)
+    setValue('personalInfo.location', formatted, { shouldDirty: true })
+  }
 
   return (
     <div className="space-y-4">
@@ -192,17 +253,83 @@ export default function PersonalInfoStep() {
           />
         </div>
 
-        <div>
-          <label htmlFor="personal-location" className="block text-sm font-medium text-[#1A2233] mb-1">
+        {/* Location: International Country & Dependent City Dropdown */}
+        <div className="sm:col-span-2 space-y-1.5">
+          <input type="hidden" {...register('personalInfo.location')} />
+          <span className="block text-sm font-medium text-[#1A2233]">
             Location
-          </label>
-          <input
-            id="personal-location"
-            type="text"
-            placeholder="San Francisco, CA"
-            {...register('personalInfo.location')}
-            className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-2 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
-          />
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="personal-country" className="block text-xs font-medium text-[#5B6678] mb-1">
+                Country
+              </label>
+              <select
+                id="personal-country"
+                aria-label="Country"
+                value={selectedCountry}
+                onChange={handleCountryChange}
+                className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-2 text-sm text-[#1A2233] focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20 cursor-pointer"
+              >
+                <option value="">Select country...</option>
+                {INTERNATIONAL_COUNTRIES.map((c) => (
+                  <option key={c.code} value={c.name}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="personal-city" className="block text-xs font-medium text-[#5B6678] mb-1">
+                City / Municipality
+              </label>
+              <select
+                id="personal-city"
+                aria-label="City"
+                value={isCustomCity ? '__custom__' : currentCity}
+                disabled={!selectedCountry}
+                onChange={handleCityChange}
+                className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-2 text-sm text-[#1A2233] focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20 disabled:bg-[#EEF2F6] disabled:text-[#5B6678] disabled:cursor-not-allowed cursor-pointer"
+              >
+                <option value="">
+                  {selectedCountry ? 'Select a city...' : 'Select country first...'}
+                </option>
+                {availableCities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+                {selectedCountry && (
+                  <option value="__custom__">Other (Type custom city...)</option>
+                )}
+              </select>
+            </div>
+          </div>
+
+          {/* Inline Custom City Input */}
+          {isCustomCity && (
+            <div className="pt-1">
+              <label htmlFor="personal-custom-city" className="block text-xs font-medium text-[#5B6678] mb-1">
+                Custom City or Province
+              </label>
+              <input
+                id="personal-custom-city"
+                type="text"
+                value={currentCity}
+                onChange={handleCustomCityChange}
+                placeholder="e.g. Malaybalay, Bukidnon or Kyoto"
+                aria-label="Custom City"
+                className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-2 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+              />
+            </div>
+          )}
+
+          {locationValue && (
+            <p className="text-xs text-[#5B6678] pt-0.5">
+              Saved format: <span className="font-semibold text-[#1A2233]">{locationValue}</span>
+            </p>
+          )}
         </div>
 
         <div>
@@ -221,7 +348,7 @@ export default function PersonalInfoStep() {
           </p>
         </div>
 
-        <div className="sm:col-span-2">
+        <div>
           <label htmlFor="personal-portfolio" className="block text-sm font-medium text-[#1A2233] mb-1">
             Portfolio / GitHub Website
           </label>
