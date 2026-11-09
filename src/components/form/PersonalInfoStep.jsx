@@ -18,58 +18,43 @@ export default function PersonalInfoStep() {
   const isEmailInvalid = emailValue.trim().length > 0 && !EMAIL_REGEX.test(emailValue.trim())
 
   const locationValue = formValues?.personalInfo?.location || ''
-  const [isCustomMode, setIsCustomMode] = useState(false)
+  const [prevLocationValue, setPrevLocationValue] = useState(locationValue)
+  const initialParsed = parseLocation(locationValue)
+  const [selectedCountry, setSelectedCountry] = useState(initialParsed.country || '')
+  const [cityInput, setCityInput] = useState(initialParsed.city || '')
 
-  // Derive parsed country and city directly from form location
-  const parsed = parseLocation(locationValue)
-  const selectedCountry = parsed.country || ''
-  const isCustomCity = isCustomMode || parsed.isCustomCity
-  const currentCity = parsed.city || ''
-
-  const currentCountryObj = INTERNATIONAL_COUNTRIES.find((c) => c.name === selectedCountry)
-  const availableCities = currentCountryObj?.cities || []
+  // Sync state if formValues.personalInfo.location was changed externally (e.g. sample loaded or reset)
+  if (locationValue !== prevLocationValue) {
+    setPrevLocationValue(locationValue)
+    const parsed = parseLocation(locationValue)
+    setSelectedCountry(parsed.country || '')
+    setCityInput(parsed.city || '')
+  }
 
   const handleCountryChange = (e) => {
     const nextCountry = e.target.value
-
-    const countryObj = INTERNATIONAL_COUNTRIES.find((c) => c.name === nextCountry)
-    const cities = countryObj?.cities || []
-
-    if (nextCountry && cities.length === 0) {
-      setIsCustomMode(true)
-      const formatted = formatLocation(nextCountry, currentCity)
-      setValue('personalInfo.location', formatted, { shouldDirty: true })
-      return
-    }
-
-    if (isCustomCity && currentCity.trim()) {
-      const formatted = formatLocation(nextCountry, currentCity)
-      setValue('personalInfo.location', formatted, { shouldDirty: true })
-      return
-    }
-
-    setIsCustomMode(false)
-    const formatted = formatLocation(nextCountry, '')
+    setSelectedCountry(nextCountry)
+    const formatted = formatLocation(nextCountry, cityInput)
+    setPrevLocationValue(formatted)
     setValue('personalInfo.location', formatted, { shouldDirty: true })
   }
 
   const handleCityChange = (e) => {
-    const val = e.target.value
-    if (val === '__custom__') {
-      setIsCustomMode(true)
-      const formatted = formatLocation(selectedCountry, currentCity)
-      setValue('personalInfo.location', formatted, { shouldDirty: true })
-    } else {
-      setIsCustomMode(false)
-      const formatted = formatLocation(selectedCountry, val)
-      setValue('personalInfo.location', formatted, { shouldDirty: true })
-    }
+    const text = e.target.value
+    setCityInput(text)
+    const formatted = formatLocation(selectedCountry, text)
+    setPrevLocationValue(formatted)
+    setValue('personalInfo.location', formatted, { shouldDirty: true })
   }
 
-  const handleCustomCityChange = (e) => {
-    const text = e.target.value
-    const formatted = formatLocation(selectedCountry, text)
-    setValue('personalInfo.location', formatted, { shouldDirty: true })
+  const handleCityBlur = () => {
+    const trimmed = cityInput.trim()
+    if (trimmed !== cityInput) {
+      setCityInput(trimmed)
+      const formatted = formatLocation(selectedCountry, trimmed)
+      setPrevLocationValue(formatted)
+      setValue('personalInfo.location', formatted, { shouldDirty: true })
+    }
   }
 
   return (
@@ -253,7 +238,7 @@ export default function PersonalInfoStep() {
           />
         </div>
 
-        {/* Location: International Country & Dependent City Dropdown */}
+        {/* Location: International Country Dropdown & City Input */}
         <div className="sm:col-span-2 space-y-1.5">
           <input type="hidden" {...register('personalInfo.location')} />
           <span className="block text-sm font-medium text-[#1A2233]">
@@ -284,46 +269,22 @@ export default function PersonalInfoStep() {
               <label htmlFor="personal-city" className="block text-xs font-medium text-[#5B6678] mb-1">
                 City / Municipality
               </label>
-              <select
-                id="personal-city"
-                aria-label="City"
-                value={isCustomCity ? '__custom__' : currentCity}
-                disabled={!selectedCountry}
-                onChange={handleCityChange}
-                className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-2 text-sm text-[#1A2233] focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20 disabled:bg-[#EEF2F6] disabled:text-[#5B6678] disabled:cursor-not-allowed cursor-pointer"
-              >
-                <option value="">
-                  {selectedCountry ? 'Select a city...' : 'Select country first...'}
-                </option>
-                {availableCities.map((city) => (
-                  <option key={city} value={city}>
-                    {city}
-                  </option>
-                ))}
-                {selectedCountry && (
-                  <option value="__custom__">Other (Type custom city...)</option>
-                )}
-              </select>
-            </div>
-          </div>
-
-          {/* Inline Custom City Input */}
-          {isCustomCity && (
-            <div className="pt-1">
-              <label htmlFor="personal-custom-city" className="block text-xs font-medium text-[#5B6678] mb-1">
-                Custom City or Province
-              </label>
               <input
-                id="personal-custom-city"
+                id="personal-city"
                 type="text"
-                value={currentCity}
-                onChange={handleCustomCityChange}
-                placeholder="e.g. Malaybalay, Bukidnon or Kyoto"
-                aria-label="Custom City"
+                aria-label="City or Municipality"
+                value={cityInput}
+                onChange={handleCityChange}
+                onBlur={handleCityBlur}
+                placeholder={
+                  selectedCountry
+                    ? `e.g. City in ${selectedCountry}`
+                    : 'e.g. Manila, San Francisco, CA'
+                }
                 className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-2 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
               />
             </div>
-          )}
+          </div>
 
           {locationValue && (
             <p className="text-xs text-[#5B6678] pt-0.5">
