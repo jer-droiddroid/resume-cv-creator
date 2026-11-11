@@ -18,20 +18,20 @@ export default function OrganizationsStep() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-[#1A2233]">Student Organizations &amp; Leadership</h2>
-          <p className="text-sm text-[#5B6678]">
+          <h2 className="text-lg font-semibold text-text">Student Organizations &amp; Leadership</h2>
+          <p className="text-sm text-text-muted">
             Pick a role type and enter your numbers — we will build strong action-verb bullets automatically.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5">
-            <label htmlFor="org-currency-select" className="text-xs font-medium text-[#5B6678]">
+            <label htmlFor="org-currency-select" className="text-xs font-medium text-text-muted">
               Currency:
             </label>
             <select
               id="org-currency-select"
               {...register('currency')}
-              className="rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1.5 text-xs font-medium text-[#1A2233] focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20 cursor-pointer"
+              className="rounded-[6px] border border-border bg-white px-2.5 py-1.5 text-xs font-medium text-text focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 cursor-pointer"
             >
               <option value="USD">USD ($)</option>
               <option value="PHP">PHP (₱)</option>
@@ -43,7 +43,7 @@ export default function OrganizationsStep() {
           <button
             type="button"
             onClick={() => append(createEmptyOrganization('marketing'))}
-            className="shrink-0 rounded-[6px] bg-[#1F4D8F] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#173b6e] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors cursor-pointer"
+            className="shrink-0 rounded-[6px] bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent transition-colors cursor-pointer"
           >
             + Add Organization
           </button>
@@ -51,7 +51,7 @@ export default function OrganizationsStep() {
       </div>
 
       {fields.length === 0 && (
-        <p className="text-sm text-[#5B6678] italic py-5 text-center border border-dashed border-[#E3E8EE] bg-[#F6F8FA] rounded-[10px]">
+        <p className="text-sm text-text-muted italic py-5 text-center border border-dashed border-border bg-page rounded-[10px]">
           No organizations added yet. Click &ldquo;+ Add Organization&rdquo; above.
         </p>
       )}
@@ -67,11 +67,11 @@ export default function OrganizationsStep() {
           return (
             <div
               key={field.id}
-              className="rounded-[10px] border border-[#E3E8EE] bg-[#F6F8FA] p-4 space-y-3"
+              className="rounded-[10px] border border-border bg-page p-4 space-y-3"
             >
               {/* Header with reorder and remove buttons */}
-              <div className="flex items-center justify-between border-b border-[#E3E8EE] pb-2.5 gap-2">
-                <span className="text-xs font-semibold text-[#1A2233] truncate">
+              <div className="flex items-center justify-between border-b border-border pb-2.5 gap-2">
+                <span className="text-xs font-semibold text-text truncate">
                   Organization {index + 1}
                   {orgName ? ` — ${orgName}` : ''}
                 </span>
@@ -82,7 +82,7 @@ export default function OrganizationsStep() {
                     onClick={() => swap(index, index - 1)}
                     aria-label={`Move organization entry ${index + 1} up`}
                     title="Move up"
-                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-[#E3E8EE] bg-white text-[#1A2233] hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-40 cursor-pointer transition-colors"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-border bg-white text-text hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-40 cursor-pointer transition-colors"
                   >
                     <svg
                       aria-hidden="true"
@@ -104,7 +104,7 @@ export default function OrganizationsStep() {
                     onClick={() => swap(index, index + 1)}
                     aria-label={`Move organization entry ${index + 1} down`}
                     title="Move down"
-                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-[#E3E8EE] bg-white text-[#1A2233] hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-40 cursor-pointer transition-colors"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-border bg-white text-text hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-40 cursor-pointer transition-colors"
                   >
                     <svg
                       aria-hidden="true"
@@ -124,7 +124,7 @@ export default function OrganizationsStep() {
                     type="button"
                     onClick={() => remove(index)}
                     aria-label={`Remove organization entry ${index + 1}`}
-                    className="inline-flex h-7 items-center rounded-[6px] border border-[#C0392B]/25 bg-white px-2.5 text-xs font-medium text-[#C0392B] hover:bg-[#C0392B]/8 focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer transition-colors"
+                    className="inline-flex h-7 items-center rounded-[6px] border border-error/25 bg-white px-2.5 text-xs font-medium text-error hover:bg-error/8 focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer transition-colors"
                   >
                     Remove
                   </button>
@@ -135,14 +135,14 @@ export default function OrganizationsStep() {
                 <div className="sm:col-span-2">
                   <label
                     htmlFor={`org-role-type-${index}`}
-                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                    className="block text-xs font-medium text-text mb-1"
                   >
                     Role Template Type
                   </label>
                   <select
                     id={`org-role-type-${index}`}
                     {...register(`organizations.${index}.roleType`)}
-                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20 cursor-pointer"
+                    className="w-full rounded-[6px] border border-border bg-white px-3 py-1.5 text-sm text-text focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 cursor-pointer"
                   >
                     {Object.entries(ROLE_TEMPLATES).map(([key, tpl]) => (
                       <option key={key} value={key}>
@@ -155,7 +155,7 @@ export default function OrganizationsStep() {
                 <div>
                   <label
                     htmlFor={`org-title-${index}`}
-                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                    className="block text-xs font-medium text-text mb-1"
                   >
                     Position / Title
                   </label>
@@ -164,14 +164,14 @@ export default function OrganizationsStep() {
                     type="text"
                     placeholder="e.g. Chapter President or VP for Publicity"
                     {...register(`organizations.${index}.title`)}
-                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                    className="w-full rounded-[6px] border border-border bg-white px-3 py-1.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor={`org-name-${index}`}
-                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                    className="block text-xs font-medium text-text mb-1"
                   >
                     Organization Name
                   </label>
@@ -180,26 +180,26 @@ export default function OrganizationsStep() {
                     type="text"
                     placeholder="e.g. ACM Student Chapter"
                     {...register(`organizations.${index}.organization`)}
-                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                    className="w-full rounded-[6px] border border-border bg-white px-3 py-1.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
 
                 <div>
-                  <span className="block text-xs font-medium text-[#1A2233] mb-1">
+                  <span className="block text-xs font-medium text-text mb-1">
                     Start Date
                   </span>
-                  <MonthYearPicker name={`organizations.${index}.startDate`} />
+                  <MonthYearPicker name={`organizations.${index}.startDate`} label={`Organization ${index + 1} start date`} />
                 </div>
 
                 <div>
-                  <span className="block text-xs font-medium text-[#1A2233] mb-1">End Date</span>
-                  <MonthYearPicker name={`organizations.${index}.endDate`} allowPresent />
+                  <span className="block text-xs font-medium text-text mb-1">End Date</span>
+                  <MonthYearPicker name={`organizations.${index}.endDate`} label={`Organization ${index + 1} end date`} allowPresent />
                 </div>
               </div>
 
               {/* Dynamic numeric metrics based on roleType */}
-              <div className="rounded-[8px] bg-white p-3.5 border border-[#E3E8EE] space-y-2.5">
-                <p className="text-xs font-semibold text-[#1A2233]">
+              <div className="rounded-[8px] bg-white p-3.5 border border-border space-y-2.5">
+                <p className="text-xs font-semibold text-text">
                   Key Metrics ({roleTemplate.label}) — Numbers only, leave blank to skip
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -207,7 +207,7 @@ export default function OrganizationsStep() {
                     <div key={metricField.key}>
                       <label
                         htmlFor={`org-metric-${index}-${metricField.key}`}
-                        className="block text-xs text-[#5B6678] mb-1"
+                        className="block text-xs text-text-muted mb-1"
                       >
                         {metricField.label}
                         {metricField.isCurrency ? ` (${currency})` : ''}
@@ -224,7 +224,7 @@ export default function OrganizationsStep() {
                               ? undefined
                               : Number(val),
                         })}
-                        className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                        className="w-full rounded-[6px] border border-border bg-white px-2.5 py-1.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                       />
                     </div>
                   ))}
@@ -232,11 +232,11 @@ export default function OrganizationsStep() {
 
                 {/* Live preview of the generated bullets */}
                 {previewBullets.length > 0 && (
-                  <div className="pt-2.5 border-t border-[#E3E8EE]">
-                    <p className="text-xs font-semibold text-[#1F4D8F] mb-1">
+                  <div className="pt-2.5 border-t border-border">
+                    <p className="text-xs font-semibold text-accent mb-1">
                       Auto-generated bullets:
                     </p>
-                    <ul className="list-disc pl-4 space-y-0.5 text-xs text-[#1A2233]">
+                    <ul className="list-disc pl-4 space-y-0.5 text-xs text-text">
                       {previewBullets.map((b, i) => (
                         <li key={i}>{b}</li>
                       ))}

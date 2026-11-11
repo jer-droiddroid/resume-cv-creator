@@ -14,22 +14,22 @@ export default function EducationStep() {
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-2">
         <div>
-          <h2 className="text-lg font-semibold text-[#1A2233]">Education</h2>
-          <p className="text-sm text-[#5B6678]">
+          <h2 className="text-lg font-semibold text-text">Education</h2>
+          <p className="text-sm text-text-muted">
             Add your university, degree, honors, or relevant coursework.
           </p>
         </div>
         <button
           type="button"
           onClick={() => append(createEmptyEducation())}
-          className="shrink-0 rounded-[6px] bg-[#1F4D8F] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#173b6e] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors cursor-pointer"
+          className="shrink-0 rounded-[6px] bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent transition-colors cursor-pointer"
         >
           + Add Education
         </button>
       </div>
 
       {fields.length === 0 && (
-        <p className="text-sm text-[#5B6678] italic py-5 text-center border border-dashed border-[#E3E8EE] bg-[#F6F8FA] rounded-[10px]">
+        <p className="text-sm text-text-muted italic py-5 text-center border border-dashed border-border bg-page rounded-[10px]">
           No education entries yet. Click &ldquo;+ Add Education&rdquo; above.
         </p>
       )}
@@ -41,11 +41,11 @@ export default function EducationStep() {
           return (
             <div
               key={field.id}
-              className="rounded-[10px] border border-[#E3E8EE] bg-[#F6F8FA] p-4 space-y-3"
+              className="rounded-[10px] border border-border bg-page p-4 space-y-3"
             >
               {/* Card header with reorder & delete controls */}
-              <div className="flex items-center justify-between border-b border-[#E3E8EE] pb-2.5 gap-2">
-                <span className="text-xs font-semibold text-[#1A2233] truncate">
+              <div className="flex items-center justify-between border-b border-border pb-2.5 gap-2">
+                <span className="text-xs font-semibold text-text truncate">
                   Education {index + 1}
                   {schoolName ? ` — ${schoolName}` : ''}
                 </span>
@@ -56,7 +56,7 @@ export default function EducationStep() {
                     onClick={() => swap(index, index - 1)}
                     aria-label={`Move education entry ${index + 1} up`}
                     title="Move up"
-                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-[#E3E8EE] bg-white text-[#1A2233] hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-40 cursor-pointer transition-colors"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-border bg-white text-text hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-40 cursor-pointer transition-colors"
                   >
                     <svg
                       aria-hidden="true"
@@ -78,7 +78,7 @@ export default function EducationStep() {
                     onClick={() => swap(index, index + 1)}
                     aria-label={`Move education entry ${index + 1} down`}
                     title="Move down"
-                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-[#E3E8EE] bg-white text-[#1A2233] hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-40 cursor-pointer transition-colors"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-border bg-white text-text hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-40 cursor-pointer transition-colors"
                   >
                     <svg
                       aria-hidden="true"
@@ -98,7 +98,7 @@ export default function EducationStep() {
                     type="button"
                     onClick={() => remove(index)}
                     aria-label={`Remove education entry ${index + 1}`}
-                    className="inline-flex h-7 items-center rounded-[6px] border border-[#C0392B]/25 bg-white px-2.5 text-xs font-medium text-[#C0392B] hover:bg-[#C0392B]/8 focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer transition-colors"
+                    className="inline-flex h-7 items-center rounded-[6px] border border-error/25 bg-white px-2.5 text-xs font-medium text-error hover:bg-error/8 focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer transition-colors"
                   >
                     Remove
                   </button>
@@ -109,7 +109,7 @@ export default function EducationStep() {
                 <div className="sm:col-span-2">
                   <label
                     htmlFor={`edu-school-${index}`}
-                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                    className="block text-xs font-medium text-text mb-1"
                   >
                     School / University
                   </label>
@@ -118,14 +118,14 @@ export default function EducationStep() {
                     type="text"
                     placeholder="e.g. State University"
                     {...register(`education.${index}.school`)}
-                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                    className="w-full rounded-[6px] border border-border bg-white px-3 py-1.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
                   <label
                     htmlFor={`edu-degree-${index}`}
-                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                    className="block text-xs font-medium text-text mb-1"
                   >
                     Degree / Program
                   </label>
@@ -134,26 +134,26 @@ export default function EducationStep() {
                     type="text"
                     placeholder="e.g. B.S. in Computer Science"
                     {...register(`education.${index}.degree`)}
-                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                    className="w-full rounded-[6px] border border-border bg-white px-3 py-1.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
 
                 <div>
-                  <span className="block text-xs font-medium text-[#1A2233] mb-1">Start Date</span>
-                  <MonthYearPicker name={`education.${index}.startDate`} />
+                  <span className="block text-xs font-medium text-text mb-1">Start Date</span>
+                  <MonthYearPicker name={`education.${index}.startDate`} label={`Education ${index + 1} start date`} />
                 </div>
 
                 <div>
-                  <span className="block text-xs font-medium text-[#1A2233] mb-1">
+                  <span className="block text-xs font-medium text-text mb-1">
                     End Date (or Expected)
                   </span>
-                  <MonthYearPicker name={`education.${index}.endDate`} allowPresent />
+                  <MonthYearPicker name={`education.${index}.endDate`} label={`Education ${index + 1} end date`} allowPresent />
                 </div>
 
                 <div className="sm:col-span-2">
                   <label
                     htmlFor={`edu-details-${index}`}
-                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                    className="block text-xs font-medium text-text mb-1"
                   >
                     Honors, GPA, or Highlights
                   </label>
@@ -162,14 +162,14 @@ export default function EducationStep() {
                     type="text"
                     placeholder="e.g. Dean's List (GPA: 3.85/4.0), Academic Excellence Scholarship"
                     {...register(`education.${index}.details`)}
-                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                    className="w-full rounded-[6px] border border-border bg-white px-3 py-1.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
                   <label
                     htmlFor={`edu-coursework-${index}`}
-                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                    className="block text-xs font-medium text-text mb-1"
                   >
                     Relevant Coursework (Optional)
                   </label>
@@ -178,7 +178,7 @@ export default function EducationStep() {
                     type="text"
                     placeholder="e.g. Database Management Systems, Systems Analysis and Design, Web Development"
                     {...register(`education.${index}.coursework`)}
-                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                    className="w-full rounded-[6px] border border-border bg-white px-3 py-1.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
               </div>

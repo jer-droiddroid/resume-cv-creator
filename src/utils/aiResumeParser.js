@@ -1,4 +1,3 @@
-import { extractTextFromPdf } from './pdfExtractor'
 
 const GEMINI_DIRECT_URL =
   'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent'
@@ -106,6 +105,7 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 45000) {
  */
 export async function parsePdfResume(file, userApiKey = '', signal = undefined) {
   // Step 1: Extract plain text from PDF in browser
+  const { extractTextFromPdf } = await import('./pdfExtractor')
   const rawText = await extractTextFromPdf(file)
 
   if (!rawText || rawText.trim().length < 20) {

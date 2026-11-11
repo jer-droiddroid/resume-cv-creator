@@ -21,7 +21,7 @@ const WIZARD_STEPS = [
   { id: 'settings', name: 'Section Order', component: SectionSettingsStep },
 ]
 
-export default function FormWizard({ disabled = false }) {
+export default function FormWizard({ disabled = false, onReview }) {
   const { watch } = useFormContext()
   const formValues = watch()
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
@@ -41,7 +41,7 @@ export default function FormWizard({ disabled = false }) {
     if (stepId === 'personal') {
       const fullName = formValues?.personalInfo?.fullName?.trim() || ''
       const email = formValues?.personalInfo?.email?.trim() || ''
-      return fullName.length > 0 || email.length > 0
+      return fullName.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     }
     if (stepId === 'skills') {
       return (
@@ -132,12 +132,12 @@ export default function FormWizard({ disabled = false }) {
   }, [isMenuOpen, currentStepIndex])
 
   return (
-    <div className="rounded-[10px] border border-[#E3E8EE] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.06)] overflow-hidden">
+    <div className="rounded-[10px] border border-border bg-white shadow-[0_1px_2px_rgba(16,24,40,0.06)] overflow-hidden">
       {/* Step Header with Progress Bar */}
-      <div className="border-b border-[#E3E8EE] bg-white px-5 pt-4 pb-3.5 space-y-2.5">
+      <div className="border-b border-border bg-white px-5 pt-4 pb-3.5 space-y-2.5">
         <div className="flex items-center justify-between gap-2">
           {/* Current Step Text */}
-          <div className="text-sm font-semibold text-[#1A2233] truncate">
+          <div className="text-sm font-semibold text-text truncate">
             Step {currentStepIndex + 1} of {totalSteps}: {currentStep.name}
           </div>
 
@@ -153,7 +153,7 @@ export default function FormWizard({ disabled = false }) {
               disabled={disabled}
               onClick={() => setIsMenuOpen((prev) => !prev)}
               onKeyDown={handleKeyDown}
-              className="rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+              className="rounded-[6px] border border-border bg-white px-2.5 py-1 text-xs font-medium text-text hover:bg-page focus:outline-none focus:ring-2 focus:ring-accent transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
               All steps
             </button>
@@ -166,7 +166,7 @@ export default function FormWizard({ disabled = false }) {
                 role="menu"
                 aria-labelledby="all-steps-button"
                 onKeyDown={handleKeyDown}
-                className="absolute right-0 mt-1.5 w-60 max-w-[calc(100vw-2.5rem)] rounded-[10px] border border-[#E3E8EE] bg-white p-1.5 shadow-lg z-30 divide-y divide-[#E3E8EE]"
+                className="absolute right-0 mt-1.5 w-60 max-w-[calc(100vw-2.5rem)] rounded-[10px] border border-border bg-white p-1.5 shadow-lg z-30 divide-y divide-border"
               >
                 <div className="space-y-0.5 pb-1">
                   {WIZARD_STEPS.map((step, idx) => {
@@ -183,10 +183,10 @@ export default function FormWizard({ disabled = false }) {
                           goToStep(idx)
                           menuButtonRef.current?.focus()
                         }}
-                        className={`w-full flex items-center justify-between rounded-[6px] px-2.5 py-1.5 text-xs text-left transition focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer ${
+                        className={`w-full flex items-center justify-between rounded-[6px] px-2.5 py-1.5 text-xs text-left transition focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer ${
                           isCurrent
-                            ? 'bg-[#1F4D8F] text-white font-semibold'
-                            : 'text-[#1A2233] hover:bg-[#F6F8FA]'
+                            ? 'bg-accent text-white font-semibold'
+                            : 'text-text hover:bg-page'
                         }`}
                       >
                         <span className="truncate">
@@ -197,7 +197,7 @@ export default function FormWizard({ disabled = false }) {
                         {isCompleted && !isCurrent && (
                           <span
                             aria-label="Completed"
-                            className="inline-flex items-center text-[#1F4D8F] ml-2 shrink-0"
+                            className="inline-flex items-center text-accent ml-2 shrink-0"
                           >
                             <svg
                               aria-hidden="true"
@@ -230,39 +230,13 @@ export default function FormWizard({ disabled = false }) {
           </div>
         </div>
 
-        {/* Interactive 8-Step Segmented Progress Strip */}
-        <div
-          role="group"
-          aria-label="Resume builder steps"
-          className="grid grid-cols-8 gap-1.5"
-        >
-          {WIZARD_STEPS.map((step, idx) => {
-            const isCurrent = idx === currentStepIndex
-            const isCompleted = isStepCompleted(step.id, idx)
-
-            return (
-              <button
-                key={step.id}
-                type="button"
-                disabled={disabled}
-                onClick={() => goToStep(idx)}
-                title={`Step ${idx + 1}: ${step.name}`}
-                aria-label={`Step ${idx + 1}: ${step.name}${isCurrent ? ' (current)' : isCompleted ? ' (completed)' : ''}`}
-                aria-current={isCurrent ? 'step' : undefined}
-                className="group py-1 focus:outline-none cursor-pointer disabled:cursor-not-allowed"
-              >
-                <span
-                  className={`block h-1.5 w-full rounded-full transition-all duration-200 group-focus-visible:ring-2 group-focus-visible:ring-[#1F4D8F] group-focus-visible:ring-offset-1 ${
-                    isCurrent
-                      ? 'bg-[#1F4D8F]'
-                      : isCompleted
-                        ? 'bg-[#1F4D8F]/45 group-hover:bg-[#1F4D8F]/70'
-                        : 'bg-[#EEF2F6] group-hover:bg-[#CBD5E1]'
-                  }`}
-                />
-              </button>
-            )
-          })}
+        <div role="progressbar" aria-label="Current builder step"
+          aria-valuemin={1} aria-valuemax={totalSteps} aria-valuenow={currentStepIndex + 1}
+          aria-valuetext={`Step ${currentStepIndex + 1} of ${totalSteps}: ${currentStep.name}`}
+          className="flex gap-1.5 py-2" >
+          {WIZARD_STEPS.map((step, idx) => (
+            <span key={step.id} className={`h-1.5 min-w-0 flex-1 rounded-full ${idx === currentStepIndex ? 'bg-accent' : isStepCompleted(step.id, idx) ? 'bg-accent/45' : 'bg-[#EEF2F6]'}`} />
+          ))}
         </div>
       </div>
 
@@ -272,26 +246,27 @@ export default function FormWizard({ disabled = false }) {
       </div>
 
       {/* Footer Navigation */}
-      <div className="flex items-center justify-between border-t border-[#E3E8EE] bg-[#F6F8FA] px-5 py-3">
+      <div className="flex items-center justify-between border-t border-border bg-page px-5 py-3">
         <button
           type="button"
           onClick={goPrev}
           disabled={disabled || currentStepIndex === 0}
-          className="rounded-[6px] border border-[#E3E8EE] bg-white px-4 py-1.5 text-sm font-medium text-[#1A2233] hover:bg-[#F6F8FA] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors"
+          className="rounded-[6px] border border-border bg-white px-4 py-1.5 text-sm font-medium text-text hover:bg-page disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent transition-colors"
         >
           Back
         </button>
 
         {isLastStep ? (
-          <span className="text-xs font-medium text-[#5B6678]">
-            All steps complete — ready to download PDF
-          </span>
+          <button type="button" onClick={onReview} disabled={disabled}
+            className="rounded-input bg-accent px-4 py-2 text-sm font-semibold text-white">
+            Review resume
+          </button>
         ) : (
           <button
             type="button"
             onClick={goNext}
             disabled={disabled}
-            className="rounded-[6px] bg-[#1F4D8F] px-4 py-1.5 text-sm font-semibold text-white hover:bg-[#173b6e] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors"
+            className="rounded-[6px] bg-accent px-4 py-1.5 text-sm font-semibold text-white hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent transition-colors"
           >
             Next
           </button>

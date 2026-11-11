@@ -43,11 +43,11 @@ function HeroPaperPreview({ template, onUseTemplate }) {
         : 'font-sans'
 
   return (
-    <div className="rounded-[10px] border border-[#E3E8EE] bg-white p-4 sm:p-6 shadow-[0_4px_20px_rgba(16,24,40,0.06)] transition-shadow duration-300 hover:shadow-[0_12px_32px_rgba(16,24,40,0.09)]">
+    <div className="rounded-[10px] border border-border bg-white p-4 sm:p-6 shadow-[0_4px_20px_rgba(16,24,40,0.06)] transition-shadow duration-300 hover:shadow-[0_12px_32px_rgba(16,24,40,0.09)]">
       {/* Mini preview toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-[#E3E8EE]">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-border">
         <div className="flex items-center gap-1.5">
-          <span className="text-xs font-medium text-[#5B6678] mr-1">Try layout:</span>
+          <span className="text-xs font-medium text-text-muted mr-1">Try layout:</span>
           {FEATURED_TEMPLATE_IDS.map((id) => {
             const tpl = templates.find((t) => t.id === id) || templates[0]
             const active = tpl.id === template.id
@@ -58,8 +58,8 @@ function HeroPaperPreview({ template, onUseTemplate }) {
                 onClick={() => onUseTemplate(tpl.id, false)}
                 className={`rounded-[6px] px-2.5 py-1 text-xs font-medium transition-all duration-200 cursor-pointer ${
                   active
-                    ? 'bg-[#1F4D8F] text-white font-semibold shadow-2xs scale-[1.02]'
-                    : 'bg-[#F6F8FA] text-[#5B6678] hover:text-[#1A2233] hover:bg-[#EEF2F6] border border-[#E3E8EE]'
+                    ? 'bg-accent text-white font-semibold shadow-2xs scale-[1.02]'
+                    : 'bg-page text-text-muted hover:text-text hover:bg-[#EEF2F6] border border-border'
                 }`}
               >
                 {tpl.name}
@@ -71,7 +71,7 @@ function HeroPaperPreview({ template, onUseTemplate }) {
         <button
           type="button"
           onClick={() => onUseTemplate(template.id, true)}
-          className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-all duration-200 cursor-pointer"
+          className="rounded-[6px] border border-border bg-white px-3 py-1 text-xs font-medium text-text hover:bg-page hover:border-[#CBD5E1] transition-all duration-200 cursor-pointer"
         >
           Use template
         </button>
@@ -81,7 +81,7 @@ function HeroPaperPreview({ template, onUseTemplate }) {
       <div className="mt-4 rounded-[8px] bg-[#EEF2F6] p-4 sm:p-6 overflow-hidden">
         <div
           key={template.id}
-          className={`animate-paper-morph mx-auto w-full max-w-[460px] rounded-[4px] bg-white border border-[#E3E8EE] shadow-sm overflow-hidden text-[10px] leading-relaxed select-none transition-colors duration-300 ${fontClass}`}
+          className={`animate-paper-morph mx-auto w-full max-w-[460px] rounded-[4px] bg-white border border-border shadow-sm overflow-hidden text-[10px] leading-relaxed select-none transition-colors duration-300 ${fontClass}`}
           style={{ color: theme.textColor }}
         >
           {/* Header */}
@@ -106,7 +106,7 @@ function HeroPaperPreview({ template, onUseTemplate }) {
               >
                 {sampleResumeData.personalInfo.fullName}
               </div>
-              <div className="text-[9px] text-[#5B6678] mt-0.5">
+              <div className="text-[9px] text-text-muted mt-0.5">
                 {sampleResumeData.personalInfo.email} • {sampleResumeData.personalInfo.phone} •{' '}
                 {sampleResumeData.personalInfo.location}
               </div>
@@ -122,7 +122,7 @@ function HeroPaperPreview({ template, onUseTemplate }) {
               >
                 {sampleResumeData.personalInfo.fullName}
               </div>
-              <div className="text-[9px] text-[#5B6678] mt-0.5">
+              <div className="text-[9px] text-text-muted mt-0.5">
                 {sampleResumeData.personalInfo.email} • {sampleResumeData.personalInfo.phone} •{' '}
                 {sampleResumeData.personalInfo.location}
               </div>
@@ -146,11 +146,11 @@ function HeroPaperPreview({ template, onUseTemplate }) {
                     </div>
                     <div className="flex justify-between font-bold text-[10px]">
                       <span>{sampleResumeData.experience[0].title}</span>
-                      <span className="text-[9px] font-normal text-[#5B6678]">
+                      <span className="text-[9px] font-normal text-text-muted">
                         Jun 2025 – Aug 2025
                       </span>
                     </div>
-                    <div className="italic text-[9.5px] text-[#5B6678]">
+                    <div className="italic text-[9.5px] text-text-muted">
                       {sampleResumeData.experience[0].company}
                     </div>
                     <ul className="list-disc pl-3.5 mt-1 space-y-0.5 text-[9.5px]">
@@ -170,11 +170,11 @@ function HeroPaperPreview({ template, onUseTemplate }) {
                     </div>
                     <div className="flex justify-between font-bold text-[10px]">
                       <span>Chapter President</span>
-                      <span className="text-[9px] font-normal text-[#5B6678]">
+                      <span className="text-[9px] font-normal text-text-muted">
                         Sep 2024 – Present
                       </span>
                     </div>
-                    <div className="italic text-[9.5px] text-[#5B6678]">
+                    <div className="italic text-[9.5px] text-text-muted">
                       Computer Science Student Society
                     </div>
                   </div>
@@ -194,7 +194,7 @@ function HeroPaperPreview({ template, onUseTemplate }) {
                     <div className="font-bold text-[9.5px]">
                       {sampleResumeData.education[0].school}
                     </div>
-                    <div className="italic text-[9px] text-[#5B6678]">
+                    <div className="italic text-[9px] text-text-muted">
                       {sampleResumeData.education[0].degree}
                     </div>
                   </div>
@@ -209,7 +209,7 @@ function HeroPaperPreview({ template, onUseTemplate }) {
                     >
                       Skills
                     </div>
-                    <div className="text-[9px] text-[#5B6678]">
+                    <div className="text-[9px] text-text-muted">
                       {sampleResumeData.skills.join(' • ')}
                     </div>
                   </div>
@@ -229,14 +229,14 @@ function HeroPaperPreview({ template, onUseTemplate }) {
                   </div>
                   <div className="flex justify-between font-bold text-[10px]">
                     <span>{sampleResumeData.education[0].school}</span>
-                    <span className="text-[9px] font-normal text-[#5B6678]">
+                    <span className="text-[9px] font-normal text-text-muted">
                       Sep 2022 – May 2026
                     </span>
                   </div>
-                  <div className="italic text-[9.5px] text-[#5B6678]">
+                  <div className="italic text-[9.5px] text-text-muted">
                     {sampleResumeData.education[0].degree}
                   </div>
-                  <div className="text-[9px] text-[#5B6678]">
+                  <div className="text-[9px] text-text-muted">
                     {sampleResumeData.education[0].details}
                   </div>
                 </div>
@@ -253,11 +253,11 @@ function HeroPaperPreview({ template, onUseTemplate }) {
                   </div>
                   <div className="flex justify-between font-bold text-[10px]">
                     <span>{sampleResumeData.experience[0].company}</span>
-                    <span className="text-[9px] font-normal text-[#5B6678]">
+                    <span className="text-[9px] font-normal text-text-muted">
                       Jun 2025 – Aug 2025
                     </span>
                   </div>
-                  <div className="italic text-[9.5px] text-[#5B6678]">
+                  <div className="italic text-[9.5px] text-text-muted">
                     {sampleResumeData.experience[0].title}
                   </div>
                   <ul className="list-disc pl-3.5 mt-1 space-y-0.5 text-[9.5px]">
@@ -351,10 +351,10 @@ export default function LandingPage({
   return (
     <div
       ref={pageRef}
-      className="min-h-screen bg-[#F6F8FA] text-[#1A2233] animate-page-enter"
+      className="min-h-screen bg-page text-text animate-page-enter"
     >
       {/* Header */}
-      <header className="sticky top-0 z-20 border-b border-[#E3E8EE] bg-white/95 backdrop-blur-xs transition-colors">
+      <header className="sticky top-0 z-20 border-b border-border bg-white/95 backdrop-blur-xs transition-colors">
         <div className="mx-auto flex max-w-[1280px] items-center justify-between px-4 sm:px-6 py-3.5">
           <a
             href="#top"
@@ -362,7 +362,7 @@ export default function LandingPage({
               e.preventDefault()
               window.scrollTo({ top: 0, behavior: 'smooth' })
             }}
-            className="inline-flex items-center gap-2 text-xl sm:text-2xl font-brand font-bold tracking-[-0.02em] text-[#1A2233] hover:opacity-85 transition-opacity duration-200 focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] rounded-sm"
+            className="inline-flex items-center gap-2 text-xl sm:text-2xl font-brand font-bold tracking-[-0.02em] text-text hover:opacity-85 transition-opacity duration-200 focus:outline-none focus:ring-2 focus:ring-accent rounded-sm"
           >
             <img
               src="/papel-logo.png"
@@ -372,14 +372,14 @@ export default function LandingPage({
             <span>Papel</span>
           </a>
 
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-[#5B6678]">
-            <a href="#features" className="hover:text-[#1A2233] transition-colors duration-200">
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-text-muted">
+            <a href="#features" className="hover:text-text transition-colors duration-200">
               Features
             </a>
-            <a href="#templates" className="hover:text-[#1A2233] transition-colors duration-200">
+            <a href="#templates" className="hover:text-text transition-colors duration-200">
               Templates
             </a>
-            <a href="#how-it-works" className="hover:text-[#1A2233] transition-colors duration-200">
+            <a href="#how-it-works" className="hover:text-text transition-colors duration-200">
               How it works
             </a>
           </nav>
@@ -389,7 +389,7 @@ export default function LandingPage({
               <button
                 type="button"
                 onClick={onStartBuilder}
-                className="hidden sm:inline-flex items-center justify-center h-10 px-3.5 rounded-[6px] border border-[#E3E8EE] bg-white text-sm font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-all duration-200 cursor-pointer"
+                className="hidden sm:inline-flex items-center justify-center h-10 px-3.5 rounded-[6px] border border-border bg-white text-sm font-medium text-text hover:bg-page hover:border-[#CBD5E1] transition-all duration-200 cursor-pointer"
               >
                 Continue saved draft
               </button>
@@ -397,7 +397,7 @@ export default function LandingPage({
             <button
               type="button"
               onClick={onStartBuilder}
-              className="inline-flex items-center justify-center h-10 px-4 rounded-[6px] bg-[#1F4D8F] text-sm font-semibold text-white hover:bg-[#173b6e] hover:-translate-y-[1px] active:translate-y-[0.5px] transition-all duration-200 cursor-pointer"
+              className="inline-flex items-center justify-center h-10 px-4 rounded-[6px] bg-accent text-sm font-semibold text-white hover:bg-accent-hover hover:-translate-y-[1px] active:translate-y-[0.5px] transition-all duration-200 cursor-pointer"
             >
               {hasSavedDraft ? 'Open builder' : 'Build your resume'}
             </button>
@@ -411,25 +411,25 @@ export default function LandingPage({
           <div className="lg:col-span-6 space-y-6">
             <div
               style={{ animationDelay: '0ms' }}
-              className="animate-fade-up inline-flex items-center gap-2 rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1 text-xs font-medium text-[#5B6678] shadow-[0_1px_2px_rgba(16,24,40,0.06)]"
+              className="animate-fade-up inline-flex items-center gap-2 rounded-[6px] border border-border bg-white px-3 py-1 text-xs font-medium text-text-muted shadow-[0_1px_2px_rgba(16,24,40,0.06)]"
             >
               <span>Free student resume &amp; CV maker</span>
-              <span className="text-[#E3E8EE]">•</span>
+              <span className="text-border">•</span>
               <span>No sign-up required</span>
             </div>
 
             <h1
               style={{ animationDelay: '70ms' }}
-              className="animate-fade-up text-3xl sm:text-4xl lg:text-[40px] font-bold tracking-tight text-[#1A2233] leading-[1.18] max-w-[22ch] text-balance"
+              className="animate-fade-up text-3xl sm:text-4xl lg:text-[40px] font-bold tracking-tight text-text leading-[1.18] max-w-[22ch] text-balance"
             >
-              Fill in your details once. Switch templates anytime.
+              Turn your student experience into a resume.
             </h1>
 
             <p
               style={{ animationDelay: '140ms' }}
-              className="animate-fade-up text-base text-[#5B6678] leading-relaxed max-w-[60ch] text-pretty"
+              className="animate-fade-up text-base text-text-muted leading-relaxed max-w-[60ch] text-pretty"
             >
-              Build a clean, one-page student resume, OJT practicum application, or multi-page academic CV. Your data stays separated from the design so you can change layouts in one click, and your work stays privately in your browser.
+              Build a clean, one-page student resume, OJT practicum application, or multi-page academic CV. Make your coursework, projects, and student activities count. Switch layouts without retyping; your draft is saved in this browser.
             </p>
 
             <div
@@ -439,7 +439,7 @@ export default function LandingPage({
               <button
                 type="button"
                 onClick={onStartBuilder}
-                className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] bg-[#1F4D8F] text-sm font-semibold text-white hover:bg-[#173b6e] hover:-translate-y-[1px] active:translate-y-[0.5px] transition-all duration-200 cursor-pointer"
+                className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] bg-accent text-sm font-semibold text-white hover:bg-accent-hover hover:-translate-y-[1px] active:translate-y-[0.5px] transition-all duration-200 cursor-pointer"
               >
                 {hasSavedDraft ? 'Continue your resume' : 'Start building for free'}
               </button>
@@ -447,7 +447,7 @@ export default function LandingPage({
               <button
                 type="button"
                 onClick={onOpenImportFromLanding}
-                className="inline-flex items-center justify-center h-11 px-4 rounded-[6px] border border-[#E3E8EE] bg-white text-sm font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] hover:-translate-y-[1px] active:translate-y-[0.5px] transition-all duration-200 cursor-pointer"
+                className="inline-flex items-center justify-center h-11 px-4 rounded-[6px] border border-border bg-white text-sm font-medium text-text hover:bg-page hover:border-[#CBD5E1] hover:-translate-y-[1px] active:translate-y-[0.5px] transition-all duration-200 cursor-pointer"
               >
                 Import existing PDF
               </button>
@@ -455,7 +455,7 @@ export default function LandingPage({
               <button
                 type="button"
                 onClick={onLoadSampleAndStart}
-                className="inline-flex items-center justify-center h-11 px-3 text-sm font-medium text-[#5B6678] hover:text-[#1A2233] underline underline-offset-4 transition-colors duration-200 cursor-pointer"
+                className="inline-flex items-center justify-center h-11 px-3 text-sm font-medium text-text-muted hover:text-text underline underline-offset-4 transition-colors duration-200 cursor-pointer"
               >
                 Try with sample data
               </button>
@@ -464,23 +464,23 @@ export default function LandingPage({
             {/* Key guarantees */}
             <div
               style={{ animationDelay: '280ms' }}
-              className="animate-fade-up pt-4 border-t border-[#E3E8EE] grid grid-cols-3 gap-4 max-w-[520px]"
+              className="animate-fade-up pt-4 border-t border-border grid grid-cols-3 gap-4 max-w-[520px]"
             >
               <div>
-                <div className="text-sm font-bold text-[#1A2233]">15 Templates</div>
-                <div className="text-xs text-[#5B6678] mt-0.5">
+                <div className="text-sm font-bold text-text">15 Templates</div>
+                <div className="text-xs text-text-muted mt-0.5">
                   Harvard, ATS, two-column, and sidebar
                 </div>
               </div>
               <div>
-                <div className="text-sm font-bold text-[#1A2233]">OJT Ready</div>
-                <div className="text-xs text-[#5B6678] mt-0.5">
+                <div className="text-sm font-bold text-text">OJT Ready</div>
+                <div className="text-xs text-text-muted mt-0.5">
                   Hours, coursework, &amp; standard file naming
                 </div>
               </div>
               <div>
-                <div className="text-sm font-bold text-[#1A2233]">100% Local</div>
-                <div className="text-xs text-[#5B6678] mt-0.5">
+                <div className="text-sm font-bold text-text">Local drafts</div>
+                <div className="text-xs text-text-muted mt-0.5">
                   Saved in your browser with zero watermarks
                 </div>
               </div>
@@ -502,10 +502,10 @@ export default function LandingPage({
         {/* Features Asymmetric Bento Grid (Stitch taste-design) */}
         <section id="features" className="space-y-6 scroll-mt-20">
           <div className="reveal-item max-w-[65ch]">
-            <h2 className="text-xl sm:text-2xl font-bold text-[#1A2233] text-balance">
+            <h2 className="text-xl sm:text-2xl font-bold text-text text-balance">
               Designed for students, interns, and first-time applicants
             </h2>
-            <p className="text-sm text-[#5B6678] mt-1 text-pretty">
+            <p className="text-sm text-text-muted mt-1 text-pretty">
               Everything you need to turn your coursework, student organizations, and academic projects into a clean, credible application.
             </p>
           </div>
@@ -514,14 +514,14 @@ export default function LandingPage({
             {/* 7-column card: Interactive OJT & Practicum Mode Preview */}
             <div
               style={{ transitionDelay: '0ms' }}
-              className="reveal-item papel-card-hover lg:col-span-7 rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-5"
+              className="reveal-item papel-card-hover lg:col-span-7 rounded-[10px] border border-border bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-5"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="space-y-1.5 max-w-[46ch]">
-                  <h3 className="text-base sm:text-lg font-bold text-[#1A2233] text-balance">
+                  <h3 className="text-base sm:text-lg font-bold text-text text-balance">
                     One toggle for OJT &amp; practicum requirements
                   </h3>
-                  <p className="text-sm text-[#5B6678] leading-relaxed text-pretty">
+                  <p className="text-sm text-text-muted leading-relaxed text-pretty">
                     Flip on OJT Mode to switch your summary heading to Career Objective, display required training hours and start date, and format your PDF filename automatically.
                   </p>
                 </div>
@@ -531,10 +531,10 @@ export default function LandingPage({
                   role="switch"
                   aria-checked={demoOjtMode}
                   onClick={() => setDemoOjtMode((prev) => !prev)}
-                  className={`inline-flex items-center gap-2 rounded-[6px] border px-3 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] ${
+                  className={`inline-flex items-center gap-2 rounded-[6px] border px-3 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent ${
                     demoOjtMode
-                      ? 'border-[#1F4D8F] bg-[#1F4D8F] text-white'
-                      : 'border-[#E3E8EE] bg-[#F6F8FA] text-[#5B6678] hover:text-[#1A2233]'
+                      ? 'border-accent bg-accent text-white'
+                      : 'border-border bg-page text-text-muted hover:text-text'
                   }`}
                 >
                   <span>OJT Mode: {demoOjtMode ? 'ON' : 'OFF'}</span>
@@ -542,10 +542,10 @@ export default function LandingPage({
               </div>
 
               {/* Interactive miniature paper diff (single inner stage, no triple nesting) */}
-              <div className="pt-4 border-t border-[#E3E8EE] space-y-3">
+              <div className="pt-4 border-t border-border space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                  <span className="font-medium text-[#5B6678]">Exported file name:</span>
-                  <code className="rounded-[4px] border border-[#E3E8EE] bg-[#F6F8FA] px-2 py-0.5 font-mono text-xs font-semibold text-[#1A2233]">
+                  <span className="font-medium text-text-muted">Exported file name:</span>
+                  <code className="rounded-[4px] border border-border bg-page px-2 py-0.5 font-mono text-xs font-semibold text-text">
                     {demoOjtMode
                       ? 'Carter_Alex_BSCS_OJT_Resume.pdf'
                       : 'Alex_Carter_Resume.pdf'}
@@ -554,13 +554,13 @@ export default function LandingPage({
 
                 <div
                   key={demoOjtMode ? 'ojt-on' : 'ojt-off'}
-                  className="animate-paper-morph rounded-[6px] border border-[#E3E8EE] bg-[#F6F8FA] p-3.5 text-xs space-y-2.5"
+                  className="animate-paper-morph rounded-[6px] border border-border bg-page p-3.5 text-xs space-y-2.5"
                 >
                   <div>
-                    <div className="text-xs font-bold uppercase tracking-wider text-[#1F4D8F] border-b border-[#E3E8EE] pb-0.5 mb-1">
+                    <div className="text-xs font-bold uppercase tracking-wider text-accent border-b border-border pb-0.5 mb-1">
                       {demoOjtMode ? 'Career Objective' : 'Summary'}
                     </div>
-                    <p className="text-xs text-[#5B6678] leading-relaxed text-pretty">
+                    <p className="text-xs text-text-muted leading-relaxed text-pretty">
                       {demoOjtMode
                         ? 'Fourth-year Computer Science student seeking an On-the-Job Training (OJT) software engineering internship...'
                         : 'Computer Science undergraduate with experience in full-stack web development and student leadership...'}
@@ -568,14 +568,14 @@ export default function LandingPage({
                   </div>
 
                   {demoOjtMode && (
-                    <div className="pt-1.5 border-t border-[#E3E8EE] flex flex-wrap gap-x-6 gap-y-1 text-xs">
+                    <div className="pt-1.5 border-t border-border flex flex-wrap gap-x-6 gap-y-1 text-xs">
                       <div>
-                        <span className="font-semibold text-[#1A2233]">Required OJT Hours:</span>{' '}
-                        <span className="text-[#5B6678]">486 hours</span>
+                        <span className="font-semibold text-text">Required OJT Hours:</span>{' '}
+                        <span className="text-text-muted">486 hours</span>
                       </div>
                       <div>
-                        <span className="font-semibold text-[#1A2233]">Preferred Start:</span>{' '}
-                        <span className="text-[#5B6678]">January 2026</span>
+                        <span className="font-semibold text-text">Preferred Start:</span>{' '}
+                        <span className="text-text-muted">January 2026</span>
                       </div>
                     </div>
                   )}
@@ -586,18 +586,18 @@ export default function LandingPage({
             {/* 5-column card: Interactive Student Organization Builder */}
             <div
               style={{ transitionDelay: '90ms' }}
-              className="reveal-item papel-card-hover lg:col-span-5 rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-5"
+              className="reveal-item papel-card-hover lg:col-span-5 rounded-[10px] border border-border bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-5"
             >
               <div className="space-y-1.5">
-                <h3 className="text-base sm:text-lg font-bold text-[#1A2233] text-balance">
+                <h3 className="text-base sm:text-lg font-bold text-text text-balance">
                   Turn student club roles into quantified action bullets
                 </h3>
-                <p className="text-sm text-[#5B6678] leading-relaxed text-pretty">
+                <p className="text-sm text-text-muted leading-relaxed text-pretty">
                   Select your student organization role and plug in your numbers to generate quantified bullets.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-[#E3E8EE] space-y-3">
+              <div className="pt-4 border-t border-border space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-1.5">
                   <div className="flex flex-wrap gap-1.5">
                     {Object.entries(ORG_ROLE_DEMOS).map(([key, item]) => (
@@ -605,26 +605,26 @@ export default function LandingPage({
                         key={key}
                         type="button"
                         onClick={() => setDemoOrgRole(key)}
-                        className={`rounded-[6px] px-2.5 py-1 text-xs font-medium transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] ${
+                        className={`rounded-[6px] px-2.5 py-1 text-xs font-medium transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent ${
                           demoOrgRole === key
-                            ? 'bg-[#1F4D8F] text-white font-semibold'
-                            : 'bg-[#F6F8FA] text-[#5B6678] border border-[#E3E8EE] hover:text-[#1A2233]'
+                            ? 'bg-accent text-white font-semibold'
+                            : 'bg-page text-text-muted border border-border hover:text-text'
                         }`}
                       >
                         {item.label}
                       </button>
                     ))}
                   </div>
-                  <span className="text-xs font-mono text-[#5B6678]">
+                  <span className="text-xs font-mono text-text-muted">
                     {ORG_ROLE_DEMOS[demoOrgRole].metrics}
                   </span>
                 </div>
 
                 <div
                   key={demoOrgRole}
-                  className="animate-paper-morph rounded-[6px] border border-[#E3E8EE] bg-[#F6F8FA] p-3 text-xs text-[#1A2233] leading-relaxed text-pretty"
+                  className="animate-paper-morph rounded-[6px] border border-border bg-page p-3 text-xs text-text leading-relaxed text-pretty"
                 >
-                  <span className="font-bold text-[#1F4D8F] mr-1.5">•</span>
+                  <span className="font-bold text-accent mr-1.5">•</span>
                   {ORG_ROLE_DEMOS[demoOrgRole].bullet}
                 </div>
               </div>
@@ -633,25 +633,25 @@ export default function LandingPage({
             {/* 5-column card: Decoupled Data & Design */}
             <div
               style={{ transitionDelay: '140ms' }}
-              className="reveal-item papel-card-hover lg:col-span-5 rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-4"
+              className="reveal-item papel-card-hover lg:col-span-5 rounded-[10px] border border-border bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-4"
             >
               <div className="space-y-1.5">
-                <h3 className="text-base font-bold text-[#1A2233] text-balance">
+                <h3 className="text-base font-bold text-text text-balance">
                   Switch templates without re-typing
                 </h3>
-                <p className="text-sm text-[#5B6678] leading-relaxed text-pretty">
-                  Your content is stored independently from the layout engine. Switch between 1-page Resume mode and multi-page Academic CV mode or test all 15 templates in one click.
+                <p className="text-sm text-text-muted leading-relaxed text-pretty">
+                  Change the design without retyping your details. Switch between 1-page Resume mode and multi-page Academic CV mode or test all 15 templates in one click.
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-[#E3E8EE] flex flex-wrap gap-1.5 text-xs font-medium text-[#5B6678]">
-                <span className="rounded-[5px] bg-[#F6F8FA] border border-[#E3E8EE] px-2.5 py-1 text-[#1A2233]">
+              <div className="pt-3 border-t border-border flex flex-wrap gap-1.5 text-xs font-medium text-text-muted">
+                <span className="rounded-[5px] bg-page border border-border px-2.5 py-1 text-text">
                   1-Page Auto-Fit Resume
                 </span>
-                <span className="rounded-[5px] bg-[#F6F8FA] border border-[#E3E8EE] px-2.5 py-1 text-[#1A2233]">
+                <span className="rounded-[5px] bg-page border border-border px-2.5 py-1 text-text">
                   Multi-Page Academic CV
                 </span>
-                <span className="rounded-[5px] bg-[#F6F8FA] border border-[#E3E8EE] px-2.5 py-1 text-[#1A2233]">
+                <span className="rounded-[5px] bg-page border border-border px-2.5 py-1 text-text">
                   Custom Section Order
                 </span>
               </div>
@@ -660,29 +660,29 @@ export default function LandingPage({
             {/* 7-column card: Local Browser Privacy & Vector PDF */}
             <div
               style={{ transitionDelay: '200ms' }}
-              className="reveal-item papel-card-hover lg:col-span-7 rounded-[10px] border border-[#E3E8EE] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-4"
+              className="reveal-item papel-card-hover lg:col-span-7 rounded-[10px] border border-border bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-4"
             >
               <div className="space-y-1.5 max-w-[62ch]">
-                <h3 className="text-base font-bold text-[#1A2233] text-balance">
+                <h3 className="text-base font-bold text-text text-balance">
                   Saved in your browser with crisp A4 vector PDF export
                 </h3>
-                <p className="text-sm text-[#5B6678] leading-relaxed text-pretty">
+                <p className="text-sm text-text-muted leading-relaxed text-pretty">
                   Papel autosaves every keystroke directly in your browser&apos;s local storage and generates selectable, ATS-parseable vector PDFs on your device—with zero watermarks, zero sign-up walls, and zero database tracking.
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-[#E3E8EE] grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div className="pt-3 border-t border-border grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
                 <div>
-                  <div className="font-bold text-[#1A2233]">Selectable Text</div>
-                  <div className="text-xs text-[#5B6678] mt-0.5">True vector PDF output</div>
+                  <div className="font-bold text-text">Selectable Text</div>
+                  <div className="text-xs text-text-muted mt-0.5">True vector PDF output</div>
                 </div>
                 <div>
-                  <div className="font-bold text-[#1A2233]">Orphan Protection</div>
-                  <div className="text-xs text-[#5B6678] mt-0.5">Clean page break rules</div>
+                  <div className="font-bold text-text">Keep sections together</div>
+                  <div className="text-xs text-text-muted mt-0.5">Clean page break rules</div>
                 </div>
                 <div>
-                  <div className="font-bold text-[#1A2233]">AI PDF Import</div>
-                  <div className="text-xs text-[#5B6678] mt-0.5">Pre-fill from old resumes</div>
+                  <div className="font-bold text-text">AI PDF Import</div>
+                  <div className="text-xs text-text-muted mt-0.5">Pre-fill from old resumes</div>
                 </div>
               </div>
             </div>
@@ -693,10 +693,10 @@ export default function LandingPage({
         <section id="templates" className="space-y-6 scroll-mt-20">
           <div className="reveal-item flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-[65ch]">
-              <h2 className="text-xl sm:text-2xl font-bold text-[#1A2233] text-balance">
+              <h2 className="text-xl sm:text-2xl font-bold text-text text-balance">
                 Start with a clean template
               </h2>
-              <p className="text-sm text-[#5B6678] mt-1 text-pretty">
+              <p className="text-sm text-text-muted mt-1 text-pretty">
                 Pick any layout below to jump into the editor. You can switch templates at any time while editing.
               </p>
             </div>
@@ -709,8 +709,8 @@ export default function LandingPage({
                   onClick={() => setActiveCategory(category)}
                   className={`rounded-[6px] px-3 py-1.5 text-xs font-medium transition-all duration-200 cursor-pointer ${
                     activeCategory === category
-                      ? 'bg-[#1F4D8F] text-white font-semibold shadow-2xs scale-[1.02]'
-                      : 'bg-white text-[#5B6678] border border-[#E3E8EE] hover:text-[#1A2233] hover:bg-[#F6F8FA]'
+                      ? 'bg-accent text-white font-semibold shadow-2xs scale-[1.02]'
+                      : 'bg-white text-text-muted border border-border hover:text-text hover:bg-page'
                   }`}
                 >
                   {category}
@@ -730,11 +730,11 @@ export default function LandingPage({
                 <div
                   key={`${activeCategory}-${tpl.id}`}
                   style={{ animationDelay: `${index * 60}ms` }}
-                  className="group animate-paper-morph papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-4 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-4"
+                  className="group animate-paper-morph papel-card-hover rounded-[10px] border border-border bg-white p-4 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col justify-between gap-4"
                 >
                   <div className="rounded-[6px] bg-[#EEF2F6] p-4 flex items-center justify-center overflow-hidden">
                     <div
-                      className="w-full max-w-[220px] h-48 rounded-[3px] bg-white border border-[#E3E8EE] shadow-2xs overflow-hidden flex flex-col text-[6px] leading-tight select-none transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.02] group-hover:shadow-md"
+                      className="w-full max-w-[220px] h-48 rounded-[3px] bg-white border border-border shadow-2xs overflow-hidden flex flex-col text-[6px] leading-tight select-none transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.02] group-hover:shadow-md"
                       style={{ color: theme.textColor }}
                     >
                       {isBanner ? (
@@ -760,7 +760,7 @@ export default function LandingPage({
                           >
                             {sampleResumeData.personalInfo.fullName}
                           </div>
-                          <div className="text-[5px] text-[#5B6678] truncate">
+                          <div className="text-[5px] text-text-muted truncate">
                             {sampleResumeData.personalInfo.location} •{' '}
                             {sampleResumeData.personalInfo.email}
                           </div>
@@ -776,7 +776,7 @@ export default function LandingPage({
                           >
                             {sampleResumeData.personalInfo.fullName}
                           </div>
-                          <div className="text-[5px] text-[#5B6678] truncate">
+                          <div className="text-[5px] text-text-muted truncate">
                             {sampleResumeData.personalInfo.email}
                           </div>
                         </div>
@@ -797,7 +797,7 @@ export default function LandingPage({
                             >
                               {sampleResumeData.personalInfo.fullName}
                             </div>
-                            <div className="text-[5px] text-[#5B6678] truncate">
+                            <div className="text-[5px] text-text-muted truncate">
                               {sampleResumeData.personalInfo.email}
                             </div>
                             <div className="pt-1 space-y-1">
@@ -825,7 +825,7 @@ export default function LandingPage({
                             <div className="font-semibold">
                               {sampleResumeData.experience[0].title}
                             </div>
-                            <div className="text-[#5B6678]">
+                            <div className="text-text-muted">
                               {sampleResumeData.experience[0].company}
                             </div>
                           </div>
@@ -845,7 +845,7 @@ export default function LandingPage({
                             <div className="font-semibold">
                               {sampleResumeData.education[0].school}
                             </div>
-                            <div className="text-[#5B6678]">
+                            <div className="text-text-muted">
                               {sampleResumeData.education[0].degree}
                             </div>
                           </div>
@@ -862,7 +862,7 @@ export default function LandingPage({
                             <div className="font-semibold">
                               {sampleResumeData.experience[0].title}
                             </div>
-                            <div className="text-[#5B6678]">
+                            <div className="text-text-muted">
                               {sampleResumeData.experience[0].company}
                             </div>
                           </div>
@@ -873,14 +873,14 @@ export default function LandingPage({
 
                   <div className="flex items-center justify-between gap-2">
                     <div>
-                      <div className="text-sm font-bold text-[#1A2233]">{tpl.name}</div>
-                      <div className="text-xs text-[#5B6678]">{tpl.category}</div>
+                      <div className="text-sm font-bold text-text">{tpl.name}</div>
+                      <div className="text-xs text-text-muted">{tpl.category}</div>
                     </div>
 
                     <button
                       type="button"
                       onClick={() => onSelectTemplateAndStart(tpl.id)}
-                      className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-semibold text-[#1A2233] group-hover:bg-[#1F4D8F] group-hover:text-white group-hover:border-[#1F4D8F] transition-colors duration-200 cursor-pointer"
+                      className="rounded-[6px] border border-border bg-white px-3 py-1.5 text-xs font-semibold text-text group-hover:bg-accent group-hover:text-white group-hover:border-accent transition-colors duration-200 cursor-pointer"
                     >
                       Use template
                     </button>
@@ -897,17 +897,17 @@ export default function LandingPage({
           className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start scroll-mt-20"
         >
           <div className="reveal-item lg:col-span-4 space-y-3">
-            <h2 className="text-xl sm:text-2xl font-bold text-[#1A2233] text-balance">
+            <h2 className="text-xl sm:text-2xl font-bold text-text text-balance">
               How Papel works
             </h2>
-            <p className="text-sm text-[#5B6678] leading-relaxed text-pretty">
+            <p className="text-sm text-text-muted leading-relaxed text-pretty">
               From a blank page or an older resume PDF to a ready-to-submit A4 application in three focused steps.
             </p>
             <div className="pt-2">
               <button
                 type="button"
                 onClick={onStartBuilder}
-                className="inline-flex items-center justify-center h-9 px-3.5 rounded-[6px] border border-[#E3E8EE] bg-white text-xs font-semibold text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] transition-all duration-200 cursor-pointer"
+                className="inline-flex items-center justify-center h-9 px-3.5 rounded-[6px] border border-border bg-white text-xs font-semibold text-text hover:bg-page hover:border-[#CBD5E1] transition-all duration-200 cursor-pointer"
               >
                 Jump into Step 1
               </button>
@@ -917,51 +917,51 @@ export default function LandingPage({
           <div className="lg:col-span-8 space-y-4">
             <div
               style={{ transitionDelay: '0ms' }}
-              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-5 sm:p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row sm:items-start justify-between gap-4"
+              className="reveal-item papel-card-hover rounded-[10px] border border-border bg-white p-5 sm:p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row sm:items-start justify-between gap-4"
             >
               <div className="space-y-1">
-                <h3 className="text-base font-bold text-[#1A2233] text-balance">
+                <h3 className="text-base font-bold text-text text-balance">
                   Enter your details or import an existing PDF
                 </h3>
-                <p className="text-sm text-[#5B6678] leading-relaxed max-w-[56ch] text-pretty">
+                <p className="text-sm text-text-muted leading-relaxed max-w-[56ch] text-pretty">
                   Fill in the 8-step guided form for education, coursework, internships, and projects—or upload an old PDF resume to pre-fill every section automatically.
                 </p>
               </div>
-              <span className="self-start rounded-[5px] bg-[#F6F8FA] border border-[#E3E8EE] px-2.5 py-1 font-mono text-xs text-[#5B6678] shrink-0">
+              <span className="self-start rounded-[5px] bg-page border border-border px-2.5 py-1 font-mono text-xs text-text-muted shrink-0">
                 8 guided steps
               </span>
             </div>
 
             <div
               style={{ transitionDelay: '80ms' }}
-              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-5 sm:p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row sm:items-start justify-between gap-4"
+              className="reveal-item papel-card-hover rounded-[10px] border border-border bg-white p-5 sm:p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row sm:items-start justify-between gap-4"
             >
               <div className="space-y-1">
-                <h3 className="text-base font-bold text-[#1A2233] text-balance">
+                <h3 className="text-base font-bold text-text text-balance">
                   Customize section order, OJT mode, &amp; templates
                 </h3>
-                <p className="text-sm text-[#5B6678] leading-relaxed max-w-[56ch] text-pretty">
+                <p className="text-sm text-text-muted leading-relaxed max-w-[56ch] text-pretty">
                   Reorder or hide sections, toggle between 1-page Resume mode and multi-page CV mode, or enable OJT Mode while watching the live A4 sheet update side-by-side.
                 </p>
               </div>
-              <span className="self-start rounded-[5px] bg-[#F6F8FA] border border-[#E3E8EE] px-2.5 py-1 font-mono text-xs text-[#5B6678] shrink-0">
+              <span className="self-start rounded-[5px] bg-page border border-border px-2.5 py-1 font-mono text-xs text-text-muted shrink-0">
                 Live A4 preview
               </span>
             </div>
 
             <div
               style={{ transitionDelay: '160ms' }}
-              className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-5 sm:p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row sm:items-start justify-between gap-4"
+              className="reveal-item papel-card-hover rounded-[10px] border border-border bg-white p-5 sm:p-6 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row sm:items-start justify-between gap-4"
             >
               <div className="space-y-1">
-                <h3 className="text-base font-bold text-[#1A2233] text-balance">
+                <h3 className="text-base font-bold text-text text-balance">
                   Download a crisp, ATS-readable vector PDF
                 </h3>
-                <p className="text-sm text-[#5B6678] leading-relaxed max-w-[56ch] text-pretty">
+                <p className="text-sm text-text-muted leading-relaxed max-w-[56ch] text-pretty">
                   Export a true vector A4 PDF immediately. No account creation, no watermarks, and your draft stays saved locally in your browser.
                 </p>
               </div>
-              <span className="self-start rounded-[5px] bg-[#F6F8FA] border border-[#E3E8EE] px-2.5 py-1 font-mono text-xs text-[#5B6678] shrink-0">
+              <span className="self-start rounded-[5px] bg-page border border-border px-2.5 py-1 font-mono text-xs text-text-muted shrink-0">
                 Vector A4 PDF
               </span>
             </div>
@@ -969,13 +969,13 @@ export default function LandingPage({
         </section>
 
         {/* Bottom CTA Panel */}
-        <section className="reveal-item papel-card-hover rounded-[10px] border border-[#E3E8EE] bg-white p-6 sm:p-8 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <section className="reveal-item papel-card-hover rounded-[10px] border border-border bg-white p-6 sm:p-8 shadow-[0_1px_2px_rgba(16,24,40,0.06)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="space-y-1 max-w-[60ch]">
-            <h2 className="text-xl font-bold text-[#1A2233] text-balance">
+            <h2 className="text-xl font-bold text-text text-balance">
               Ready to build your student resume?
             </h2>
-            <p className="text-sm text-[#5B6678] text-pretty">
-              Free, private, and saved right in your browser so you can pick up where you left off anytime.
+            <p className="text-sm text-text-muted text-pretty">
+              Free to use, with drafts saved in this browser so you can return to your work.
             </p>
           </div>
 
@@ -983,7 +983,7 @@ export default function LandingPage({
             <button
               type="button"
               onClick={onStartBuilder}
-              className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] bg-[#1F4D8F] text-sm font-semibold text-white hover:bg-[#173b6e] hover:-translate-y-[1px] active:translate-y-[0.5px] transition-all duration-200 cursor-pointer"
+              className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] bg-accent text-sm font-semibold text-white hover:bg-accent-hover hover:-translate-y-[1px] active:translate-y-[0.5px] transition-all duration-200 cursor-pointer"
             >
               {hasSavedDraft ? 'Continue your resume' : 'Open resume builder'}
             </button>
@@ -992,21 +992,21 @@ export default function LandingPage({
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#E3E8EE] bg-white">
-        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-6 flex flex-wrap items-center justify-between gap-4 text-xs text-[#5B6678]">
+      <footer className="border-t border-border bg-white">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-6 flex flex-wrap items-center justify-between gap-4 text-xs text-text-muted">
           <div className="flex items-center gap-2">
             <img
               src="/papel-logo.png"
               alt=""
               className="w-4 h-4 object-contain"
             />
-            <span className="font-brand font-bold text-[#1A2233] tracking-[-0.02em]">
+            <span className="font-brand font-bold text-text tracking-[-0.02em]">
               Papel
             </span>
             <span>— Student resume and CV maker</span>
           </div>
           <div>
-            Your work is saved locally in your browser and never uploaded to a server.
+            Your draft is saved in this browser. Optional AI import sends extracted resume text to Google Gemini.
           </div>
         </div>
       </footer>

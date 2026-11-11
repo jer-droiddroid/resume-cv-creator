@@ -1,11 +1,13 @@
-import { useState, useRef, useEffect } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import { useState, useRef } from 'react'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import FormWizard from './components/form/FormWizard'
 import LivePreview from './components/preview/LivePreview'
 import TemplatePicker from './components/picker/TemplatePicker'
 import ImportPdfModal from './components/form/ImportPdfModal'
 import ClearConfirmModal from './components/form/ClearConfirmModal'
 import LandingPage from './components/landing/LandingPage'
+import DownloadButton from './components/preview/DownloadButton'
+import { hasDraftContent } from './utils/draftSafety'
 import { defaultResumeData } from './data/defaultResume'
 import { sampleResumeData } from './data/sampleResume'
 import { templates } from './templates/registry'
@@ -22,8 +24,7 @@ const DISMISSED_NOTE_KEY = 'resume_storage_notice_dismissed'
 
 // Helper to check if the current data is the sample data
 const isSampleData = (data) =>
-  data?.personalInfo?.fullName === sampleResumeData.personalInfo.fullName &&
-  data?.personalInfo?.email === sampleResumeData.personalInfo.email
+  JSON.stringify(data) === JSON.stringify(sampleResumeData)
 
 export default function App() {
   const [initialData] = useState(() => loadSavedDraft())
@@ -68,6 +69,7 @@ export default function App() {
     loadSavedTemplateId(templates[0].id)
   )
   const [showLanding, setShowLanding] = useState(true)
+  const [mobileView, setMobileView] = useState('edit')
   const [isPickerOpen, setIsPickerOpen] = useState(false)
   const [isImportModalOpen, setIsImportModalOpen] = useState(false)
 
@@ -96,10 +98,10 @@ export default function App() {
   // Handle successful AI PDF extraction and populate form
   const handleImportSuccess = (parsedData) => {
     const current = methods.getValues()
-    if (current?.personalInfo?.fullName) {
+    if (hasDraftContent(current) && !isSampleData(current)) {
+      setUserBackup(structuredClone(current))
       try {
         localStorage.setItem(BACKUP_STORAGE_KEY, JSON.stringify(current))
-        setUserBackup(current)
       } catch {
         // Ignore quota errors
       }
@@ -108,23 +110,23 @@ export default function App() {
   }
 
   // Watch current values to know if sample is active
-  const currentValues = methods.watch()
+  const currentValues = useWatch({ control: methods.control })
   const isSampleActive = isSampleData(currentValues)
   const hasSavedDraft = Boolean(
-    currentValues?.personalInfo?.fullName && !isSampleActive
+    hasDraftContent(currentValues) && !isSampleActive
   )
 
   // Load sample data while automatically saving a backup of user's work
   const handleLoadSample = () => {
     const current = methods.getValues()
     const hasTypedData =
-      current?.personalInfo?.fullName && !isSampleData(current)
+      hasDraftContent(current) && !isSampleData(current)
 
     if (hasTypedData) {
+      setUserBackup(structuredClone(current))
       // Save user's work into backup so they can restore it anytime
       try {
         localStorage.setItem(BACKUP_STORAGE_KEY, JSON.stringify(current))
-        setUserBackup(current)
       } catch {
         // Ignore quota errors
       }
@@ -153,7 +155,7 @@ export default function App() {
 
     if (backupToRestore) {
       methods.reset(backupToRestore)
-      localStorage.removeItem(BACKUP_STORAGE_KEY)
+      try { localStorage.removeItem(BACKUP_STORAGE_KEY) } catch { /* In-memory restore remains available. */ }
       setUserBackup(null)
     } else {
       // If no backup existed, start with a fresh blank resume
@@ -169,33 +171,14 @@ export default function App() {
   const [wizardKey, setWizardKey] = useState(0)
 
   const undoDataRef = useRef(null)
-  const undoTimeoutRef = useRef(null)
-
-  useEffect(() => {
-    return () => {
-      if (undoTimeoutRef.current) {
-        clearTimeout(undoTimeoutRef.current)
-      }
-    }
-  }, [])
-
-  const triggerUndoNotice = () => {
-    if (undoTimeoutRef.current) {
-      clearTimeout(undoTimeoutRef.current)
-    }
-    setShowUndoNotice(true)
-    undoTimeoutRef.current = setTimeout(() => {
-      setShowUndoNotice(false)
-      undoDataRef.current = null
-    }, 5000)
-  }
+  const triggerUndoNotice = () => setShowUndoNotice(true)
 
   // Clear animation sequence (about 450ms total):
   // 1. Close dialog first
   // 2. Resume page slides up 24px and fades out (200ms, ease-in); form fades to 0.4
   // 3. At midpoint: actually clear data, reset to step 1
   // 4. Fresh resume page fades in from slightly below (250ms, ease-out); form fades back to 1
-  // 5. Show 3s feedback message with Undo button
+  // 5. Keep Undo available until dismissed or used.
   const handleConfirmClear = () => {
     setIsClearModalOpen(false)
     setIsClearing(true)
@@ -207,9 +190,9 @@ export default function App() {
     if (prefersReducedMotion) {
       setClearingPhase('reduced-out')
       setTimeout(() => {
-        undoDataRef.current = methods.getValues()
+        undoDataRef.current = structuredClone(methods.getValues())
         clearSavedDraft()
-        localStorage.removeItem(BACKUP_STORAGE_KEY)
+        try { localStorage.removeItem(BACKUP_STORAGE_KEY) } catch { /* In-memory restore remains available. */ }
         setUserBackup(null)
         methods.reset(defaultResumeData)
         setWizardKey((prev) => prev + 1)
@@ -228,9 +211,9 @@ export default function App() {
 
     setTimeout(() => {
       // Midpoint at 200ms: clear data and return to step 1
-      undoDataRef.current = methods.getValues()
+      undoDataRef.current = structuredClone(methods.getValues())
       clearSavedDraft()
-      localStorage.removeItem(BACKUP_STORAGE_KEY)
+      try { localStorage.removeItem(BACKUP_STORAGE_KEY) } catch { /* In-memory restore remains available. */ }
       setUserBackup(null)
       methods.reset(defaultResumeData)
       setWizardKey((prev) => prev + 1)
@@ -253,9 +236,6 @@ export default function App() {
   }
 
   const handleUndoClear = () => {
-    if (undoTimeoutRef.current) {
-      clearTimeout(undoTimeoutRef.current)
-    }
     if (undoDataRef.current) {
       methods.reset(undoDataRef.current)
       undoDataRef.current = null
@@ -275,9 +255,9 @@ export default function App() {
           onLoadSampleAndStart={handleLoadSampleAndStart}
         />
       ) : (
-        <div className="min-h-screen bg-[#F6F8FA] text-[#1A2233] animate-page-enter">
+        <div className="min-h-screen bg-page text-text builder-shell">
           {/* Sticky Top Header */}
-          <header className="border-b border-[#E3E8EE] bg-white/95 backdrop-blur-xs px-4 sm:px-6 py-3.5 sticky top-0 z-20">
+          <header className="border-b border-border bg-white/95 backdrop-blur-xs px-4 sm:px-6 py-3.5 sticky top-0 z-20">
             <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
               <div>
                 <h1 className="leading-none">
@@ -289,7 +269,7 @@ export default function App() {
                       window.scrollTo({ top: 0, behavior: 'smooth' })
                     }}
                     title="Back to Papel home"
-                    className="group inline-flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F4D8F] focus-visible:ring-offset-2 rounded-xs"
+                    className="group inline-flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-xs"
                   >
                     <img
                       src="/papel-logo.png"
@@ -297,20 +277,20 @@ export default function App() {
                       aria-hidden="true"
                       className="h-6 w-auto sm:h-7 shrink-0 object-contain"
                     />
-                    <span className="font-brand font-bold text-lg sm:text-2xl text-[#1A2233] tracking-[-0.02em] group-hover:opacity-85 transition-opacity">
+                    <span className="font-brand font-bold text-lg sm:text-2xl text-text tracking-[-0.02em] group-hover:opacity-85 transition-opacity">
                       Papel
                     </span>
                   </a>
                 </h1>
-                <p className="text-xs text-[#5B6678] mt-1">
+                <p className="text-xs text-text-muted mt-1">
                   Fill in your details once, then switch templates anytime.
                 </p>
                 <p
                   aria-live="polite"
                   className={`text-xs mt-0.5 ${
                     saveStatus === 'error'
-                      ? 'text-[#C0392B] font-medium'
-                      : 'text-[#5B6678]'
+                      ? 'text-error font-medium'
+                      : 'text-text-muted'
                   }`}
                 >
                   {saveStatus === 'saving'
@@ -330,7 +310,7 @@ export default function App() {
                     setShowLanding(true)
                     window.scrollTo({ top: 0, behavior: 'smooth' })
                   }}
-                  className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors disabled:opacity-50 cursor-pointer"
+                  className="rounded-[6px] border border-border bg-white px-3 py-1.5 text-xs font-medium text-text hover:bg-page hover:border-[#CBD5E1] focus:outline-none focus:ring-2 focus:ring-accent transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   Home
                 </button>
@@ -340,7 +320,7 @@ export default function App() {
                   type="button"
                   disabled={isClearing}
                   onClick={() => setIsImportModalOpen(true)}
-                  className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+                  className="rounded-[6px] border border-border bg-white px-3 py-1.5 text-xs font-medium text-text hover:bg-page hover:border-[#CBD5E1] focus:outline-none focus:ring-2 focus:ring-accent transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
                 >
                   <span>Import PDF</span>
                 </button>
@@ -351,7 +331,7 @@ export default function App() {
                     type="button"
                     disabled={isClearing}
                     onClick={handleRestoreUserData}
-                    className="rounded-[6px] bg-[#1F4D8F] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#173b6e] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors disabled:opacity-50 shadow-2xs cursor-pointer flex items-center gap-1.5"
+                    className="rounded-[6px] bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent transition-colors disabled:opacity-50 shadow-2xs cursor-pointer flex items-center gap-1.5"
                   >
                     <svg
                       aria-hidden="true"
@@ -373,7 +353,7 @@ export default function App() {
                     type="button"
                     disabled={isClearing}
                     onClick={handleLoadSample}
-                    className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] hover:border-[#CBD5E1] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors disabled:opacity-50 cursor-pointer"
+                    className="rounded-[6px] border border-border bg-white px-3 py-1.5 text-xs font-medium text-text hover:bg-page hover:border-[#CBD5E1] focus:outline-none focus:ring-2 focus:ring-accent transition-colors disabled:opacity-50 cursor-pointer"
                   >
                     Load Sample
                   </button>
@@ -384,7 +364,7 @@ export default function App() {
                   type="button"
                   disabled={isClearing}
                   onClick={() => setIsClearModalOpen(true)}
-                  className="rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-xs font-medium text-[#C0392B] hover:bg-[#C0392B]/8 hover:border-[#C0392B]/30 focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors cursor-pointer disabled:opacity-50"
+                  className="rounded-[6px] border border-border bg-white px-3 py-1.5 text-xs font-medium text-error hover:bg-error/8 hover:border-error/30 focus:outline-none focus:ring-2 focus:ring-accent transition-colors cursor-pointer disabled:opacity-50"
                 >
                   Start over
                 </button>
@@ -398,13 +378,13 @@ export default function App() {
               <div
                 role="status"
                 aria-live="polite"
-                className="rounded-[10px] border border-[#E3E8EE] bg-white px-4 py-2.5 text-xs text-[#1A2233] shadow-2xs flex items-center justify-between gap-3 animate-fade-up"
+                className="rounded-[10px] border border-border bg-white px-4 py-2.5 text-xs text-text shadow-2xs flex items-center justify-between gap-3 animate-fade-up"
               >
                 <span>Cleared. You&apos;re starting fresh.</span>
                 <button
                   type="button"
                   onClick={handleUndoClear}
-                  className="font-semibold text-[#1F4D8F] underline hover:text-[#173b6e] cursor-pointer px-1.5 py-0.5 rounded focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]"
+                  className="font-semibold text-accent underline hover:text-accent-hover cursor-pointer px-1.5 py-0.5 rounded focus:outline-none focus:ring-2 focus:ring-accent"
                 >
                   Undo
                 </button>
@@ -413,14 +393,14 @@ export default function App() {
 
             {/* One-time browser storage note */}
             {showStorageNotice && (
-              <div className="rounded-[10px] border border-[#E3E8EE] bg-white px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-[#5B6678]">
+              <div className="rounded-[10px] border border-border bg-white px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-text-muted">
                 <span>
                   Your work is saved in this browser only. Clearing your browser data will delete it.
                 </span>
                 <button
                   type="button"
                   onClick={handleDismissNotice}
-                  className="rounded-[6px] border border-[#E3E8EE] bg-[#F6F8FA] px-3 py-1 text-xs font-medium text-[#1A2233] hover:bg-[#EEF2F6] shrink-0 focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer"
+                  className="rounded-[6px] border border-border bg-page px-3 py-1 text-xs font-medium text-text hover:bg-[#EEF2F6] shrink-0 focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer"
                 >
                   Got it
                 </button>
@@ -429,7 +409,7 @@ export default function App() {
 
           {/* Active Sample Data Notice Banner */}
           {isSampleActive && (
-            <div className="rounded-[10px] border border-[#1F4D8F]/25 bg-[#1F4D8F]/[0.06] px-4 py-2.5 text-xs text-[#1A2233] flex flex-wrap items-center justify-between gap-2 shadow-2xs">
+            <div className="rounded-[10px] border border-accent/25 bg-accent/[0.06] px-4 py-2.5 text-xs text-text flex flex-wrap items-center justify-between gap-2 shadow-2xs">
               <div className="flex items-center gap-2">
                 <span>
                   You are currently previewing sample student data (<strong>{sampleResumeData.personalInfo.fullName}</strong>).
@@ -443,7 +423,7 @@ export default function App() {
                   type="button"
                   disabled={isClearing}
                   onClick={handleRestoreUserData}
-                  className="rounded-[6px] bg-[#1F4D8F] px-3 py-1 text-xs font-semibold text-white hover:bg-[#173b6e] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-50 cursor-pointer transition-colors"
+                  className="rounded-[6px] bg-accent px-3 py-1 text-xs font-semibold text-white hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50 cursor-pointer transition-colors"
                 >
                   {userBackup ? 'Restore My Data' : 'Clear to Blank Form'}
                 </button>
@@ -463,12 +443,12 @@ export default function App() {
                       ? 'opacity 250ms ease-out'
                       : 'none',
               }}
-              className="lg:col-span-5 will-change-[opacity]"
+              className={`lg:col-span-5 ${mobileView === 'preview' ? 'hidden lg:block' : ''}`}
             >
-              <FormWizard key={wizardKey} disabled={isClearing} />
+              <FormWizard key={wizardKey} disabled={isClearing} onReview={() => { setMobileView('preview'); document.getElementById('resume-preview')?.scrollIntoView({ behavior: 'smooth' }) }} />
             </div>
 
-            <div className="lg:col-span-7 lg:sticky lg:top-20">
+            <div id="resume-preview" className={`lg:col-span-7 lg:sticky lg:top-28 scroll-mt-28 ${mobileView === 'edit' ? 'hidden lg:block' : ''}`}>
               <LivePreview
                 selectedTemplateId={selectedTemplateId}
                 onOpenPicker={() => setIsPickerOpen(true)}
@@ -478,6 +458,20 @@ export default function App() {
             </div>
           </div>
         </main>
+
+        <nav aria-label="Resume workspace" className="fixed bottom-0 inset-x-0 z-30 flex items-center justify-between gap-3 border-t border-border bg-surface px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:hidden">
+          <div className="flex gap-1 rounded-panel bg-page p-1">
+            {['edit', 'preview'].map((view) => (
+              <button key={view} type="button" aria-pressed={mobileView === view} disabled={isClearing}
+                onClick={() => { setMobileView(view); window.scrollTo({ top: 0, behavior: 'instant' }) }}
+                className={`min-h-11 rounded-input px-4 text-sm font-semibold ${mobileView === view ? 'bg-accent text-white' : 'text-text-muted'}`}>
+                {view === 'edit' ? 'Edit' : 'Preview'}
+              </button>
+            ))}
+          </div>
+          {mobileView === 'preview' && <DownloadButton selectedTemplateId={selectedTemplateId} />}
+          {mobileView === 'edit' && <span className="text-xs text-text-muted">Saved as you write</span>}
+        </nav>
 
         {/* Clear Confirmation Modal */}
         <ClearConfirmModal

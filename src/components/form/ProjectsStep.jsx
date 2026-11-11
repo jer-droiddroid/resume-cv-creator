@@ -13,22 +13,22 @@ export default function ProjectsStep() {
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-2">
         <div>
-          <h2 className="text-lg font-semibold text-[#1A2233]">Academic &amp; Personal Projects</h2>
-          <p className="text-sm text-[#5B6678]">
+          <h2 className="text-lg font-semibold text-text">Academic &amp; Personal Projects</h2>
+          <p className="text-sm text-text-muted">
             Capstone projects, hackathon builds, or course projects.
           </p>
         </div>
         <button
           type="button"
           onClick={() => append(createEmptyProject())}
-          className="shrink-0 rounded-[6px] bg-[#1F4D8F] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#173b6e] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors cursor-pointer"
+          className="shrink-0 rounded-[6px] bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent transition-colors cursor-pointer"
         >
           + Add Project
         </button>
       </div>
 
       {fields.length === 0 && (
-        <p className="text-sm text-[#5B6678] italic py-5 text-center border border-dashed border-[#E3E8EE] bg-[#F6F8FA] rounded-[10px]">
+        <p className="text-sm text-text-muted italic py-5 text-center border border-dashed border-border bg-page rounded-[10px]">
           No projects added yet. Click &ldquo;+ Add Project&rdquo; above.
         </p>
       )}
@@ -40,10 +40,10 @@ export default function ProjectsStep() {
           return (
             <div
               key={field.id}
-              className="rounded-[10px] border border-[#E3E8EE] bg-[#F6F8FA] p-4 space-y-3"
+              className="rounded-[10px] border border-border bg-page p-4 space-y-3"
             >
-              <div className="flex items-center justify-between border-b border-[#E3E8EE] pb-2.5 gap-2">
-                <span className="text-xs font-semibold text-[#1A2233] truncate">
+              <div className="flex items-center justify-between border-b border-border pb-2.5 gap-2">
+                <span className="text-xs font-semibold text-text truncate">
                   Project {index + 1}
                   {projectName ? ` — ${projectName}` : ''}
                 </span>
@@ -54,7 +54,7 @@ export default function ProjectsStep() {
                     onClick={() => swap(index, index - 1)}
                     aria-label={`Move project entry ${index + 1} up`}
                     title="Move up"
-                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-[#E3E8EE] bg-white text-[#1A2233] hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-40 cursor-pointer transition-colors"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-border bg-white text-text hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-40 cursor-pointer transition-colors"
                   >
                     <svg
                       aria-hidden="true"
@@ -76,7 +76,7 @@ export default function ProjectsStep() {
                     onClick={() => swap(index, index + 1)}
                     aria-label={`Move project entry ${index + 1} down`}
                     title="Move down"
-                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-[#E3E8EE] bg-white text-[#1A2233] hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-40 cursor-pointer transition-colors"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-[6px] border border-border bg-white text-text hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-40 cursor-pointer transition-colors"
                   >
                     <svg
                       aria-hidden="true"
@@ -96,7 +96,7 @@ export default function ProjectsStep() {
                     type="button"
                     onClick={() => remove(index)}
                     aria-label={`Remove project entry ${index + 1}`}
-                    className="inline-flex h-7 items-center rounded-[6px] border border-[#C0392B]/25 bg-white px-2.5 text-xs font-medium text-[#C0392B] hover:bg-[#C0392B]/8 focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer transition-colors"
+                    className="inline-flex h-7 items-center rounded-[6px] border border-error/25 bg-white px-2.5 text-xs font-medium text-error hover:bg-error/8 focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer transition-colors"
                   >
                     Remove
                   </button>
@@ -107,7 +107,7 @@ export default function ProjectsStep() {
                 <div>
                   <label
                     htmlFor={`proj-name-${index}`}
-                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                    className="block text-xs font-medium text-text mb-1"
                   >
                     Project Name
                   </label>
@@ -116,14 +116,14 @@ export default function ProjectsStep() {
                     type="text"
                     placeholder="e.g. StudySync"
                     {...register(`projects.${index}.name`)}
-                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                    className="w-full rounded-[6px] border border-border bg-white px-3 py-1.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor={`proj-link-${index}`}
-                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                    className="block text-xs font-medium text-text mb-1"
                   >
                     Link / Repository
                   </label>
@@ -132,14 +132,14 @@ export default function ProjectsStep() {
                     type="text"
                     placeholder="e.g. github.com/alexcarter/studysync"
                     {...register(`projects.${index}.link`)}
-                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                    className="w-full rounded-[6px] border border-border bg-white px-3 py-1.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
                   <label
                     htmlFor={`proj-stack-${index}`}
-                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                    className="block text-xs font-medium text-text mb-1"
                   >
                     Tech Stack
                   </label>
@@ -148,14 +148,14 @@ export default function ProjectsStep() {
                     type="text"
                     placeholder="e.g. React, Node.js, PostgreSQL, Tailwind CSS"
                     {...register(`projects.${index}.techStack`)}
-                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                    className="w-full rounded-[6px] border border-border bg-white px-3 py-1.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
                   <label
                     htmlFor={`proj-desc-${index}`}
-                    className="block text-xs font-medium text-[#1A2233] mb-1"
+                    className="block text-xs font-medium text-text mb-1"
                   >
                     Description
                   </label>
@@ -164,7 +164,7 @@ export default function ProjectsStep() {
                     rows={2}
                     placeholder="Describe what you built and the problem it solved..."
                     {...register(`projects.${index}.description`)}
-                    className="w-full rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                    className="w-full rounded-[6px] border border-border bg-white px-3 py-1.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
               </div>

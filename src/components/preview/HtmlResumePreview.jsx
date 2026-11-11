@@ -1,6 +1,6 @@
 import { generateBullets } from '../../data/roleTemplates'
 import { isSectionNonEmpty } from '../../utils/sectionHelpers'
-import { formatDateRange, getContactItems } from '../../templates/sectionRenderer'
+import { formatDateRange, getContactItems } from '../../utils/resumeFormatting'
 import { sampleResumeData } from '../../data/sampleResume'
 import { DEFAULT_SECTIONS } from '../../data/defaultResume'
 
@@ -14,7 +14,7 @@ import { DEFAULT_SECTIONS } from '../../data/defaultResume'
  * - Downloaded PDF only uses real data; sample content never appears in downloaded PDF
  * - break-words and [overflow-wrap:anywhere] ensure long words, URLs, and test text wrap cleanly
  */
-export default function HtmlResumePreview({ data, theme, templateId }) {
+export default function HtmlResumePreview({ data, theme, templateId, showExamples = false }) {
   const configuredSections =
     Array.isArray(data?.sections) && data.sections.length > 0
       ? data.sections
@@ -26,14 +26,14 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
 
   const { personalInfo = {}, currency = 'USD' } = data || {}
   const realName = personalInfo?.fullName?.trim()
-  const displayName = realName || 'Your Name'
+  const displayName = realName || (showExamples ? 'Your Name' : '')
   const isNameSample = !realName
 
   const realContactItems = getContactItems(personalInfo)
   const hasRealContact = realContactItems.length > 0
   const displayContactItems = hasRealContact
     ? realContactItems
-    : getContactItems(sampleResumeData.personalInfo)
+    : showExamples ? getContactItems(sampleResumeData.personalInfo) : []
 
   const isHarvard = templateId.startsWith('harvard-') || templateId.startsWith('reddit-')
   const isBanner = templateId.startsWith('banner-')
@@ -80,6 +80,7 @@ export default function HtmlResumePreview({ data, theme, templateId }) {
 
   // Render individual sections (real data if provided, or faded sample placeholder if empty)
   const renderSection = (sectionId, overrides = {}) => {
+    if (!showExamples && !isSectionNonEmpty(sectionId, data)) return null
     switch (sectionId) {
       case 'summary': {
         const isReal = isSectionNonEmpty('summary', data)

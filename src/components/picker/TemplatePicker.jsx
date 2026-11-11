@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import Modal from '../Modal'
 import { sampleResumeData } from '../../data/sampleResume'
 import { TEMPLATE_CATEGORIES, templates } from '../../templates/registry'
 
@@ -24,16 +25,16 @@ function TemplateCard({ template, isSelected, onSelect }) {
     <button
       type="button"
       onClick={() => onSelect(template.id)}
-      className={`group flex flex-col rounded-[10px] border text-left transition overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] ${
+      className={`group flex flex-col rounded-[10px] border text-left transition overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent ${
         isSelected
-          ? 'border-[#1F4D8F] ring-2 ring-[#1F4D8F] bg-[#F6F8FA]'
-          : 'border-[#E3E8EE] bg-white hover:border-[#CBD5E1] hover:shadow-xs'
+          ? 'border-accent ring-2 ring-accent bg-page'
+          : 'border-border bg-white hover:border-[#CBD5E1] hover:shadow-xs'
       }`}
     >
       {/* Thumbnail preview area (uses sampleResumeData) */}
-      <div className="relative h-48 w-full bg-[#EEF2F6] p-2.5 flex items-center justify-center overflow-hidden border-b border-[#E3E8EE]">
+      <div className="relative h-48 w-full bg-[#EEF2F6] p-2.5 flex items-center justify-center overflow-hidden border-b border-border">
         <div
-          className={`h-full w-34 rounded-[4px] bg-white shadow-xs border border-[#E3E8EE] overflow-hidden flex flex-col text-[5.5px] leading-tight select-none ${fontClass}`}
+          className={`h-full w-34 rounded-[4px] bg-white shadow-xs border border-border overflow-hidden flex flex-col text-[5.5px] leading-tight select-none ${fontClass}`}
           style={{ color: theme.textColor }}
         >
           {isBanner ? (
@@ -200,7 +201,7 @@ function TemplateCard({ template, isSelected, onSelect }) {
         </div>
 
         {isSelected && (
-          <span className="absolute top-2 right-2 rounded-[6px] bg-[#1F4D8F] px-2 py-0.5 text-xs font-semibold text-white shadow-xs">
+          <span className="absolute top-2 right-2 rounded-[6px] bg-accent px-2 py-0.5 text-xs font-semibold text-white shadow-xs">
             Selected
           </span>
         )}
@@ -209,11 +210,11 @@ function TemplateCard({ template, isSelected, onSelect }) {
       {/* Card footer */}
       <div className="p-2.5 flex items-center justify-between">
         <div className="min-w-0 pr-1">
-          <p className="text-xs font-semibold text-[#1A2233] truncate">{template.name}</p>
-          <p className="text-xs text-[#5B6678]">{template.category}</p>
+          <p className="text-xs font-semibold text-text truncate">{template.name}</p>
+          <p className="text-xs text-text-muted">{template.category}</p>
         </div>
         <span
-          className="h-3.5 w-3.5 shrink-0 rounded-full border border-[#E3E8EE]"
+          className="h-3.5 w-3.5 shrink-0 rounded-full border border-border"
           style={{ backgroundColor: theme.accentColor }}
           title={`Accent: ${theme.name}`}
         />
@@ -230,15 +231,6 @@ function TemplateCard({ template, isSelected, onSelect }) {
 export default function TemplatePicker({ isOpen, onClose, selectedTemplateId, onSelectTemplate }) {
   const [activeCategory, setActiveCategory] = useState('All')
 
-  // Close drawer on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen) onClose()
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onClose])
-
   if (!isOpen) return null
 
   const filteredTemplates =
@@ -247,50 +239,45 @@ export default function TemplatePicker({ isOpen, onClose, selectedTemplateId, on
       : templates.filter((t) => t.category === activeCategory)
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="template-picker-title"
-      className="fixed inset-0 z-50 overflow-hidden"
-    >
+    <Modal labelledBy="template-picker-title" onClose={onClose} className="overflow-hidden">
       {/* Backdrop */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-[#1A2233]/40 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-text/40 backdrop-blur-xs transition-opacity"
       />
 
       {/* Drawer Container: slides in from right on desktop, bottom on mobile */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-y-0 sm:right-0 sm:left-auto w-full sm:w-[480px] md:w-[520px] max-h-[85vh] sm:max-h-full bg-white shadow-2xl flex flex-col rounded-t-[10px] sm:rounded-none z-10 transition-transform">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#E3E8EE] px-5 py-4">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <div>
-            <h2 id="template-picker-title" className="text-base font-semibold text-[#1A2233]">
+            <h2 id="template-picker-title" className="text-base font-semibold text-text">
               Choose a Template
             </h2>
-            <p className="text-xs text-[#5B6678]">
+            <p className="text-xs text-text-muted">
               Pick a design to instantly change your resume layout.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[6px] border border-[#E3E8EE] bg-white px-2.5 py-1 text-xs font-medium text-[#1A2233] hover:bg-[#F6F8FA] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer transition-colors"
+            className="rounded-[6px] border border-border bg-white px-2.5 py-1 text-xs font-medium text-text hover:bg-page focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer transition-colors"
           >
             Close
           </button>
         </div>
 
         {/* Category Filter Pills */}
-        <div className="flex items-center gap-1.5 px-5 py-3 border-b border-[#E3E8EE] bg-[#F6F8FA] overflow-x-auto">
+        <div className="flex items-center gap-1.5 px-5 py-3 border-b border-border bg-page overflow-x-auto">
           {TEMPLATE_CATEGORIES.map((category) => (
             <button
               key={category}
               type="button"
               onClick={() => setActiveCategory(category)}
-              className={`rounded-[6px] px-3 py-1 text-xs font-medium transition cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] ${
+              className={`rounded-[6px] px-3 py-1 text-xs font-medium transition cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent ${
                 activeCategory === category
-                  ? 'bg-[#1F4D8F] text-white font-semibold shadow-2xs'
-                  : 'bg-white border border-[#E3E8EE] text-[#5B6678] hover:text-[#1A2233] hover:bg-[#EEF2F6]'
+                  ? 'bg-accent text-white font-semibold shadow-2xs'
+                  : 'bg-white border border-border text-text-muted hover:text-text hover:bg-[#EEF2F6]'
               }`}
             >
               {category}
@@ -315,6 +302,6 @@ export default function TemplatePicker({ isOpen, onClose, selectedTemplateId, on
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }

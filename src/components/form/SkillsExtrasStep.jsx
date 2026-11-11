@@ -27,23 +27,23 @@ function StringArraySection({ name, title, subtitle, placeholder }) {
   }
 
   return (
-    <div className="rounded-[10px] border border-[#E3E8EE] bg-[#F6F8FA] p-4 space-y-3">
+    <div className="rounded-[10px] border border-border bg-page p-4 space-y-3">
       <div className="flex items-center justify-between gap-2">
         <div>
-          <h3 className="text-sm font-semibold text-[#1A2233]">{title}</h3>
-          <p className="text-xs text-[#5B6678]">{subtitle}</p>
+          <h3 className="text-sm font-semibold text-text">{title}</h3>
+          <p className="text-xs text-text-muted">{subtitle}</p>
         </div>
         <button
           type="button"
           onClick={addItem}
-          className="shrink-0 rounded-[6px] bg-[#1F4D8F] px-2.5 py-1 text-xs font-semibold text-white hover:bg-[#173b6e] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] transition-colors cursor-pointer"
+          className="shrink-0 rounded-[6px] bg-accent px-2.5 py-1 text-xs font-semibold text-white hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent transition-colors cursor-pointer"
         >
           + Add
         </button>
       </div>
 
       {items.length === 0 ? (
-        <p className="text-xs text-[#5B6678] italic">None added yet.</p>
+        <p className="text-xs text-text-muted italic">None added yet.</p>
       ) : (
         <div className="space-y-2">
           {items.map((_, index) => (
@@ -53,7 +53,7 @@ function StringArraySection({ name, title, subtitle, placeholder }) {
                 aria-label={`${title} item ${index + 1}`}
                 placeholder={placeholder}
                 {...register(`${name}.${index}`)}
-                className="flex-1 rounded-[6px] border border-[#E3E8EE] bg-white px-3 py-1.5 text-sm text-[#1A2233] placeholder:text-[#5B6678]/60 focus:border-[#1F4D8F] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F]/20"
+                className="flex-1 rounded-[6px] border border-border bg-white px-3 py-1.5 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
               />
               <button
                 type="button"
@@ -61,7 +61,7 @@ function StringArraySection({ name, title, subtitle, placeholder }) {
                 onClick={() => moveItem(index, -1)}
                 aria-label={`Move ${title} item ${index + 1} up`}
                 title="Move up"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-[6px] border border-[#E3E8EE] bg-white text-[#1A2233] hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-40 cursor-pointer transition-colors"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-[6px] border border-border bg-white text-text hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-40 cursor-pointer transition-colors"
               >
                 <svg
                   aria-hidden="true"
@@ -83,7 +83,7 @@ function StringArraySection({ name, title, subtitle, placeholder }) {
                 onClick={() => moveItem(index, 1)}
                 aria-label={`Move ${title} item ${index + 1} down`}
                 title="Move down"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-[6px] border border-[#E3E8EE] bg-white text-[#1A2233] hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] disabled:opacity-40 cursor-pointer transition-colors"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-[6px] border border-border bg-white text-text hover:bg-[#EEF2F6] focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-40 cursor-pointer transition-colors"
               >
                 <svg
                   aria-hidden="true"
@@ -104,7 +104,7 @@ function StringArraySection({ name, title, subtitle, placeholder }) {
                 onClick={() => removeItem(index)}
                 aria-label={`Remove ${title} item ${index + 1}`}
                 title="Remove"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-[6px] border border-[#C0392B]/25 bg-white text-[#C0392B] hover:bg-[#C0392B]/8 focus:outline-none focus:ring-2 focus:ring-[#1F4D8F] cursor-pointer transition-colors"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-[6px] border border-error/25 bg-white text-error hover:bg-error/8 focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer transition-colors"
               >
                 <svg
                   aria-hidden="true"
@@ -132,15 +132,15 @@ export default function SkillsExtrasStep() {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-lg font-semibold text-[#1A2233]">Skills, Awards &amp; Certifications</h2>
-        <p className="text-sm text-[#5B6678]">
+        <h2 className="text-lg font-semibold text-text">Skills, Awards &amp; Certifications</h2>
+        <p className="text-sm text-text-muted">
           Add technical skills, academic honors, and relevant certificates.
         </p>
       </div>
 
       {/* Tip callout */}
-      <div className="rounded-[10px] border border-[#E3E8EE] bg-[#F6F8FA] p-3.5 text-xs text-[#5B6678] leading-relaxed">
-        <strong className="font-semibold text-[#1A2233]">Tip:</strong> Stick to concrete hard skills (languages, software, developer tools, hardware). Avoid subjective soft skills like <em>&ldquo;punctual&rdquo;</em>, <em>&ldquo;hard worker&rdquo;</em>, or <em>&ldquo;team player&rdquo;</em>—demonstrate those traits through your experience accomplishments instead.
+      <div className="rounded-[10px] border border-border bg-page p-3.5 text-xs text-text-muted leading-relaxed">
+        <strong className="font-semibold text-text">Tip:</strong> Stick to concrete hard skills (languages, software, developer tools, hardware). Avoid subjective soft skills like <em>&ldquo;punctual&rdquo;</em>, <em>&ldquo;hard worker&rdquo;</em>, or <em>&ldquo;team player&rdquo;</em>—demonstrate those traits through your experience accomplishments instead.
       </div>
 
       <StringArraySection
