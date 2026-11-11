@@ -1005,8 +1005,17 @@ export default function LandingPage({
             </span>
             <span>— Student resume and CV maker</span>
           </div>
-          <div>
-            Your draft is saved in this browser. Optional AI import sends extracted resume text to Google Gemini.
+          <div className="space-y-2">
+            <p>Your draft is saved in this browser. Optional AI import sends extracted resume text to Google Gemini.</p>
+            <p>
+              Made by{' '}
+              <a
+                href="https://jerwin-izar-portfolio.vercel.app/"
+                className="font-medium text-text underline underline-offset-4 hover:text-accent"
+              >
+                Jerwin Izar
+              </a>
+            </p>
           </div>
         </div>
       </footer>
