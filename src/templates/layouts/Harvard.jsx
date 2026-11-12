@@ -1,3 +1,4 @@
+import PhotoHeader from '../PhotoHeader'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { generateBullets } from '../../data/roleTemplates'
 import { getActiveSections } from '../../utils/sectionHelpers'
@@ -328,12 +329,14 @@ export default function Harvard({ data, theme }) {
     <Document>
       <Page size="A4" style={styles.page}>
         {/* Centered Harvard Header */}
-        <View style={styles.header}>
-          <Text style={styles.name}>{(personalInfo.fullName || 'YOUR NAME').toUpperCase()}</Text>
-          {contactItems.length > 0 && (
-            <Text style={styles.contactLine}>{contactItems.join('  •  ')}</Text>
-          )}
-        </View>
+        <PhotoHeader photo={personalInfo.photo}>
+          <View style={styles.header}>
+            <Text style={styles.name}>{(personalInfo.fullName || 'YOUR NAME').toUpperCase()}</Text>
+            {contactItems.length > 0 && (
+              <Text style={styles.contactLine}>{contactItems.join('  •  ')}</Text>
+            )}
+          </View>
+        </PhotoHeader>
 
         {/* Sections in student's chosen order */}
         {activeSections.map((sectionId) => renderSection(sectionId))}

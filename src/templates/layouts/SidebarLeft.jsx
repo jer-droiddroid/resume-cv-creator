@@ -1,3 +1,4 @@
+import { PdfResumePhoto } from '../PhotoHeader'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { getActiveSections } from '../../utils/sectionHelpers'
 import { getContactItems, renderResumeSection } from '../sectionRenderer'
@@ -68,7 +69,8 @@ export default function SidebarLeft({ data, theme }) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.sidebar}>
+        <View style={[styles.sidebar, personalInfo.photo ? { width: '34%' } : {}]}>
+          <PdfResumePhoto photo={personalInfo.photo} />
           <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
           {contactItems.length > 0 && (
             <View style={styles.contactBlock}>
@@ -84,7 +86,7 @@ export default function SidebarLeft({ data, theme }) {
           )}
         </View>
 
-        <View style={styles.main}>
+        <View style={[styles.main, personalInfo.photo ? { width: '66%' } : {}]}>
           {mainSections.map((id) => renderResumeSection(id, data, theme))}
         </View>
 

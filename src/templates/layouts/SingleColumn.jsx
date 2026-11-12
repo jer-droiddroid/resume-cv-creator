@@ -1,3 +1,4 @@
+import PhotoHeader from '../PhotoHeader'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { getActiveSections } from '../../utils/sectionHelpers'
 import { getContactItems, renderResumeSection } from '../sectionRenderer'
@@ -50,12 +51,14 @@ export default function SingleColumn({ data, theme }) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
-          <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
-          {contactItems.length > 0 && (
-            <Text style={styles.contactRow}>{contactItems.join('  •  ')}</Text>
-          )}
-        </View>
+        <PhotoHeader photo={personalInfo.photo}>
+          <View style={styles.header}>
+            <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
+            {contactItems.length > 0 && (
+              <Text style={styles.contactRow}>{contactItems.join('  •  ')}</Text>
+            )}
+          </View>
+        </PhotoHeader>
 
         {activeSections.map((sectionId) => renderResumeSection(sectionId, data, theme))}
 

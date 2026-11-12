@@ -1,4 +1,5 @@
 import DocumentFormat from './DocumentFormat'
+import PhotoUpload from './PhotoUpload'
 import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { buildFileName } from '../../utils/sectionHelpers'
@@ -208,6 +209,7 @@ export default function PersonalInfoStep() {
           </p>
         </div>
       </div>
+      <PhotoUpload />
       <details className="border-t border-border pt-4">
         <summary className="cursor-pointer min-h-11 text-sm font-semibold text-text">Document format &amp; OJT settings</summary>
       {/* Document Type & OJT Mode quick settings */}

@@ -1,3 +1,4 @@
+import PhotoHeader from '../PhotoHeader'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { getActiveSections } from '../../utils/sectionHelpers'
 import { getContactItems, renderResumeSection } from '../sectionRenderer'
@@ -55,10 +56,12 @@ export default function HeaderBanner({ data, theme }) {
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.banner}>
-          <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
-          {contactItems.length > 0 && (
-            <Text style={styles.contactRow}>{contactItems.join('  |  ')}</Text>
-          )}
+          <PhotoHeader photo={personalInfo.photo}>
+            <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
+            {contactItems.length > 0 && (
+              <Text style={styles.contactRow}>{contactItems.join('  |  ')}</Text>
+            )}
+          </PhotoHeader>
         </View>
 
         <View style={styles.body}>

@@ -63,6 +63,7 @@ export const defaultResumeData = {
     location: '',
     linkedin: '',
     portfolio: '',
+    photo: '',
   },
   summary: '',
   education: [createEmptyEducation()],

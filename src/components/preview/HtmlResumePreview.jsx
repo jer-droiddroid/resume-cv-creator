@@ -1,3 +1,4 @@
+import PhotoHeader, { ResumePhoto } from './PhotoHeader'
 import { generateBullets } from '../../data/roleTemplates'
 import { isSectionNonEmpty } from '../../utils/sectionHelpers'
 import { formatDateRange, getContactItems } from '../../utils/resumeFormatting'
@@ -454,6 +455,7 @@ export default function HtmlResumePreview({ data, theme, templateId, showExample
           }}
         >
           <div>
+            <ResumePhoto photo={personalInfo.photo} />
             <h1
               className={`text-lg font-bold tracking-tight mb-2 break-words [overflow-wrap:anywhere] ${
                 isNameSample ? 'text-slate-400 opacity-60 italic' : ''
@@ -503,30 +505,32 @@ export default function HtmlResumePreview({ data, theme, templateId, showExample
         className={`w-full min-h-[919px] bg-white p-7 sm:p-9 break-words [overflow-wrap:anywhere] ${fontClass}`}
       >
         {/* Header */}
-        <div
-          className="pb-3 mb-5 border-b"
-          style={{ borderColor: theme.accentColor }}
-        >
-          <h1
-            className={`text-xl font-bold tracking-tight mb-2 break-words [overflow-wrap:anywhere] ${
-              isNameSample ? 'text-slate-400 opacity-60 italic' : ''
-            }`}
-            style={{ color: isNameSample ? undefined : theme.accentColor }}
+        <PhotoHeader photo={personalInfo.photo}>
+          <div
+            className="pb-3 mb-5 border-b"
+            style={{ borderColor: theme.accentColor }}
           >
-            {displayName}
-          </h1>
-          {displayContactItems.length > 0 && (
-            <div
-              className={`text-xs break-words [overflow-wrap:anywhere] ${
-                hasRealContact
-                  ? 'text-slate-600'
-                  : 'text-slate-400 opacity-50 select-none italic'
+            <h1
+              className={`text-xl font-bold tracking-tight mb-2 break-words [overflow-wrap:anywhere] ${
+                isNameSample ? 'text-slate-400 opacity-60 italic' : ''
               }`}
+              style={{ color: isNameSample ? undefined : theme.accentColor }}
             >
-              {displayContactItems.join('  •  ')}
-            </div>
-          )}
-        </div>
+              {displayName}
+            </h1>
+            {displayContactItems.length > 0 && (
+              <div
+                className={`text-xs break-words [overflow-wrap:anywhere] ${
+                  hasRealContact
+                    ? 'text-slate-600'
+                    : 'text-slate-400 opacity-50 select-none italic'
+                }`}
+              >
+                {displayContactItems.join('  •  ')}
+              </div>
+            )}
+          </div>
+        </PhotoHeader>
 
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-8 space-y-4">
@@ -551,20 +555,22 @@ export default function HtmlResumePreview({ data, theme, templateId, showExample
           className="px-7 py-6 sm:px-9 text-white"
           style={{ backgroundColor: theme.accentColor }}
         >
-          <h1 className="text-2xl font-bold tracking-tight mb-2 break-words [overflow-wrap:anywhere]">
-            {displayName}
-          </h1>
-          {displayContactItems.length > 0 && (
-            <div
-              className={`text-xs break-words [overflow-wrap:anywhere] ${
-                hasRealContact
-                  ? 'text-slate-100/90'
-                  : 'text-white/60 select-none italic'
-              }`}
-            >
-              {displayContactItems.join('  |  ')}
-            </div>
-          )}
+          <PhotoHeader photo={personalInfo.photo}>
+            <h1 className="text-2xl font-bold tracking-tight mb-2 break-words [overflow-wrap:anywhere]">
+              {displayName}
+            </h1>
+            {displayContactItems.length > 0 && (
+              <div
+                className={`text-xs break-words [overflow-wrap:anywhere] ${
+                  hasRealContact
+                    ? 'text-slate-100/90'
+                    : 'text-white/60 select-none italic'
+                }`}
+              >
+                {displayContactItems.join('  |  ')}
+              </div>
+            )}
+          </PhotoHeader>
         </div>
 
         {/* Body */}
@@ -582,77 +588,83 @@ export default function HtmlResumePreview({ data, theme, templateId, showExample
     >
       {/* Header */}
       {isHarvard ? (
-        <div className="text-center mb-6">
-          <h1
-            className={`text-xl font-bold uppercase tracking-wide mb-2 break-words [overflow-wrap:anywhere] ${
-              isNameSample ? 'text-slate-400 opacity-60 italic' : ''
-            }`}
-            style={{ color: isNameSample ? undefined : theme.accentColor }}
-          >
-            {displayName.toUpperCase()}
-          </h1>
-          {displayContactItems.length > 0 && (
-            <div
-              className={`text-xs break-words [overflow-wrap:anywhere] ${
-                hasRealContact
-                  ? 'text-slate-600'
-                  : 'text-slate-400 opacity-50 select-none italic'
+        <PhotoHeader photo={personalInfo.photo}>
+          <div className="text-center mb-6">
+            <h1
+              className={`text-xl font-bold uppercase tracking-wide mb-2 break-words [overflow-wrap:anywhere] ${
+                isNameSample ? 'text-slate-400 opacity-60 italic' : ''
               }`}
+              style={{ color: isNameSample ? undefined : theme.accentColor }}
             >
-              {displayContactItems.join('  •  ')}
-            </div>
-          )}
-        </div>
+              {displayName.toUpperCase()}
+            </h1>
+            {displayContactItems.length > 0 && (
+              <div
+                className={`text-xs break-words [overflow-wrap:anywhere] ${
+                  hasRealContact
+                    ? 'text-slate-600'
+                    : 'text-slate-400 opacity-50 select-none italic'
+                }`}
+              >
+                {displayContactItems.join('  •  ')}
+              </div>
+            )}
+          </div>
+        </PhotoHeader>
       ) : isCompact ? (
-        <div
-          className="flex justify-between items-end pb-2 mb-4 border-b"
-          style={{ borderColor: theme.accentColor }}
-        >
-          <h1
-            className={`text-lg font-bold break-words [overflow-wrap:anywhere] ${
-              isNameSample ? 'text-slate-400 opacity-60 italic' : ''
-            }`}
-            style={{ color: isNameSample ? undefined : theme.accentColor }}
+        <PhotoHeader photo={personalInfo.photo}>
+          <div
+            className="flex justify-between items-end pb-2 mb-4 border-b"
+            style={{ borderColor: theme.accentColor }}
           >
-            {displayName}
-          </h1>
-          {displayContactItems.length > 0 && (
-            <div
-              className={`text-xs text-right max-w-[60%] break-words [overflow-wrap:anywhere] ${
-                hasRealContact
-                  ? 'text-slate-600'
-                  : 'text-slate-400 opacity-50 select-none italic'
+            <h1
+              className={`text-lg font-bold break-words [overflow-wrap:anywhere] ${
+                isNameSample ? 'text-slate-400 opacity-60 italic' : ''
               }`}
+              style={{ color: isNameSample ? undefined : theme.accentColor }}
             >
-              {displayContactItems.join(' • ')}
-            </div>
-          )}
-        </div>
+              {displayName}
+            </h1>
+            {displayContactItems.length > 0 && (
+              <div
+                className={`text-xs text-right max-w-[60%] break-words [overflow-wrap:anywhere] ${
+                  hasRealContact
+                    ? 'text-slate-600'
+                    : 'text-slate-400 opacity-50 select-none italic'
+                }`}
+              >
+                {displayContactItems.join(' • ')}
+              </div>
+            )}
+          </div>
+        </PhotoHeader>
       ) : (
-        <div
-          className="pb-3 mb-5 border-b"
-          style={{ borderColor: theme.accentColor }}
-        >
-          <h1
-            className={`text-xl font-bold mb-2 break-words [overflow-wrap:anywhere] ${
-              isNameSample ? 'text-slate-400 opacity-60 italic' : ''
-            }`}
-            style={{ color: isNameSample ? undefined : theme.accentColor }}
+        <PhotoHeader photo={personalInfo.photo}>
+          <div
+            className="pb-3 mb-5 border-b"
+            style={{ borderColor: theme.accentColor }}
           >
-            {displayName}
-          </h1>
-          {displayContactItems.length > 0 && (
-            <div
-              className={`text-xs break-words [overflow-wrap:anywhere] ${
-                hasRealContact
-                  ? 'text-slate-600'
-                  : 'text-slate-400 opacity-50 select-none italic'
+            <h1
+              className={`text-xl font-bold mb-2 break-words [overflow-wrap:anywhere] ${
+                isNameSample ? 'text-slate-400 opacity-60 italic' : ''
               }`}
+              style={{ color: isNameSample ? undefined : theme.accentColor }}
             >
-              {displayContactItems.join('  •  ')}
-            </div>
-          )}
-        </div>
+              {displayName}
+            </h1>
+            {displayContactItems.length > 0 && (
+              <div
+                className={`text-xs break-words [overflow-wrap:anywhere] ${
+                  hasRealContact
+                    ? 'text-slate-600'
+                    : 'text-slate-400 opacity-50 select-none italic'
+                }`}
+              >
+                {displayContactItems.join('  •  ')}
+              </div>
+            )}
+          </div>
+        </PhotoHeader>
       )}
 
       {/* Sections */}
