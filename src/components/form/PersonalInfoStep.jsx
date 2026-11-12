@@ -2,7 +2,7 @@ import DocumentFormat from './DocumentFormat'
 import PhotoUpload from './PhotoUpload'
 import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { buildFileName } from '../../utils/sectionHelpers'
+import OjtSettings from './OjtSettings'
 import {
   INTERNATIONAL_COUNTRIES,
   formatLocation,
@@ -14,7 +14,6 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 export default function PersonalInfoStep() {
   const { register, watch, setValue } = useFormContext()
   const formValues = watch()
-  const isOjtMode = Boolean(formValues?.isOjtMode)
   const emailValue = formValues?.personalInfo?.email || ''
   const isEmailInvalid = emailValue.trim().length > 0 && !EMAIL_REGEX.test(emailValue.trim())
 
@@ -66,6 +65,8 @@ export default function PersonalInfoStep() {
           How employers or academic committees can reach you.
         </p>
       </div>
+
+      <OjtSettings />
 
       {/* Contact fields */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -211,98 +212,11 @@ export default function PersonalInfoStep() {
       </div>
       <PhotoUpload />
       <details className="border-t border-border pt-4">
-        <summary className="cursor-pointer min-h-11 text-sm font-semibold text-text">Document format &amp; OJT settings</summary>
-      {/* Document Type & OJT Mode quick settings */}
-      <div className="space-y-3.5 p-3.5 bg-page rounded-[10px] border border-border">
-        <div>
-          <span
-            id="personal-doc-format-label"
-            className="block text-xs font-semibold text-text mb-1.5"
-          >
-            Document format
-          </span>
+        <summary className="cursor-pointer min-h-11 text-sm font-semibold text-text">Document format</summary>
+        <div className="space-y-3 pt-2">
           <DocumentFormat />
-          <p className="mt-2 text-xs text-text-muted">Resume: aim for one page. CV: include a fuller academic history.</p>
+          <p className="text-xs text-text-muted">Resume: aim for one page. CV: include a fuller academic history.</p>
         </div>
-
-        {/* OJT / Practicum Mode Toggle */}
-        <div className="pt-3 border-t border-border">
-          <label className="flex items-start gap-2.5 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              {...register('isOjtMode')}
-              className="mt-0.5 h-4 w-4 rounded border-border accent-accent text-accent focus:ring-2 focus:ring-accent cursor-pointer"
-            />
-            <div className="text-xs">
-              <span className="font-semibold text-text">
-                OJT / Practicum Application Mode
-              </span>
-              <p className="text-text-muted mt-0.5 leading-relaxed">
-                Adds required OJT hours &amp; start date, renames Summary to Career Objective, and formats your PDF filename as{' '}
-                <code className="text-xs bg-white px-1.5 py-0.5 rounded-[4px] border border-border text-text">
-                  Lastname_Firstname_Course_OJT_Resume.pdf
-                </code>
-              </p>
-            </div>
-          </label>
-
-          {isOjtMode && (
-            <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white p-3 rounded-[8px] border border-border">
-              <div>
-                <label
-                  htmlFor="ojt-course-code"
-                  className="block text-xs font-medium text-text mb-1"
-                >
-                  Course Code
-                </label>
-                <input
-                  id="ojt-course-code"
-                  type="text"
-                  placeholder="e.g. BSIT, BSBA, BSHM"
-                  {...register('ojtInfo.courseCode')}
-                  className="w-full rounded-[6px] border border-border bg-white px-2.5 py-1.5 text-xs text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="ojt-required-hours"
-                  className="block text-xs font-medium text-text mb-1"
-                >
-                  Required OJT Hours
-                </label>
-                <input
-                  id="ojt-required-hours"
-                  type="text"
-                  placeholder="e.g. 486 hours"
-                  {...register('ojtInfo.requiredHours')}
-                  className="w-full rounded-[6px] border border-border bg-white px-2.5 py-1.5 text-xs text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="ojt-start-date"
-                  className="block text-xs font-medium text-text mb-1"
-                >
-                  Preferred Start Date
-                </label>
-                <input
-                  id="ojt-start-date"
-                  type="text"
-                  placeholder="e.g. January 15, 2026"
-                  {...register('ojtInfo.preferredStartDate')}
-                  className="w-full rounded-[6px] border border-border bg-white px-2.5 py-1.5 text-xs text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
-                />
-              </div>
-              <div className="sm:col-span-3 text-xs text-text-muted flex items-center justify-between pt-2 border-t border-border">
-                <span>
-                  PDF filename preview: <strong className="text-text">{buildFileName(formValues)}</strong>
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
       </details>
     </div>
   )

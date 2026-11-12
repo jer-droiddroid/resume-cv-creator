@@ -1,3 +1,4 @@
+import CourseWritingGuide from './CourseWritingGuide'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { createEmptyProject } from '../../data/defaultResume'
 
@@ -26,6 +27,8 @@ export default function ProjectsStep() {
           + Add Project
         </button>
       </div>
+
+      <CourseWritingGuide section="projects" />
 
       {fields.length === 0 && (
         <p className="text-sm text-text-muted italic py-5 text-center border border-dashed border-border bg-page rounded-[10px]">

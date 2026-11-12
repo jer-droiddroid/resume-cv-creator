@@ -1,3 +1,4 @@
+import CourseWritingGuide from './CourseWritingGuide'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { createEmptyEducation } from '../../data/defaultResume'
 import MonthYearPicker from './MonthYearPicker'
@@ -27,6 +28,8 @@ export default function EducationStep() {
           + Add Education
         </button>
       </div>
+
+      <CourseWritingGuide section="education" />
 
       {fields.length === 0 && (
         <p className="text-sm text-text-muted italic py-5 text-center border border-dashed border-border bg-page rounded-[10px]">

@@ -10,7 +10,10 @@ const hasValue = (value) => {
 export function hasDraftContent(data) {
   if (!data) return false
   return ['personalInfo', 'summary', 'education', 'experience', 'organizations', 'projects', 'skills', 'awards', 'certifications', 'ojtInfo']
-    .some((key) => JSON.stringify(data[key]) !== JSON.stringify(defaultResumeData[key]) && hasValue(data[key]))
+    .some((key) => {
+      const value = key === 'ojtInfo' ? { ...data.ojtInfo, writingGuide: '' } : data[key]
+      return JSON.stringify(value) !== JSON.stringify(defaultResumeData[key]) && hasValue(value)
+    })
 }
 
 export function getReviewSuggestions(data) {

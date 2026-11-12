@@ -1,3 +1,4 @@
+import CourseWritingGuide from './CourseWritingGuide'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 // Reusable string-list editor for skills, awards, and certifications
@@ -137,6 +138,8 @@ export default function SkillsExtrasStep() {
           Add technical skills, academic honors, and relevant certificates.
         </p>
       </div>
+
+      <CourseWritingGuide section="skills" />
 
       {/* Tip callout */}
       <div className="rounded-[10px] border border-border bg-page p-3.5 text-xs text-text-muted leading-relaxed">

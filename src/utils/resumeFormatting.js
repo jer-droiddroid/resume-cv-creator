@@ -5,12 +5,12 @@ export const formatDateRange = (start, end) => {
 }
 
 // Gather non-empty contact strings from personalInfo
-export const getContactItems = (personalInfo = {}) =>
+export const getContactItems = (personalInfo = {}, { hidePortfolio = false } = {}) =>
   [
     personalInfo.email,
     personalInfo.phone,
     personalInfo.location,
     personalInfo.linkedin,
-    personalInfo.portfolio,
+    hidePortfolio ? '' : personalInfo.portfolio,
   ].filter((item) => item && item.trim())
 

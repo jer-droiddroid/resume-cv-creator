@@ -11,6 +11,8 @@
   - **Resume Mode**: Automatically adjusts typography and spacing density (`resumeFit`) to keep your resume on a single clean A4 page.
   - **CV Mode**: Supports multi-page academic CVs with automatic `Page X of Y` footer numbering and orphan-protected section breaks.
 - **Action-Verb Bullet Builder for Student Organizations**: Enter your raw leadership metrics (members led, events organized, budget managed, funds raised, or campaign reach) and Papel generates quantified, action-verb bullets automatically.
+- **OJT Starting Structures**: Enable OJT mode in Personal Info to start with **Skills & Projects First**, or choose **Experience First** or **Portfolio First**. Presets reorder sections while preserving your details and visibility choices. Portfolio First highlights a clickable portfolio link in the preview and PDF. Split and sidebar designs retain their column assignments.
+- **Optional Course Writing Guides**: IT / BSIT, Marketing / BSBA, Hospitality / BSHM, and Multimedia Arts examples are available in the objective, education, projects, and skills steps. They never populate fields or appear in exported PDFs.
 - **Live A4 Preview**: Instant HTML paper preview on the right while you edit on the left, with optional writing examples that are excluded from PDF exports.
 - **Privacy-First Local Storage**: All drafts stay in your browser's `localStorage`. No account required, no server-side database tracking your personal information, and a one-click **Start over** with undo available during the editing session.
 - **Optional AI Resume Import**: Upload an existing PDF resume to extract and populate your details automatically via Gemini 2.0 Flash.

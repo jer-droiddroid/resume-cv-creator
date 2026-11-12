@@ -1,3 +1,4 @@
+import CourseWritingGuide from './CourseWritingGuide'
 import { useFormContext } from 'react-hook-form'
 
 export default function SummaryStep() {
@@ -14,6 +15,8 @@ export default function SummaryStep() {
           Write 2–3 sentences highlighting your degree, key strengths, and what role you are looking for. Leave blank to hide this section.
         </p>
       </div>
+
+      <CourseWritingGuide section="summary" />
 
       {/* Tip callout */}
       <div className="rounded-[10px] border border-border bg-page p-3.5 text-xs text-text-muted leading-relaxed">

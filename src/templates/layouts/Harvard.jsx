@@ -1,3 +1,5 @@
+import PortfolioHighlight from '../PortfolioHighlight'
+import { getPortfolioHighlight } from '../../data/ojtPresets'
 import PhotoHeader from '../PhotoHeader'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { generateBullets } from '../../data/roleTemplates'
@@ -124,7 +126,7 @@ export default function Harvard({ data, theme }) {
   const styles = createHarvardStyles(theme)
   const activeSections = getActiveSections(data)
   const { personalInfo = {}, currency = 'USD', documentType = 'resume' } = data || {}
-  const contactItems = getContactItems(personalInfo)
+  const contactItems = getContactItems(personalInfo, { hidePortfolio: Boolean(getPortfolioHighlight(data)) })
 
   const renderSection = (sectionId) => {
     switch (sectionId) {
@@ -332,6 +334,7 @@ export default function Harvard({ data, theme }) {
         <PhotoHeader photo={personalInfo.photo}>
           <View style={styles.header}>
             <Text style={styles.name}>{(personalInfo.fullName || 'YOUR NAME').toUpperCase()}</Text>
+            <PortfolioHighlight data={data} theme={theme} />
             {contactItems.length > 0 && (
               <Text style={styles.contactLine}>{contactItems.join('  •  ')}</Text>
             )}

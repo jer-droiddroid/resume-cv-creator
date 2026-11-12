@@ -1,3 +1,5 @@
+import PortfolioHighlight from '../PortfolioHighlight'
+import { getPortfolioHighlight } from '../../data/ojtPresets'
 import PhotoHeader from '../PhotoHeader'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { getActiveSections } from '../../utils/sectionHelpers'
@@ -70,14 +72,17 @@ export default function Compact({ data, theme }) {
   const styles = createStyles(compactTheme)
   const activeSections = getActiveSections(data)
   const { personalInfo = {}, documentType = 'resume' } = data || {}
-  const contactItems = getContactItems(personalInfo)
+  const contactItems = getContactItems(personalInfo, { hidePortfolio: Boolean(getPortfolioHighlight(data)) })
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <PhotoHeader photo={personalInfo.photo}>
           <View style={styles.header}>
-            <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
+            <View style={{ flex: 1, minWidth: 0, paddingRight: 8 }}>
+              <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
+              <PortfolioHighlight data={data} theme={compactTheme} />
+            </View>
             {contactItems.length > 0 && (
               <Text style={styles.contactRight}>{contactItems.join(' • ')}</Text>
             )}

@@ -1,3 +1,5 @@
+import PortfolioHighlight from '../PortfolioHighlight'
+import { getPortfolioHighlight } from '../../data/ojtPresets'
 import PhotoHeader from '../PhotoHeader'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { getActiveSections } from '../../utils/sectionHelpers'
@@ -60,7 +62,7 @@ export default function TwoColumn({ data, theme }) {
   const styles = createStyles(theme)
   const activeSections = getActiveSections(data)
   const { personalInfo = {}, documentType = 'resume' } = data || {}
-  const contactItems = getContactItems(personalInfo)
+  const contactItems = getContactItems(personalInfo, { hidePortfolio: Boolean(getPortfolioHighlight(data)) })
 
   const mainSections = activeSections.filter((id) => !NARROW_COLUMN_IDS.has(id))
   const sideSections = activeSections.filter((id) => NARROW_COLUMN_IDS.has(id))
@@ -71,6 +73,7 @@ export default function TwoColumn({ data, theme }) {
         <PhotoHeader photo={personalInfo.photo}>
           <View style={styles.header}>
             <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
+            <PortfolioHighlight data={data} theme={theme} />
             {contactItems.length > 0 && (
               <Text style={styles.contactRow}>{contactItems.join('  •  ')}</Text>
             )}

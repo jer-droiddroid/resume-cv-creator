@@ -51,10 +51,12 @@ export const createEmptyProject = () => ({
 export const defaultResumeData = {
   documentType: 'resume', // "resume" | "cv"
   isOjtMode: false,
+  ojtPreset: '',
   ojtInfo: {
     courseCode: '',
     requiredHours: '',
     preferredStartDate: '',
+    writingGuide: '',
   },
   personalInfo: {
     fullName: '',

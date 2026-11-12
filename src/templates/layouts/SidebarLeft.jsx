@@ -1,3 +1,5 @@
+import PortfolioHighlight from '../PortfolioHighlight'
+import { getPortfolioHighlight } from '../../data/ojtPresets'
 import { PdfResumePhoto } from '../PhotoHeader'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { getActiveSections } from '../../utils/sectionHelpers'
@@ -61,7 +63,7 @@ export default function SidebarLeft({ data, theme }) {
   const styles = createStyles(theme)
   const activeSections = getActiveSections(data)
   const { personalInfo = {}, documentType = 'resume' } = data || {}
-  const contactItems = getContactItems(personalInfo)
+  const contactItems = getContactItems(personalInfo, { hidePortfolio: Boolean(getPortfolioHighlight(data)) })
 
   const sidebarSections = activeSections.filter((id) => SIDEBAR_SECTIONS.has(id))
   const mainSections = activeSections.filter((id) => !SIDEBAR_SECTIONS.has(id))
@@ -72,6 +74,7 @@ export default function SidebarLeft({ data, theme }) {
         <View style={[styles.sidebar, personalInfo.photo ? { width: '34%' } : {}]}>
           <PdfResumePhoto photo={personalInfo.photo} />
           <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
+          <PortfolioHighlight data={data} theme={theme} />
           {contactItems.length > 0 && (
             <View style={styles.contactBlock}>
               {contactItems.map((item, idx) => (

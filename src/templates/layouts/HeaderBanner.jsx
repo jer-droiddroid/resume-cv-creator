@@ -1,3 +1,5 @@
+import PortfolioHighlight from '../PortfolioHighlight'
+import { getPortfolioHighlight } from '../../data/ojtPresets'
 import PhotoHeader from '../PhotoHeader'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { getActiveSections } from '../../utils/sectionHelpers'
@@ -50,7 +52,7 @@ export default function HeaderBanner({ data, theme }) {
   const styles = createStyles(theme)
   const activeSections = getActiveSections(data)
   const { personalInfo = {}, documentType = 'resume' } = data || {}
-  const contactItems = getContactItems(personalInfo)
+  const contactItems = getContactItems(personalInfo, { hidePortfolio: Boolean(getPortfolioHighlight(data)) })
 
   return (
     <Document>
@@ -58,6 +60,7 @@ export default function HeaderBanner({ data, theme }) {
         <View style={styles.banner}>
           <PhotoHeader photo={personalInfo.photo}>
             <Text style={styles.name}>{personalInfo.fullName || 'Your Name'}</Text>
+            <PortfolioHighlight data={data} theme={theme} color="#ffffff" />
             {contactItems.length > 0 && (
               <Text style={styles.contactRow}>{contactItems.join('  |  ')}</Text>
             )}

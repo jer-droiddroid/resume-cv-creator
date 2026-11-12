@@ -1,3 +1,5 @@
+import PortfolioHighlight from './PortfolioHighlight'
+import { getPortfolioHighlight } from '../../data/ojtPresets'
 import PhotoHeader, { ResumePhoto } from './PhotoHeader'
 import { generateBullets } from '../../data/roleTemplates'
 import { isSectionNonEmpty } from '../../utils/sectionHelpers'
@@ -30,7 +32,7 @@ export default function HtmlResumePreview({ data, theme, templateId, showExample
   const displayName = realName || (showExamples ? 'Your Name' : '')
   const isNameSample = !realName
 
-  const realContactItems = getContactItems(personalInfo)
+  const realContactItems = getContactItems(personalInfo, { hidePortfolio: Boolean(getPortfolioHighlight(data)) })
   const hasRealContact = realContactItems.length > 0
   const displayContactItems = hasRealContact
     ? realContactItems
@@ -464,6 +466,7 @@ export default function HtmlResumePreview({ data, theme, templateId, showExample
             >
               {displayName}
             </h1>
+            <PortfolioHighlight data={data} color={isBanner ? '#ffffff' : theme.accentColor} />
             {displayContactItems.length > 0 && (
               <div
                 className={`space-y-1 text-xs ${
@@ -518,6 +521,7 @@ export default function HtmlResumePreview({ data, theme, templateId, showExample
             >
               {displayName}
             </h1>
+            <PortfolioHighlight data={data} color={isBanner ? '#ffffff' : theme.accentColor} />
             {displayContactItems.length > 0 && (
               <div
                 className={`text-xs break-words [overflow-wrap:anywhere] ${
@@ -559,6 +563,7 @@ export default function HtmlResumePreview({ data, theme, templateId, showExample
             <h1 className="text-2xl font-bold tracking-tight mb-2 break-words [overflow-wrap:anywhere]">
               {displayName}
             </h1>
+            <PortfolioHighlight data={data} color={isBanner ? '#ffffff' : theme.accentColor} />
             {displayContactItems.length > 0 && (
               <div
                 className={`text-xs break-words [overflow-wrap:anywhere] ${
@@ -598,6 +603,7 @@ export default function HtmlResumePreview({ data, theme, templateId, showExample
             >
               {displayName.toUpperCase()}
             </h1>
+            <PortfolioHighlight data={data} color={isBanner ? '#ffffff' : theme.accentColor} />
             {displayContactItems.length > 0 && (
               <div
                 className={`text-xs break-words [overflow-wrap:anywhere] ${
@@ -617,14 +623,17 @@ export default function HtmlResumePreview({ data, theme, templateId, showExample
             className="flex justify-between items-end pb-2 mb-4 border-b"
             style={{ borderColor: theme.accentColor }}
           >
-            <h1
-              className={`text-lg font-bold break-words [overflow-wrap:anywhere] ${
-                isNameSample ? 'text-slate-400 opacity-60 italic' : ''
-              }`}
-              style={{ color: isNameSample ? undefined : theme.accentColor }}
-            >
-              {displayName}
-            </h1>
+            <div className="min-w-0 flex-1 pr-2">
+              <h1
+                className={`text-lg font-bold break-words [overflow-wrap:anywhere] ${
+                  isNameSample ? 'text-slate-400 opacity-60 italic' : ''
+                }`}
+                style={{ color: isNameSample ? undefined : theme.accentColor }}
+              >
+                {displayName}
+              </h1>
+              <PortfolioHighlight data={data} color={isBanner ? '#ffffff' : theme.accentColor} />
+            </div>
             {displayContactItems.length > 0 && (
               <div
                 className={`text-xs text-right max-w-[60%] break-words [overflow-wrap:anywhere] ${
@@ -652,6 +661,7 @@ export default function HtmlResumePreview({ data, theme, templateId, showExample
             >
               {displayName}
             </h1>
+            <PortfolioHighlight data={data} color={isBanner ? '#ffffff' : theme.accentColor} />
             {displayContactItems.length > 0 && (
               <div
                 className={`text-xs break-words [overflow-wrap:anywhere] ${
